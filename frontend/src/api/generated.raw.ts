@@ -1454,6 +1454,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/purchase-record-sync/order-targets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Sync Order Targets
+         * @description 按申购单号列出待同步整单目标（整单一次平台查询、整单批量回写）。
+         */
+        get: operations["sync_order_targets_api_v1_purchase_record_sync_order_targets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/purchase-record-sync/orders/{purchase_order_no}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Sync Order Apply
+         * @description 整单批量回写：把一个申购单下多个追溯号的结果一次写回。
+         */
+        post: operations["sync_order_apply_api_v1_purchase_record_sync_orders__purchase_order_no__apply_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/purchase-records": {
         parameters: {
             query?: never;
@@ -3537,6 +3577,65 @@ export interface components {
              * @enum {string}
              */
             sort_order: "asc" | "desc";
+        };
+        /** PurchaseRecordSyncOrderApply */
+        PurchaseRecordSyncOrderApply: {
+            /** Items */
+            items: components["schemas"]["PurchaseRecordSyncOrderUpdateItem"][];
+        };
+        /** PurchaseRecordSyncOrderApplyRead */
+        PurchaseRecordSyncOrderApplyRead: {
+            /** Applied */
+            applied: number;
+            /** Not Found */
+            not_found: number;
+            /** Affected Headers */
+            affected_headers: number;
+            /** Affected Lines */
+            affected_lines: number;
+        };
+        /** PurchaseRecordSyncOrderTargetRead */
+        PurchaseRecordSyncOrderTargetRead: {
+            /** Purchase Order No */
+            purchase_order_no: string;
+            /** Trace Nos */
+            trace_nos: string[];
+            /** Cursor Id */
+            cursor_id: number;
+        };
+        /** PurchaseRecordSyncOrderTargetsRead */
+        PurchaseRecordSyncOrderTargetsRead: {
+            /** Items */
+            items: components["schemas"]["PurchaseRecordSyncOrderTargetRead"][];
+            /** Has More */
+            has_more: boolean;
+            /**
+             * Next Cursor
+             * @default 0
+             */
+            next_cursor: number;
+        };
+        /**
+         * PurchaseRecordSyncOrderUpdateItem
+         * @description 整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。
+         */
+        PurchaseRecordSyncOrderUpdateItem: {
+            /** Salesperson */
+            salesperson?: string | null;
+            /** Contract No */
+            contract_no?: string | null;
+            /** Vessel No */
+            vessel_no?: string | null;
+            /** Consolidation Port */
+            consolidation_port?: string | null;
+            /** Consolidation Date */
+            consolidation_date?: string | null;
+            /** Sailing Date */
+            sailing_date?: string | null;
+            /** Status */
+            status?: string | null;
+            /** Trace No */
+            trace_no: string;
         };
         /** PurchaseRecordSyncResultRead */
         PurchaseRecordSyncResultRead: {
@@ -10623,6 +10722,149 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PurchaseRecordSyncResultRead"];
+                };
+            };
+            /** @description 业务校验失败 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 未认证或凭证无效 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 权限不足 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 版本、状态或业务数据冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 请求参数校验失败 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    sync_order_targets_api_v1_purchase_record_sync_order_targets_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: number;
+                /** @description 逗号分隔的需要补全的同步字段；省略表示全部字段 */
+                fields?: string | null;
+                /** @description 只返回申购单号（purchase_order_no）>= 该值的记录（含该值） */
+                min_purchase_order_no?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PurchaseRecordSyncOrderTargetsRead"];
+                };
+            };
+            /** @description 业务校验失败 */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 未认证或凭证无效 */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 权限不足 */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 版本、状态或业务数据冲突 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description 请求参数校验失败 */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    sync_order_apply_api_v1_purchase_record_sync_orders__purchase_order_no__apply_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                purchase_order_no: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PurchaseRecordSyncOrderApply"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PurchaseRecordSyncOrderApplyRead"];
                 };
             };
             /** @description 业务校验失败 */

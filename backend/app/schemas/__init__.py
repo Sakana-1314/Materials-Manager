@@ -1649,6 +1649,37 @@ class PurchaseRecordSyncResultRead(ReadModel):
     affected_lines: int
 
 
+class PurchaseRecordSyncOrderTargetRead(ReadModel):
+    purchase_order_no: str
+    trace_nos: list[str]
+    cursor_id: int
+
+
+class PurchaseRecordSyncOrderTargetsRead(ReadModel):
+    items: list[PurchaseRecordSyncOrderTargetRead]
+    has_more: bool
+    next_cursor: int = 0
+
+
+class PurchaseRecordSyncOrderUpdateItem(PurchaseRecordSyncTraceUpdate):
+    """整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。"""
+
+    trace_no: Annotated[
+        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)
+    ]
+
+
+class PurchaseRecordSyncOrderApply(RequestModel):
+    items: list[PurchaseRecordSyncOrderUpdateItem] = Field(min_length=1, max_length=200)
+
+
+class PurchaseRecordSyncOrderApplyRead(ReadModel):
+    applied: int
+    not_found: int
+    affected_headers: int
+    affected_lines: int
+
+
 class VersionInfoRead(ReadModel):
     app_name: str
     version: str
