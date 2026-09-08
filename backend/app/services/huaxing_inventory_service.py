@@ -211,16 +211,21 @@ async def list_huaxing_filter_options(
         HuaXingInventory.purchaser.is_not(None),
         func.trim(HuaXingInventory.purchaser) != "",
     )
-    purchase_departments = list(
-        await session.scalars(
+    # 两列均可为 NULL（查询已过滤，但 ORM 类型仍是 str | None），显式收敛类型。
+    purchase_departments = [
+        value
+        for value in await session.scalars(
             department_query.distinct().order_by(HuaXingInventory.purchase_department)
         )
-    )
-    purchasers = list(
-        await session.scalars(
+        if value is not None
+    ]
+    purchasers = [
+        value
+        for value in await session.scalars(
             purchaser_query.distinct().order_by(HuaXingInventory.purchaser)
         )
-    )
+        if value is not None
+    ]
     return purchase_departments, purchasers
 
 

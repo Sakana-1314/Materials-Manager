@@ -190,3 +190,201 @@ async def test_sync_trace_not_found(client) -> None:
     )
     assert response.status_code == 400
     assert response.json()["code"] == "NOT_FOUND"
+
+
+# ---------------------------------------------------------------------------
+# 按申购单号整单目标 / 整单批量回写（华兴帆软脚本）
+# ---------------------------------------------------------------------------
+
+
+async def _order_targets(client, headers, **params):
+    response = await client.get(
+        "/api/v1/purchase-record-sync/order-targets", headers=headers, params=params
+    )
+    assert response.status_code == 200, response.text
+    return response.json()
+
+
+async def _apply_order(client, headers, purchase_order_no, items):
+    response = await client.post(
+        f"/api/v1/purchase-record-sync/orders/{purchase_order_no}/apply",
+        headers=headers,
+        json={"items": items},
+    )
+    assert response.status_code == 200, response.text
+    return response.json()
+
+
+async def test_sync_order_targets_groups_traces_by_order(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    motor_a = await create_purchase_plan(client, headers, "整单电机A", code="ORD-A")
+    await _move_plan(client, headers, int(motor_a["id"]), "TR-ORD-1", purchase_order_no="PO-ONE")
+    motor_b = await create_purchase_plan(client, headers, "整单电机B", code="ORD-B")
+    await _move_plan(client, headers, int(motor_b["id"]), "TR-ORD-2", purchase_order_no="PO-TWO")
+    motor_c = await create_purchase_plan(client, headers, "整单电机C", code="ORD-C")
+    await _move_plan(client, headers, int(motor_c["id"]), "TR-ORD-3", purchase_order_no="PO-TWO")
+
+    result = await _order_targets(client, headers)
+    by_po = {item["purchase_order_no"]: item["trace_nos"] for item in result["items"]}
+    assert by_po == {
+        "PO-ONE": ["TR-ORD-1"],
+        "PO-TWO": ["TR-ORD-2", "TR-ORD-3"],
+    }
+
+
+async def test_sync_order_targets_cursor_pagination(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    for index in range(1, 4):
+        motor = await create_purchase_plan(
+            client, headers, f"整单电机P{index}", code=f"ORD-P{index}"
+        )
+        await _move_plan(
+            client, headers, int(motor["id"]), f"TR-ORD-P{index}",
+            purchase_order_no=f"PO-P{index}",
+        )
+
+    first = await _order_targets(client, headers, limit=2)
+    assert len(first["items"]) == 2
+    assert first["has_more"] is True
+    second = await _order_targets(client, headers, limit=2, cursor=first["next_cursor"])
+    assert second["has_more"] is False
+    assert len(second["items"]) == 1
+    order_nos = {item["purchase_order_no"] for item in first["items"]} | {
+        item["purchase_order_no"] for item in second["items"]
+    }
+    assert order_nos == {"PO-P1", "PO-P2", "PO-P3"}
+
+
+async def test_sync_order_targets_min_purchase_order_no(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    for name, code, po in [
+        ("整单电机L1", "ORD-L1", "P05SG0299"),
+        ("整单电机L2", "ORD-L2", "P05SG0300"),
+    ]:
+        motor = await create_purchase_plan(client, headers, name, code=code)
+        await _move_plan(client, headers, int(motor["id"]), f"TR-{code}", purchase_order_no=po)
+
+    filtered = await _order_targets(client, headers, min_purchase_order_no="P05SG0300")
+    assert [item["purchase_order_no"] for item in filtered["items"]] == ["P05SG0300"]
+
+
+async def test_sync_order_apply_writes_whole_order_in_one_call(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    motor_a = await create_purchase_plan(client, headers, "整单回写电机A", code="WRITE-A")
+    record_a = await _move_plan(
+        client, headers, int(motor_a["id"]), "TR-WRITE-A", purchase_order_no="PO-WRITE"
+    )
+    motor_b = await create_purchase_plan(client, headers, "整单回写电机B", code="WRITE-B")
+    record_b = await _move_plan(
+        client, headers, int(motor_b["id"]), "TR-WRITE-B", purchase_order_no="PO-WRITE"
+    )
+
+    result = await _apply_order(
+        client,
+        headers,
+        "PO-WRITE",
+        [
+            {
+                "trace_no": "TR-WRITE-A",
+                "salesperson": "王经理",
+                "contract_no": "HT-WRITE",
+                "vessel_no": "V-WRITE",
+                "status": "已采购",
+            },
+            {"trace_no": "TR-WRITE-B", "salesperson": "李经理", "status": "已采购"},
+        ],
+    )
+    assert result == {
+        "applied": 2,
+        "not_found": 0,
+        "affected_headers": 1,
+        "affected_lines": 2,
+    }
+
+    rec_a = await _record(client, headers, record_a["line_id"])
+    assert rec_a["contract_no"] == "HT-WRITE"
+    assert rec_a["vessel_no"] == "V-WRITE"
+    assert rec_a["salesperson"] == "王经理"
+    assert rec_a["status"] == "已采购"
+    assert rec_a["version"] == 2
+
+    rec_b = await _record(client, headers, record_b["line_id"])
+    assert rec_b["salesperson"] == "李经理"
+    assert rec_b["status"] == "已采购"
+
+    # 规则不变：已填不覆盖、状态不回退
+    again = await _apply_order(
+        client,
+        headers,
+        "PO-WRITE",
+        [
+            {
+                "trace_no": "TR-WRITE-A",
+                "salesperson": "赵经理",
+                "contract_no": "HT-OTHER",
+                "status": "已申购",
+            }
+        ],
+    )
+    assert again == {
+        "applied": 1,
+        "not_found": 0,
+        "affected_headers": 0,
+        "affected_lines": 0,
+    }
+    rec_a = await _record(client, headers, record_a["line_id"])
+    assert rec_a["contract_no"] == "HT-WRITE"
+    assert rec_a["salesperson"] == "王经理"
+    assert rec_a["status"] == "已采购"
+
+
+async def test_sync_order_apply_counts_unknown_trace(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    motor = await create_purchase_plan(client, headers, "整单回写电机C", code="WRITE-C")
+    record = await _move_plan(
+        client, headers, int(motor["id"]), "TR-WRITE-C", purchase_order_no="PO-WRITE-C"
+    )
+    result = await _apply_order(
+        client,
+        headers,
+        "PO-WRITE-C",
+        [
+            {"trace_no": "TR-WRITE-C", "salesperson": "孙经理"},
+            {"trace_no": "NO-SUCH-TRACE", "salesperson": "路人甲"},
+        ],
+    )
+    assert result == {
+        "applied": 1,
+        "not_found": 1,
+        "affected_headers": 0,
+        "affected_lines": 1,
+    }
+    rec = await _record(client, headers, record["line_id"])
+    assert rec["salesperson"] == "孙经理"
+
+
+async def test_sync_order_targets_and_apply_require_purchase_writer(client) -> None:
+    readonly = await auth_headers(client, "readonly")
+    response = await client.get(
+        "/api/v1/purchase-record-sync/order-targets", headers=readonly
+    )
+    assert response.status_code == 403
+    assert response.json()["code"] == "FORBIDDEN"
+
+    response = await client.post(
+        "/api/v1/purchase-record-sync/orders/ANY-PO/apply",
+        headers=readonly,
+        json={"items": [{"trace_no": "X"}]},
+    )
+    assert response.status_code == 403
+
+
+async def test_sync_order_apply_order_not_found(client) -> None:
+    headers = await auth_headers(client, "purchase")
+    response = await client.post(
+        "/api/v1/purchase-record-sync/orders/NO-SUCH-PO/apply",
+        headers=headers,
+        json={"items": [{"trace_no": "TR-X"}]},
+    )
+    assert response.status_code == 400
+    assert response.json()["code"] == "NOT_FOUND"

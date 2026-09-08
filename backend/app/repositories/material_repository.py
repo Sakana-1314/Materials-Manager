@@ -87,7 +87,8 @@ async def purchase_material_ids_moved_to_record(
         .where(PurchaseRequestLine.purchase_material_id.in_(ids))
         .distinct()
     )
-    return set(rows.all())
+    # purchase_material_id 可为 NULL（计划删除后 ON DELETE SET NULL），NULL 不代表任何计划已转入。
+    return {value for value in rows.all() if value is not None}
 
 
 async def search_stock_materials(
@@ -292,10 +293,19 @@ async def purchase_filter_options(
             responsible_query.distinct().order_by(PurchaseMaterial.purchase_responsible)
         )
     )
-    subitem_nos = list(
-        await session.scalars(subitem_query.distinct().order_by(PurchaseMaterial.subitem_no))
-    )
-    categories = list(
-        await session.scalars(category_query.distinct().order_by(PurchaseMaterial.category))
-    )
+    # subitem_no / category 列可为 NULL（查询已过滤，但 ORM 类型仍是 str | None），显式收敛类型。
+    subitem_nos = [
+        item
+        for item in await session.scalars(
+            subitem_query.distinct().order_by(PurchaseMaterial.subitem_no)
+        )
+        if item is not None
+    ]
+    categories = [
+        item
+        for item in await session.scalars(
+            category_query.distinct().order_by(PurchaseMaterial.category)
+        )
+        if item is not None
+    ]
     return actual_demand_persons, purchase_responsibles, subitem_nos, categories

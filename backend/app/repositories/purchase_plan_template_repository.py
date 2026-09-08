@@ -126,7 +126,12 @@ async def template_filter_options(
             responsible_query.distinct().order_by(PurchasePlanTemplate.purchase_responsible)
         )
     )
-    categories = list(
-        await session.scalars(category_query.distinct().order_by(PurchasePlanTemplate.category))
-    )
+    # category 列可为 NULL（查询已过滤，但 ORM 类型仍是 str | None），显式收敛类型。
+    categories = [
+        value
+        for value in await session.scalars(
+            category_query.distinct().order_by(PurchasePlanTemplate.category)
+        )
+        if value is not None
+    ]
     return actual_demand_persons, purchase_responsibles, categories

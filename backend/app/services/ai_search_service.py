@@ -13,7 +13,6 @@ from cryptography.fernet import InvalidToken
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.errors import AppError, version_conflict
 from app.core.wechat import configured_wechat_app_ids, get_wechat_credentials
 from app.domain.enums import (
@@ -149,11 +148,17 @@ async def close_client() -> None:
     await _client.aclose()
 
 
-def _config_from_data(data: dict[str, Any], *, version: int, updated_at: datetime | None) -> AiSearchConfig:
+def _config_from_data(
+    data: dict[str, Any], *, version: int, updated_at: datetime | None
+) -> AiSearchConfig:
     endpoint = data.get("endpoint")
     api_key_encrypted = data.get("api_key_encrypted")
     model = data.get("model")
     enabled = data.get("enabled")
+    # 先取到局部变量再 isinstance 收窄：同一表达式的两次 data.get() 调用无法被 mypy 关联收窄。
+    registration_enabled = data.get("mini_program_registration_enabled")
+    new_user_enabled = data.get("mini_program_new_user_enabled")
+    image_server_url = data.get("image_acceleration_server_url")
     return AiSearchConfig(
         endpoint=endpoint if isinstance(endpoint, str) else "",
         api_key_encrypted=api_key_encrypted if isinstance(api_key_encrypted, str) else "",
@@ -164,19 +169,13 @@ def _config_from_data(data: dict[str, Any], *, version: int, updated_at: datetim
             data.get("mini_program_code_app_id")
         ),
         mini_program_registration_enabled=(
-            data.get("mini_program_registration_enabled")
-            if isinstance(data.get("mini_program_registration_enabled"), bool)
-            else True
+            registration_enabled if isinstance(registration_enabled, bool) else True
         ),
         mini_program_new_user_enabled=(
-            data.get("mini_program_new_user_enabled")
-            if isinstance(data.get("mini_program_new_user_enabled"), bool)
-            else True
+            new_user_enabled if isinstance(new_user_enabled, bool) else True
         ),
         image_acceleration_server_url=(
-            data.get("image_acceleration_server_url")
-            if isinstance(data.get("image_acceleration_server_url"), str)
-            else ""
+            image_server_url if isinstance(image_server_url, str) else ""
         ),
         inventory_mode=_feature_mode(
             data.get("inventory_mode"), MiniProgramFeatureMode.READ_WRITE
@@ -312,7 +311,7 @@ async def update_setting(
         "material_codes_mode": data.material_codes_mode,
         "secondary_warehouse_mode": data.secondary_warehouse_mode,
     }
-    event = await log_event(
+    await log_event(
         session,
         business_type=_SETTING_BUSINESS_TYPE,
         business_id=_SETTING_BUSINESS_ID,
@@ -544,8 +543,11 @@ def _upstream_error_reason(response: httpx.Response) -> str | None:
     if not isinstance(payload, dict):
         return None
     error = payload.get("error")
-    if isinstance(error, dict) and isinstance(error.get("message"), str):
-        return error["message"][:300]
+    if isinstance(error, dict):
+        # dict[str, Any] 下标取值会退化为 Any，需先取出并收窄，才能满足 str | None 返回类型。
+        message = error.get("message")
+        if isinstance(message, str):
+            return message[:300]
     if isinstance(error, str):
         return error[:300]
     for key in ("message", "detail"):

@@ -5770,6 +5770,152 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+  /api/v1/purchase-record-sync/order-targets:
+    get:
+      tags:
+      - 申购记录同步
+      summary: Sync Order Targets
+      description: 按申购单号列出待同步整单目标（整单一次平台查询、整单批量回写）。
+      operationId: sync_order_targets_api_v1_purchase_record_sync_order_targets_get
+      security:
+      - HTTPBearer: []
+      - APIKeyHeader: []
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Cursor
+      - name: fields
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 逗号分隔的需要补全的同步字段；省略表示全部字段
+          title: Fields
+        description: 逗号分隔的需要补全的同步字段；省略表示全部字段
+      - name: min_purchase_order_no
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          description: 只返回申购单号（purchase_order_no）>= 该值的记录（含该值）
+          title: Min Purchase Order No
+        description: 只返回申购单号（purchase_order_no）>= 该值的记录（含该值）
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseRecordSyncOrderTargetsRead'
+        '400':
+          description: 业务校验失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: 未认证或凭证无效
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: 版本、状态或业务数据冲突
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: 请求参数校验失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /api/v1/purchase-record-sync/orders/{purchase_order_no}/apply:
+    post:
+      tags:
+      - 申购记录同步
+      summary: Sync Order Apply
+      description: 整单批量回写：把一个申购单下多个追溯号的结果一次写回。
+      operationId: sync_order_apply_api_v1_purchase_record_sync_orders__purchase_order_no__apply_post
+      security:
+      - HTTPBearer: []
+      - APIKeyHeader: []
+      parameters:
+      - name: purchase_order_no
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Purchase Order No
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseRecordSyncOrderApply'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseRecordSyncOrderApplyRead'
+        '400':
+          description: 业务校验失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: 未认证或凭证无效
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: 权限不足
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: 版本、状态或业务数据冲突
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '422':
+          description: 请求参数校验失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
   /api/v1/purchase-records:
     get:
       tags:
@@ -11167,6 +11313,134 @@ components:
       required:
       - columns
       title: PurchaseRecordResultExportRequest
+    PurchaseRecordSyncOrderApply:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PurchaseRecordSyncOrderUpdateItem'
+          type: array
+          maxItems: 200
+          minItems: 1
+          title: Items
+      additionalProperties: false
+      type: object
+      required:
+      - items
+      title: PurchaseRecordSyncOrderApply
+    PurchaseRecordSyncOrderApplyRead:
+      properties:
+        applied:
+          type: integer
+          title: Applied
+        not_found:
+          type: integer
+          title: Not Found
+        affected_headers:
+          type: integer
+          title: Affected Headers
+        affected_lines:
+          type: integer
+          title: Affected Lines
+      type: object
+      required:
+      - applied
+      - not_found
+      - affected_headers
+      - affected_lines
+      title: PurchaseRecordSyncOrderApplyRead
+    PurchaseRecordSyncOrderTargetRead:
+      properties:
+        purchase_order_no:
+          type: string
+          title: Purchase Order No
+        trace_nos:
+          items:
+            type: string
+          type: array
+          title: Trace Nos
+        cursor_id:
+          type: integer
+          title: Cursor Id
+      type: object
+      required:
+      - purchase_order_no
+      - trace_nos
+      - cursor_id
+      title: PurchaseRecordSyncOrderTargetRead
+    PurchaseRecordSyncOrderTargetsRead:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/PurchaseRecordSyncOrderTargetRead'
+          type: array
+          title: Items
+        has_more:
+          type: boolean
+          title: Has More
+        next_cursor:
+          type: integer
+          title: Next Cursor
+          default: 0
+      type: object
+      required:
+      - items
+      - has_more
+      title: PurchaseRecordSyncOrderTargetsRead
+    PurchaseRecordSyncOrderUpdateItem:
+      properties:
+        salesperson:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Salesperson
+        contract_no:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Contract No
+        vessel_no:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Vessel No
+        consolidation_port:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Consolidation Port
+        consolidation_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Consolidation Date
+        sailing_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Sailing Date
+        status:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Status
+        trace_no:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Trace No
+      additionalProperties: false
+      type: object
+      required:
+      - trace_no
+      title: PurchaseRecordSyncOrderUpdateItem
+      description: 整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。
     PurchaseRecordSyncResultRead:
       properties:
         affected_headers:

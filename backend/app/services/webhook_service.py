@@ -19,7 +19,6 @@ from cryptography.fernet import InvalidToken
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
 from app.core.database import SessionLocal
 from app.core.errors import AppError, version_conflict
 from app.domain.enums import (

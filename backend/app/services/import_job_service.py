@@ -19,9 +19,10 @@ import logging
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, cast
 
 from fastapi import UploadFile
-from sqlalchemy import delete, select, update
+from sqlalchemy import CursorResult, delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -203,7 +204,8 @@ async def cleanup_finished_jobs(*, retention_days: int = 30) -> int:
             )
         )
         await session.commit()
-        return int(result.rowcount or 0)
+        # execute() 的静态返回类型是 Result[Any]，DELETE 实际返回带 rowcount 的 CursorResult。
+        return int(cast(CursorResult[Any], result).rowcount or 0)
 
 
 async def _run_job(job_id: int, processor: ImportProcessor) -> None:
