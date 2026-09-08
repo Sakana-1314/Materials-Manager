@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import asyncio
 import csv
-from io import BytesIO, StringIO
+from io import StringIO
 
 import pytest
 from httpx import AsyncClient
-from openpyxl import Workbook
 
 from app.services import mini_program_service
 from tests.conftest import auth_headers, create_stock
@@ -162,7 +161,12 @@ async def test_lite_mode_blocks_admin_full_warehouse_writes(client: AsyncClient)
     blocked = await client.post(
         "/api/v1/stock-materials",
         headers=warehouse,
-        json={"name": "精简模式不应创建", "model_spec": "LITE-1", "unit_name": "个", "image_ids": []},
+        json={
+            "name": "精简模式不应创建",
+            "model_spec": "LITE-1",
+            "unit_name": "个",
+            "image_ids": [],
+        },
     )
     assert blocked.status_code == 403
     assert blocked.json()["code"] == "SECONDARY_WAREHOUSE_LITE_MODE"

@@ -953,7 +953,9 @@ async def test_mini_program_purchase_records_search_status_and_pagination(
     assert uploaded.status_code == 201, uploaded.text
     file_id = uploaded.json()["id"]
 
-    async def create_plan(name: str, code: str, image_ids: list[str] | None = None) -> dict[str, object]:
+    async def create_plan(
+        name: str, code: str, image_ids: list[str] | None = None
+    ) -> dict[str, object]:
         response = await client.post(
             "/api/v1/purchase-materials",
             headers=purchase_headers,

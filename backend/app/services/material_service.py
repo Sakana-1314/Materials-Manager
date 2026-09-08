@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import date, datetime
 from uuid import UUID
 
@@ -550,7 +551,7 @@ async def purchase_materials_for_export(
 
 
 def validate_purchase_application_export(materials: list[PurchaseMaterial]) -> None:
-    field_checks = {
+    field_checks: dict[str, tuple[str, Callable[[PurchaseMaterial], str | None]]] = {
         "material_code": ("编码", lambda item: item.material_code),
         "subitem_no": ("子项号", lambda item: item.subitem_no),
         "usage": ("用途", lambda item: item.usage),
@@ -578,7 +579,7 @@ def validate_purchase_application_export(materials: list[PurchaseMaterial]) -> N
 
 def validate_purchase_approval_export(materials: list[PurchaseMaterial]) -> None:
     """申购审批表导出必填校验：子项号、物资名称、型号、申请数量、单位、用途缺一不可。"""
-    field_checks = {
+    field_checks: dict[str, tuple[str, Callable[[PurchaseMaterial], object]]] = {
         "subitem_no": ("子项号", lambda item: item.subitem_no),
         "name": ("物资名称", lambda item: item.name),
         "model_spec": ("型号", lambda item: item.model_spec),

@@ -13,9 +13,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import ColumnElement, SQLColumnExpression
 
 from app.core.errors import AppError, version_conflict
-from app.core.security import (
-    fernet,  # noqa: F401  # 转发：保持既有 from app.services.common import fernet 可用
-)
+
+# 显式 re-export（import ... as ...）：既保持 from app.services.common import fernet 可用，
+# 又满足 mypy strict 的 no_implicit_reexport；ruff 视冗余别名为显式导出，无需 noqa。
+from app.core.security import fernet as fernet
 from app.domain.enums import SourceType
 from app.models import BusinessEventLog, FileObject, StockOperation
 from app.schemas import FileObjectRead, Page
