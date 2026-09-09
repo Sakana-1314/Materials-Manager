@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友新物资系统同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.4
+// @version      3.1.5
 // @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -26,7 +26,7 @@
   const MATERIALS_API = "https://materials-manager.qcloud.19890605.xyz/api/v1";
   const SYNC_FIELDS = "contract_no,vessel_no,salesperson,status";
   const VIEWLET =
-    "%252F%25E6%2595%25B0%25E6%258D%25AE%25E6%2584%25B8%25E6%259E%2590" +
+    "%252F%25E6%2595%25B0%25E6%258D%25AE%25E5%2588%2586%25E6%259E%2590" +
     "%252F%25E4%25BB%2593%25E5%2582%25A8%25E7%25AE%25A1%25E7%2590%2586" +
     "%252F%25E7%2589%25A9%25E6%2596%2599%25E7%2594%25B3%25E8%25B4%25AD" +
     "%252F%25E7%2589%25A9%25E6%2596%2599%25E7%2594%25B3%25E8%25B4%25AD%25E8%25B7%259F%25E8%25B8%25AA.cpt";
