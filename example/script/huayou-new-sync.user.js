@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友新物资系统同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.1
+// @version      3.1.2
 // @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -177,6 +177,16 @@
     }
   };
 
+  // —— 请求调试日志：每次网络请求（备件 API / 华兴登录 / 报表导出）统一打印参数与输出 ——
+  // 注意：按需求为全量明文输出，请求日志会包含密码、接口令牌、accessToken 等敏感凭证，
+  // 仅用于个人电脑上的联调核对，勿在共享/生产控制台长时间留存。
+  let requestSeq = 0;
+  const clipText = (text, max = 5000) => {
+    const value = String(text ?? "");
+    return value.length > max
+      ? `${value.slice(0, max)}\n…（响应截断，共 ${value.length} 字符）`
+      : value;
+  };
   const request = ({
     method = "GET",
     url,
@@ -185,7 +195,14 @@
     responseType,
     timeout = 45000,
   }) =>
-    new Promise((resolve, reject) =>
+    new Promise((resolve, reject) => {
+      const no = ++requestSeq;
+      console.info(`[华兴同步] → 请求 #${no}`, {
+        method,
+        url,
+        headers,
+        body: data,
+      });
       GM_xmlhttpRequest({
         method,
         url,
@@ -195,21 +212,35 @@
         timeout,
         anonymous: false,
         onload(response) {
+          const text = String(response.responseText || response.response || "");
+          console.info(`[华兴同步] ← 响应 #${no}`, {
+            status: response.status,
+            text: clipText(text),
+          });
           if (response.status >= 200 && response.status < 300) resolve(response);
           else {
-            const detail = String(response.responseText || response.response || "");
-            reject(new Error(`HTTP ${response.status}：${detail.slice(0, 300)}`));
+            const detail = text.slice(0, 300);
+            reject(new Error(`HTTP ${response.status}：${detail}`));
           }
         },
-        ontimeout: () => reject(new Error(`请求超时：${url}`)),
+        ontimeout: () => {
+          console.info(`[华兴同步] ✗ 超时 #${no}`, { method, url });
+          reject(new Error(`请求超时：${url}`));
+        },
         onerror: (error) => {
           const detail = error?.error || error?.message || "网络请求失败";
           const target = error?.finalUrl || url;
           const suffix = error?.status ? `（HTTP ${error.status}）` : "";
+          console.info(`[华兴同步] ✗ 失败 #${no}`, {
+            method,
+            url: target,
+            status: error?.status,
+            detail,
+          });
           reject(new Error(`${detail}：${target}${suffix}`));
         },
-      }),
-    );
+      });
+    });
   const json = async (options) => {
     const response = await request(options);
     const text = String(response.responseText || response.response || "");
@@ -486,6 +517,10 @@
     );
     const token = result?.data?.accessToken;
     if (!token) throw new Error(result?.errorMsg || "华兴物资平台登录失败");
+    console.info("[华兴同步] 平台登录成功，写入 fine_auth_token cookie", {
+      username: config.platformUsername,
+      token,
+    });
     await new Promise((resolve, reject) =>
       GM_cookie.set(
         {
