@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友印尼数据平台同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.2.0
+// @version      3.2.1
 // @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -774,11 +774,38 @@
       credentials();
       log(`${trigger === "auto" ? "自动" : "手动"}同步开始（按申购单号整单同步）`);
       const orders = await orderTargets();
-      stats.scanned = orders.length;
+      // 只处理申购单号以 P 开头的申购单（如 P05SG0398），其余一律跳过，不发起平台查询。
+      const pOrders = orders.filter((order) =>
+        /^P/i.test(clean(order.purchase_order_no)),
+      );
+      const skippedNonP = orders.length - pOrders.length;
+      const skippedExamples = orders
+        .filter((order) => !/^P/i.test(clean(order.purchase_order_no)))
+        .slice(0, 3)
+        .map((order) => clean(order.purchase_order_no))
+        .join("、");
+      if (skippedNonP) {
+        log(
+          `跳过 ${skippedNonP} 个非 P 开头申购单${skippedExamples ? `（如 ${skippedExamples}）` : ""}，不查询平台`,
+          "warn",
+        );
+      }
+      stats.scanned = pOrders.length;
       renderStats();
-      if (!orders.length) {
+      if (!pOrders.length) {
         status("无需同步", "success");
-        log("没有需要补齐的申购单");
+        if (skippedNonP) {
+          // 本批全为非 P 申购单：推进游标，避免反复拉取同一批
+          const pageCursorIds = orders
+            .map((order) => Number(order.cursor_id))
+            .filter(Number.isFinite);
+          if (pageCursorIds.length) {
+            GM_setValue(key("cursor"), Math.min(...pageCursorIds));
+          }
+          log("本批申购单均非 P 开头，已跳过并推进批次，本次未请求平台", "warn");
+        } else {
+          log("没有需要补齐的申购单");
+        }
         return;
       }
       // 3 天冷却去重：最近一次成功同步过的申购单本次跳过，避免频繁请求平台。
@@ -791,7 +818,7 @@
         log(`本地更新记录不可用（${error.message}），本次不做 3 天去重`, "warn");
       }
       const pendingOrders = idbAvailable
-        ? orders.filter((order) => {
+        ? pOrders.filter((order) => {
             const orderNo = clean(order.purchase_order_no);
             if (recentOrderNos.has(orderNo)) {
               stats.skipped += 1;
@@ -799,10 +826,10 @@
             }
             return true;
           })
-        : orders;
-      if (pendingOrders.length !== orders.length) {
+        : pOrders;
+      if (pendingOrders.length !== pOrders.length) {
         log(
-          `跳过 ${orders.length - pendingOrders.length} 个 ${ORDER_COOLDOWN_DAYS} 天内已更新的申购单（避免重复请求）`,
+          `跳过 ${pOrders.length - pendingOrders.length} 个 ${ORDER_COOLDOWN_DAYS} 天内已更新的申购单（避免重复请求）`,
           "warn",
         );
         renderStats();
@@ -817,7 +844,7 @@
         }
         status("全部在冷却期内", "success");
         log(
-          `本批 ${orders.length} 个申购单均在 ${ORDER_COOLDOWN_DAYS} 天冷却期内，已跳过并推进批次，本次未请求平台`,
+          `本批 ${pOrders.length} 个 P 开头申购单均在 ${ORDER_COOLDOWN_DAYS} 天冷却期内，已跳过并推进批次，本次未请求平台`,
           "warn",
         );
         return;
