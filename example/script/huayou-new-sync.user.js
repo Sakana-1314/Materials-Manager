@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友新物资系统同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.2
+// @version      3.1.3
 // @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -80,13 +80,6 @@
     String(value ?? "")
       .replace(/\s+/g, " ")
       .trim();
-  const form = (data) =>
-    Object.entries(data)
-      .map(
-        ([name, value]) =>
-          `${encodeURIComponent(name)}=${encodeURIComponent(value ?? "")}`,
-      )
-      .join("&");
   const joined = (values) => {
     const value = [...new Set(values.map(clean).filter(Boolean))].join(" / ");
     return value.length <= 128 ? value : `${value.slice(0, 127)}…`;
@@ -368,6 +361,76 @@
     );
     return `${PLATFORM_BASE}/view/report?viewlet=${VIEWLET}&__parameters__=${parameters}&${WORKER_PARAM}=${encodeURIComponent(task.id)}`;
   };
+  // —— 报表 JSON 数据接口：与真实帆软 viewer 一致（不再走导出接口）——
+  // viewer 打开报表后自行发起 page/data（JSON）；cid 取自页面已发出的 page/data 资源 URL（保留原始编码原样回传）。
+  const reportPageDataUrl = () => {
+    const entry = performance
+      .getEntriesByType("resource")
+      .map((resource) => resource.name)
+      .filter(
+        (url) =>
+          url.includes("/url/report/v10/page/data") && /[?&]cid=/.test(url),
+      )
+      .pop();
+    return entry || "";
+  };
+  const reportPage = async (template, sid, pn) => {
+    const url =
+      template
+        .replace(/sessionID=[^&]*/, `sessionID=${encodeURIComponent(sid)}`)
+        .replace(/([?&])pn=\d+/, `$1pn=${pn}`) + `&_=${Date.now()}`;
+    const response = await request({ method: "GET", url });
+    const text = String(response.responseText || response.response || "");
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw structuralError(
+        `报表 page/data 返回的不是有效 JSON：${text.slice(0, 200)}`,
+      );
+    }
+  };
+  const cellText = (value) => {
+    if (value == null) return "";
+    if (typeof value === "object") return String(value?.value ?? "");
+    if (typeof value === "string") {
+      try {
+        return String(JSON.parse(value)?.value ?? "");
+      } catch {
+        return value;
+      }
+    }
+    return String(value);
+  };
+  const csvCell = (value) => {
+    const text = String(value ?? "");
+    return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  };
+  // 把一个 page/data 页（可含多个 canvas 块、冻结表头重复）还原为 {header, rows}
+  const pageToRows = (pageJson) => {
+    const grid = {};
+    for (const block of pageJson?.pageResult || []) {
+      for (const cell of block || []) {
+        const y = cell?.position?.y;
+        const x = cell?.position?.x;
+        if (y == null || x == null) continue;
+        (grid[y] ||= {})[x] = cellText(cell.value);
+      }
+    }
+    const ys = Object.keys(grid).map(Number).sort((a, b) => a - b);
+    if (!ys.length) return { header: [], rows: [] };
+    const headerY = ys[0];
+    const headerXs = Object.keys(grid[headerY])
+      .map(Number)
+      .sort((a, b) => a - b);
+    const header = headerXs.map((x) => grid[headerY][x]);
+    const rows = [];
+    for (const y of ys) {
+      if (y === headerY) continue;
+      if (!Object.values(grid[y]).some((text) => clean(text))) continue;
+      rows.push(headerXs.map((x) => grid[y][x] ?? ""));
+    }
+    return { header, rows };
+  };
   const sessionId = () => {
     for (const script of document.scripts) {
       if (script.src) continue;
@@ -402,17 +465,28 @@
       }
       await waitForReport();
       const sid = sessionId();
-      const response = await request({
-        method: "POST",
-        url: `${PLATFORM_BASE}/url/report/v10/export`,
-        headers: {
-          Authorization: `Bearer ${task.token}`,
-          sessionID: sid,
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        },
-        data: form({ format: "csv", extype: "page" }),
-      });
-      const text = String(response.responseText || response.response || "");
+      // 复用页面已发出的 page/data 资源 URL（含报表实例 cid），逐页拉全量 JSON，不用导出接口
+      const pageDataTemplate = reportPageDataUrl();
+      if (!pageDataTemplate) {
+        throw new Error("报表页尚未发起 page/data，未能取得报表实例 cid");
+      }
+      const first = await reportPage(pageDataTemplate, sid, 1);
+      const totalPages = Math.min(Number(first?.totalPage) || 1, 200);
+      const allRows = [];
+      let header = [];
+      for (let pn = 1; pn <= totalPages; pn += 1) {
+        const page = pn === 1 ? first : await reportPage(pageDataTemplate, sid, pn);
+        const pageRows = pageToRows(page);
+        if (pn === 1) header = pageRows.header;
+        allRows.push(...pageRows.rows);
+      }
+      if (!header.length || !allRows.length) {
+        throw structuralError("报表未返回可解析的数据行，模板或权限可能已变化");
+      }
+      const text = [
+        header.map(csvCell).join(","),
+        ...allRows.map((row) => row.map(csvCell).join(",")),
+      ].join("\n");
       GM_setValue(responseKey, {
         id: taskId,
         ok: true,
