@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         华友新物资系统同步脚本
+// @name         华友印尼数据平台同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.6
-// @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
+// @version      3.2.0
+// @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
 // @downloadURL  https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -170,7 +170,7 @@
     }
   };
 
-  // —— 请求调试日志：每次网络请求（备件 API / 华兴登录 / 报表导出）统一打印参数与输出 ——
+  // —— 请求调试日志：每次网络请求（备件 API / 平台登录 / 报表拉取）统一打印参数与输出 ——
   // 注意：按需求为全量明文输出，请求日志会包含密码、接口令牌、accessToken 等敏感凭证，
   // 仅用于个人电脑上的联调核对，勿在共享/生产控制台长时间留存。
   let requestSeq = 0;
@@ -190,7 +190,7 @@
   }) =>
     new Promise((resolve, reject) => {
       const no = ++requestSeq;
-      console.info(`[华兴同步] → 请求 #${no}`, {
+      console.info(`[华友印尼] → 请求 #${no}`, {
         method,
         url,
         headers,
@@ -206,7 +206,7 @@
         anonymous: false,
         onload(response) {
           const text = String(response.responseText || response.response || "");
-          console.info(`[华兴同步] ← 响应 #${no}`, {
+          console.info(`[华友印尼] ← 响应 #${no}`, {
             status: response.status,
             text: clipText(text),
           });
@@ -217,14 +217,14 @@
           }
         },
         ontimeout: () => {
-          console.info(`[华兴同步] ✗ 超时 #${no}`, { method, url });
+          console.info(`[华友印尼] ✗ 超时 #${no}`, { method, url });
           reject(new Error(`请求超时：${url}`));
         },
         onerror: (error) => {
           const detail = error?.error || error?.message || "网络请求失败";
           const target = error?.finalUrl || url;
           const suffix = error?.status ? `（HTTP ${error.status}）` : "";
-          console.info(`[华兴同步] ✗ 失败 #${no}`, {
+          console.info(`[华友印尼] ✗ 失败 #${no}`, {
             method,
             url: target,
             status: error?.status,
@@ -361,7 +361,7 @@
     );
     return `${PLATFORM_BASE}/view/report?viewlet=${VIEWLET}&__parameters__=${parameters}&${WORKER_PARAM}=${encodeURIComponent(task.id)}`;
   };
-  // —— 报表 JSON 数据接口：与真实帆软 viewer 一致（不再走导出接口）——
+  // —— 报表 JSON 数据接口：与真实平台内置报表 viewer 一致（不再走导出接口）——
   // viewer 打开报表后自行发起 page/data（JSON）；cid 取自页面已发出的 page/data 资源 URL（保留原始编码原样回传）。
   const reportPageDataUrl = () => {
     const entry = performance
@@ -615,8 +615,8 @@
       "物资平台登录接口",
     );
     const token = result?.data?.accessToken;
-    if (!token) throw new Error(result?.errorMsg || "华兴物资平台登录失败");
-    console.info("[华兴同步] 平台登录成功，写入 fine_auth_token cookie", {
+    if (!token) throw new Error(result?.errorMsg || "印尼数据平台登录失败");
+    console.info("[华友印尼] 平台登录成功，写入 fine_auth_token cookie", {
       username: config.platformUsername,
       token,
     });
@@ -677,7 +677,7 @@
               } catch {}
               if (!config.platformPassword) {
                 throw new Error(
-                  "物资平台未登录，且未填写平台密码无法自动补登；请先在浏览器登录华兴平台，或在悬浮窗填写平台密码",
+                  "物资平台未登录，且未填写平台密码无法自动补登；请先在浏览器登录印尼数据平台，或在悬浮窗填写平台密码",
                 );
               }
               await loginPlatform();
@@ -731,7 +731,7 @@
     ui.status.dataset.kind = kind;
   };
   const credentials = () => {
-    // 平台查询优先复用浏览器现有华兴会话，因此不强制要求平台密码；
+    // 平台查询优先复用浏览器现有平台会话，因此不强制要求平台密码；
     // 仅在 worker 报告未登录而需自动补登时才会用到平台账号密码。
     const missing = [];
     if (!config.apiToken) missing.push("接口令牌");
@@ -822,8 +822,8 @@
         );
         return;
       }
-      // 复用浏览器现有华兴会话查询；若 worker 报告未登录，queryOrder 内部会自动补登一次。
-      log("查询将复用浏览器华兴会话；如需补登会使用脚本账号自动登录");
+      // 复用浏览器现有平台会话查询；若 worker 报告未登录，queryOrder 内部会自动补登一次。
+      log("查询将复用浏览器平台会话；如需补登会使用脚本账号自动登录");
       let orderIndex = 0;
       let aborted = false;
       for (const order of pendingOrders) {
@@ -1050,7 +1050,7 @@
 <style>
 :host{all:initial;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#1f2937}*{box-sizing:border-box}.panel{width:380px;overflow:hidden;border:1px solid #cbd5e1;border-radius:8px;background:#fff;box-shadow:0 18px 45px #0f172a38}.head{display:flex;align-items:center;gap:8px;padding:9px 10px 9px 14px;color:#fff;background:#176b5b;cursor:move;user-select:none}.title{flex:1;font-size:14px;font-weight:700}.status{max-width:170px;overflow:hidden;padding:3px 8px;border-radius:4px;background:#ffffff2e;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.status[data-kind=success]{background:#10b98155}.status[data-kind=warn]{background:#f59e0b66}.status[data-kind=error]{background:#ef444466}.mini{width:28px;height:28px;border:0;border-radius:4px;color:#fff;background:#ffffff22;cursor:pointer}.body{padding:12px}:host([data-minimized=true]) .body{display:none}:host([data-minimized=true]) .panel{width:260px}.toolbar{display:flex;align-items:center;gap:9px}.run,.save{height:34px;border-radius:4px;padding:0 14px;font-weight:650;cursor:pointer}.run{border:0;color:#fff;background:#176b5b}.save{border:1px solid #cbd5e1;color:#334155;background:#fff}.switch{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:12px;color:#475569}.switch input,.check input{accent-color:#176b5b}.stats{margin:10px 0;padding:8px 10px;border-radius:4px;color:#475569;background:#f1f5f9;font-size:12px}details{border:1px solid #e2e8f0;border-radius:4px}summary{padding:9px 10px;font-size:12px;font-weight:650;cursor:pointer}.settings{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 10px 10px}label{display:grid;gap:4px;color:#64748b;font-size:11px}input[type=text],input[type=number]{width:100%;height:31px;border:1px solid #cbd5e1;border-radius:4px;padding:0 8px}.full{grid-column:1/-1}.check{display:flex;align-items:center;gap:6px}.logs{height:170px;margin-top:10px;overflow:auto;border-radius:4px;padding:8px;color:#cbd5e1;background:#20252b;font:11px/1.55 Consolas,"Microsoft YaHei",monospace}.logs div{margin-bottom:2px;overflow-wrap:anywhere}.logs .success{color:#6ee7b7}.logs .warn{color:#fcd34d}.logs .error{color:#fca5a5}button:disabled{opacity:.55;cursor:wait}
 </style>
-<section class="panel"><header class="head"><div class="title">华友新物资系统同步</div><div class="status">待机</div><button class="mini" title="最小化">—</button></header><div class="body"><div class="toolbar"><button class="run">同步一次</button><label class="switch"><input class="auto" type="checkbox">自动模式</label></div><div class="stats">申购单 0 · 追溯号命中 0 · 更新 0 · 跳过 0 · 失败 0</div><details><summary>连接与同步设置</summary><div class="settings"><label>物资平台账号<input class="platform-user" type="text"></label><label>物资平台密码<input class="platform-pass" type="text" autocomplete="off"></label><label>接口令牌<input class="api-token" type="text" autocomplete="off" placeholder="管理端 API Token"></label><label>自动间隔<input class="interval" type="number" min="1" max="1440"></label><label>单次申购单数<input class="batch" type="number" min="1" max="200"></label><label>申购单号起始<input class="min-po-no" type="text" placeholder="如 P05SG0300"></label><label class="check full"><input class="dry-run" type="checkbox">演练模式</label><button class="save full">保存设置</button></div></details><div class="logs"></div></div></section>`;
+<section class="panel"><header class="head"><div class="title">华友印尼数据平台同步</div><div class="status">待机</div><button class="mini" title="最小化">—</button></header><div class="body"><div class="toolbar"><button class="run">同步一次</button><label class="switch"><input class="auto" type="checkbox">自动模式</label></div><div class="stats">申购单 0 · 追溯号命中 0 · 更新 0 · 跳过 0 · 失败 0</div><details><summary>连接与同步设置</summary><div class="settings"><label>物资平台账号<input class="platform-user" type="text"></label><label>物资平台密码<input class="platform-pass" type="text" autocomplete="off"></label><label>接口令牌<input class="api-token" type="text" autocomplete="off" placeholder="管理端 API Token"></label><label>自动间隔<input class="interval" type="number" min="1" max="1440"></label><label>单次申购单数<input class="batch" type="number" min="1" max="200"></label><label>申购单号起始<input class="min-po-no" type="text" placeholder="如 P05SG0300"></label><label class="check full"><input class="dry-run" type="checkbox">演练模式</label><button class="save full">保存设置</button></div></details><div class="logs"></div></div></section>`;
     document.documentElement.append(host);
     ui = {
       status: shadow.querySelector(".status"),
@@ -1088,8 +1088,8 @@
     if (config.autoEnabled) schedule(3000);
   };
 
-  GM_registerMenuCommand("华兴物料跟踪：同步一次", () => run());
-  GM_registerMenuCommand("华兴物料跟踪：切换自动模式", () => {
+  GM_registerMenuCommand("印尼数据平台：同步一次", () => run());
+  GM_registerMenuCommand("印尼数据平台：切换自动模式", () => {
     saveConfig({ autoEnabled: !config.autoEnabled });
     if (ui) ui.auto.checked = config.autoEnabled;
     if (config.autoEnabled) schedule(1000);
