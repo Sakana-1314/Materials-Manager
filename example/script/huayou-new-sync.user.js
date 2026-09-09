@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友新物资系统同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.5
+// @version      3.1.6
 // @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -331,9 +331,9 @@
       if (section.headers.includes("追溯码")) trackingRows.push(...section.rows);
       if (section.headers.includes("入库数量")) quantityRows.push(...section.rows);
     }
-    if (!trackingRows.length && !quantityRows.length) {
-      throw structuralError("导出结果既无追溯码数据也无数量数据，报表结构可能已变化");
-    }
+    // 表头正常但无有效数据行（多为“该单在平台无记录”），不属于结构异常：
+    // 返回空结果，由调用方视作“平台未查询到记录”，不应终止整批同步。
+    if (!trackingRows.length && !quantityRows.length) return {};
     const traces = new Map();
     for (const row of trackingRows) {
       const trace = clean(row["追溯码"]);
@@ -490,8 +490,13 @@
         if (pn === 1) header = pageRows.header;
         allRows.push(...pageRows.rows);
       }
-      if (!header.length || !allRows.length) {
-        throw structuralError("报表未返回可解析的数据行，模板或权限可能已变化");
+      if (!header.length) {
+        throw structuralError("报表未返回表头，模板或权限可能已变化");
+      }
+      if (!allRows.length) {
+        // 表头正常但无任何数据行：该申购单在平台无记录，返回空结果（不终止整批）
+        GM_setValue(responseKey, { id: taskId, ok: true, result: {} });
+        return;
       }
       const text = [
         header.map(csvCell).join(","),
@@ -569,20 +574,30 @@
     }
     return rows;
   };
-  const applyOrder = async (orderNo, items) => {
-    const payload = requireShape(
-      await apiRequest({
-        method: "POST",
-        url: `${MATERIALS_API}/purchase-record-sync/orders/${encodeURIComponent(orderNo)}/apply`,
-        data: JSON.stringify({ items }),
-      }),
-      "整单回写接口",
-    );
-    for (const field of ["applied", "not_found", "affected_headers", "affected_lines"]) {
-      if (!Number.isFinite(Number(payload[field])))
-        throw structuralError(`整单回写接口缺少 ${field}`);
+  // 回写只补空值、状态只进不退，天然幂等：瞬时网络错误可安全重试一次。
+  const applyOrder = async (orderNo, items, attempt = 1) => {
+    try {
+      const payload = requireShape(
+        await apiRequest({
+          method: "POST",
+          url: `${MATERIALS_API}/purchase-record-sync/orders/${encodeURIComponent(orderNo)}/apply`,
+          data: JSON.stringify({ items }),
+        }),
+        "整单回写接口",
+      );
+      for (const field of ["applied", "not_found", "affected_headers", "affected_lines"]) {
+        if (!Number.isFinite(Number(payload[field])))
+          throw structuralError(`整单回写接口缺少 ${field}`);
+      }
+      return payload;
+    } catch (error) {
+      if (attempt < 2 && !error?.structural) {
+        log(`申购单 ${orderNo}：回写请求失败（${error.message}），短暂等待后重试一次`, "warn");
+        await sleep(1500);
+        return applyOrder(orderNo, items, attempt + 1);
+      }
+      throw error;
     }
-    return payload;
   };
   const loginPlatform = async () => {
     const result = requireShape(
@@ -882,19 +897,17 @@
           }
         } catch (error) {
           stats.failed += 1;
-          if (orderIndex === 1 || error?.structural) {
+          if (error?.structural) {
             aborted = true;
             status("同步中止", "error");
             log(`申购单 ${orderNo}：${error.message}`, "error");
-            log(
-              orderIndex === 1
-                ? "首个平台查询即失败，为尽快暴露问题已终止本次同步，请检查日志后重试"
-                : "报表结构异常属系统性问题，已终止本次同步",
-              "error",
-            );
+            log("报表结构异常属系统性问题，已终止本次同步", "error");
             break;
           }
-          log(`申购单 ${orderNo}：${error.message}`, "error");
+          log(
+            `申购单 ${orderNo}：${error.message}（已计入失败，继续处理其余申购单）`,
+            "error",
+          );
         }
         renderStats();
       }
