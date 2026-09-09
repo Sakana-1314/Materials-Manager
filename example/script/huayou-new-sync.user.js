@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友印尼数据平台同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.2.1
+// @version      3.2.2
 // @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -966,15 +966,34 @@
       if (config.autoEnabled) schedule();
     }
   };
+  // 自动模式执行窗口：仅北京时间 02:00–06:00（UTC+8，无夏令时）。
+  // 返回距下次应执行的时间（毫秒）：窗口内返回 0；否则返回距下一个窗口开始
+  // （当日或次日北京时间 02:00）的毫秒数。
+  const autoWindowDelayMs = (nowMs) => {
+    const bj = nowMs + 8 * 3600 * 1000; // 北京时间 = UTC+8
+    const hour = new Date(bj).getUTCHours();
+    if (hour >= 2 && hour < 6) return 0;
+    const start = new Date(bj);
+    start.setUTCHours(2, 0, 0, 0);
+    let next = start.getTime();
+    if (next <= bj) next += 24 * 3600 * 1000;
+    return next - bj;
+  };
   const schedule = (delay) => {
     clearTimeout(timer);
     if (!config.autoEnabled) return;
     const milliseconds = int(config.intervalMinutes, 10, 1, 1440) * 60000;
-    timer = setTimeout(
-      () => run("auto"),
-      typeof delay === "number" ? delay : milliseconds,
-    );
-    status(`自动模式：${config.intervalMinutes} 分钟`);
+    const wait = autoWindowDelayMs(Date.now());
+    if (wait > 0) {
+      timer = setTimeout(() => run("auto"), wait);
+      status(`自动模式：等北京时间凌晨2点（约 ${Math.ceil(wait / 60000)} 分钟后）`);
+    } else {
+      timer = setTimeout(
+        () => run("auto"),
+        typeof delay === "number" ? delay : milliseconds,
+      );
+      status(`自动模式：北京时间 2-6 点，每 ${config.intervalMinutes} 分钟`);
+    }
   };
   const formConfig = () => ({
     platformUsername: ui.platformUsername.value.trim(),
@@ -1024,7 +1043,7 @@
     ui.auto.addEventListener("change", () => {
       saveConfig({ autoEnabled: ui.auto.checked });
       if (config.autoEnabled) {
-        log("自动模式已开启");
+        log("自动模式已开启（仅北京时间 02:00–06:00 执行）");
         schedule(1500);
       } else {
         clearTimeout(timer);
