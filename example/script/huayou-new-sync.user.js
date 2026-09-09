@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         华友新物资系统同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.1.3
+// @version      3.1.4
 // @description  从华兴帆软“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -440,29 +440,39 @@
     return "";
   };
   const waitForReport = async () => {
-    const deadline = Date.now() + REPORT_LOAD_DEADLINE_MS;
+    const startedAt = Date.now();
+    const deadline = startedAt + REPORT_LOAD_DEADLINE_MS;
     while (Date.now() < deadline) {
       const text = document.body?.innerText || "";
-      if (
-        sessionId() &&
-        /共\d+行/.test(text) &&
-        document.querySelector(".sheet-table-canvas")
-      ) {
+      const hasCanvas = !!document.querySelector(".sheet-table-canvas");
+      if (sessionId() && /共\d+行/.test(text) && hasCanvas) {
         await sleep(800);
         return;
       }
+      // 页面呈现登录表单（无报表画布）→ 明确未登录，快速失败，便于主面板补登一次
+      if (!hasCanvas && document.querySelector('input[type="password"]')) {
+        throw new Error("【未登录】物资平台未登录：报表被重定向到登录页");
+      }
+      if (
+        !hasCanvas &&
+        Date.now() - startedAt > 5000 &&
+        /(登\s*录|用户名|密\s*码)/.test(text)
+      ) {
+        throw new Error("【未登录】物资平台未登录：报表未加载（检测到登录页特征）");
+      }
       await sleep(300);
     }
-    throw new Error("物料申购跟踪报表加载超时");
+    const text = document.body?.innerText || "";
+    if (/(无权限|无权访问|没有权限|权限不足)/.test(text)) {
+      throw new Error("【无权限】当前账号无权访问“物料申购跟踪”报表");
+    }
+    throw new Error("【未登录】物资平台未登录或报表加载失败（未取得报表会话）");
   };
   const runWorker = async (taskId) => {
     const task = GM_getValue(TASK_KEY, null);
     if (!task || task.id !== taskId) return;
     const responseKey = `${RESPONSE_PREFIX}${taskId}`;
     try {
-      if (document.title !== "物料申购跟踪") {
-        throw new Error("物资平台未登录或无权访问物料申购跟踪");
-      }
       await waitForReport();
       const sid = sessionId();
       // 复用页面已发出的 page/data 资源 URL（含报表实例 cid），逐页拉全量 JSON，不用导出接口
@@ -621,10 +631,11 @@
       last = Date.now();
     };
   })();
-  const queryOrder = async (token, orderNo) => {
+  // 每个申购单号只发起一次平台查询；复用浏览器会话，仅在 worker 明确报【未登录】时补登一次并重试。
+  const queryOrder = async (orderNo, allowRelogin = true) => {
     await pacer();
     const id = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const task = { id, token, orderNo };
+    const task = { id, orderNo };
     const responseKey = `${RESPONSE_PREFIX}${id}`;
     GM_deleteValue(responseKey);
     GM_setValue(TASK_KEY, task);
@@ -639,10 +650,28 @@
         const response = GM_getValue(responseKey, null);
         if (response?.id === id) {
           if (!response.ok) {
-            throw Object.assign(
+            const error = Object.assign(
               new Error(response.error || "报表查询失败"),
               { structural: /【结构异常】/.test(response.error || "") },
             );
+            if (allowRelogin && /未登录/.test(response.error || "")) {
+              GM_deleteValue(responseKey);
+              GM_deleteValue(TASK_KEY);
+              try {
+                tab?.close();
+              } catch {}
+              if (!config.platformPassword) {
+                throw new Error(
+                  "物资平台未登录，且未填写平台密码无法自动补登；请先在浏览器登录华兴平台，或在悬浮窗填写平台密码",
+                );
+              }
+              await loginPlatform();
+              log(
+                `检测到平台未登录，已用 ${config.platformUsername} 补登并重试 ${orderNo}`,
+              );
+              return queryOrder(orderNo, false);
+            }
+            throw error;
           }
           return response.result;
         }
@@ -687,9 +716,9 @@
     ui.status.dataset.kind = kind;
   };
   const credentials = () => {
+    // 平台查询优先复用浏览器现有华兴会话，因此不强制要求平台密码；
+    // 仅在 worker 报告未登录而需自动补登时才会用到平台账号密码。
     const missing = [];
-    if (!config.platformUsername) missing.push("物资平台账号");
-    if (!config.platformPassword) missing.push("物资平台密码");
     if (!config.apiToken) missing.push("接口令牌");
     if (missing.length) throw new Error(`请先填写并保存：${missing.join("、")}`);
   };
@@ -778,8 +807,8 @@
         );
         return;
       }
-      const token = await loginPlatform();
-      log(`物资平台登录成功：${config.platformUsername}`);
+      // 复用浏览器现有华兴会话查询；若 worker 报告未登录，queryOrder 内部会自动补登一次。
+      log("查询将复用浏览器华兴会话；如需补登会使用脚本账号自动登录");
       let orderIndex = 0;
       let aborted = false;
       for (const order of pendingOrders) {
@@ -789,7 +818,7 @@
         const orderTargetsCount = traceNos.length;
         status(`${orderIndex}/${pendingOrders.length} ${orderNo}`, "running");
         try {
-          const perTrace = await queryOrder(token, orderNo);
+          const perTrace = await queryOrder(orderNo);
           const items = [];
           for (const traceNo of traceNos) {
             const result = perTrace[traceNo];
