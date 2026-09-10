@@ -1,59 +1,161 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import { useDialog, useMessage } from 'naive-ui'
 import type { Memo } from '@/api/generated'
 import { memoApi } from '@/api/memos'
+import { useAuthStore } from '@/stores/auth'
 import { formatShanghaiTime } from '@/utils/time'
+import {
+  hasPendingDraft,
+  memoDraftKey,
+  pruneMemoDrafts,
+  readMemoDrafts,
+  removeMemoDraft,
+  writeMemoDraft,
+} from '@/utils/memoDrafts'
 
 const message = useMessage()
 const dialog = useDialog()
+const auth = useAuthStore()
+/** 草稿按用户隔离存储，同一浏览器切换账号不会互相串号。 */
+const userId = auth.user?.id ?? 0
 
 const memos = ref<Memo[]>([])
 const activeId = ref<number | null>(null)
 const loading = ref(true)
+/** 新建请求在途标记：按钮置灰并忽略重复确认，避免连点建出多条空白备忘录。 */
+const creating = ref(false)
 
 interface MemoDraft {
   title: string
   content: string
+  /** 与服务端内容存在差异（未保存）。 */
   dirty: boolean
+  /** 保存请求在途，期间再次点击保存不会重复发请求。 */
   saving: boolean
-  failed: boolean
+  /** 最后一次本地修改时间（epoch ms）。 */
+  editedAt: number
 }
 
-/** 各备忘录的本地草稿（未保存修改也在其中），key = memo id。 */
+/** 各备忘录的工作副本（含未保存修改），key = memo id。 */
 const drafts = reactive(new Map<number, MemoDraft>())
 
-function ensureDraft(id: number, title: string, content: string): MemoDraft {
-  let draft = drafts.get(id)
-  if (!draft) {
-    draft = { title, content, dirty: false, saving: false, failed: false }
-    drafts.set(id, draft)
-  }
-  return draft
-}
+/** 本地草稿写入 IndexedDB 的防抖时间：只落浏览器本地，不产生服务端请求。 */
+const DRAFT_WRITE_DELAY = 300
+const draftTimers = new Map<number, ReturnType<typeof setTimeout>>()
+
+const activeMemo = computed(() => memos.value.find((memo) => memo.id === activeId.value) ?? null)
+const activeDraft = computed(() =>
+  activeId.value == null ? undefined : drafts.get(activeId.value),
+)
 
 function draftOf(id: number): MemoDraft | undefined {
   return drafts.get(id)
 }
 
-const activeDraft = computed(() => (activeId.value == null ? undefined : draftOf(activeId.value)))
-
-/** 顶部 tab 标签：有未保存修改时给出红点提醒。 */
-function isActiveDirty(id: number): boolean {
-  return id === activeId.value && (draftOf(id)?.dirty ?? false)
+/** 抽屉里显示的名称：优先显示本地未保存的标题。 */
+function listTitle(memo: Memo): string {
+  return draftOf(memo.id)?.title.trim() || memo.title
 }
 
-let saveTimer: ReturnType<typeof setTimeout> | null = null
+function isPending(id: number): boolean {
+  return draftOf(id)?.dirty ?? false
+}
+
+/** 为指定备忘录准备工作副本（已有未保存草稿时保持不变）。 */
+function ensureDraft(memo: Memo): MemoDraft {
+  const existing = drafts.get(memo.id)
+  if (existing) return existing
+  const draft: MemoDraft = {
+    title: memo.title,
+    content: memo.content,
+    dirty: false,
+    saving: false,
+    editedAt: Date.now(),
+  }
+  drafts.set(memo.id, draft)
+  return draft
+}
+
+/** 切换当前备忘录：先把上一条的本地草稿落库（纯本地操作，不发请求）。 */
+function activate(id: number | null): void {
+  const previousId = activeId.value
+  if (previousId != null && (draftTimers.has(previousId) || isPending(previousId))) {
+    flushDraft(previousId)
+  }
+  activeId.value = id
+  const memo = memos.value.find((item) => item.id === id)
+  if (memo) ensureDraft(memo)
+}
+
+function flushDraft(id: number): void {
+  const timer = draftTimers.get(id)
+  if (timer) {
+    clearTimeout(timer)
+    draftTimers.delete(id)
+  }
+  const draft = drafts.get(id)
+  if (!draft) return
+  if (!draft.dirty) {
+    void removeMemoDraft(userId, id)
+    return
+  }
+  void writeMemoDraft({
+    key: memoDraftKey(userId, id),
+    userId,
+    memoId: id,
+    title: draft.title,
+    content: draft.content,
+    editedAt: draft.editedAt,
+  })
+}
+
+function scheduleDraftWrite(id: number): void {
+  const timer = draftTimers.get(id)
+  if (timer) clearTimeout(timer)
+  draftTimers.set(
+    id,
+    setTimeout(() => {
+      draftTimers.delete(id)
+      flushDraft(id)
+    }, DRAFT_WRITE_DELAY),
+  )
+}
+
+/** 编辑即标记未保存：只记录本地草稿，是否提交完全由「保存」按钮决定。 */
+function handleEdit(): void {
+  const memo = activeMemo.value
+  const draft = activeDraft.value
+  if (!memo || !draft) return
+  draft.editedAt = Date.now()
+  // 改回与服务端一致的内容时自动取消未保存标记。
+  draft.dirty = hasPendingDraft(draft, memo)
+  scheduleDraftWrite(memo.id)
+}
 
 async function loadMemos(): Promise<void> {
   loading.value = true
   try {
     const list = await memoApi.listMemos()
     memos.value = list
-    for (const memo of list) ensureDraft(memo.id, memo.title, memo.content)
-    if (!activeId.value || !list.some((memo) => memo.id === activeId.value)) {
-      activeId.value = list[0]?.id ?? null
+    // 恢复上次未提交的本地草稿（刷新 / 切换页面后仍能看到未保存内容）。
+    for (const record of await readMemoDrafts(userId)) {
+      const memo = list.find((item) => item.id === record.memoId)
+      if (!memo || !hasPendingDraft(record, memo)) continue
+      drafts.set(record.memoId, {
+        title: record.title,
+        content: record.content,
+        dirty: true,
+        saving: false,
+        editedAt: record.editedAt,
+      })
     }
+    // 服务端已删除的备忘录，草稿一并清理。
+    void pruneMemoDrafts(
+      userId,
+      list.map((item) => item.id),
+    )
+    activate(list[0]?.id ?? null)
   } catch (error) {
     message.error(error instanceof Error ? error.message : '加载备忘录失败')
   } finally {
@@ -61,159 +163,122 @@ async function loadMemos(): Promise<void> {
   }
 }
 
-/** 立即保存指定备忘录（跳过 debounce）。 */
-async function saveMemo(id: number): Promise<void> {
-  const memo = memos.value.find((item) => item.id === id)
-  const draft = drafts.get(id)
-  if (!memo || !draft || !draft.dirty) return
+/** 保存当前备忘录：只有点击「保存」（或 Ctrl+S）才会发出请求。 */
+async function saveActive(): Promise<void> {
+  const memo = activeMemo.value
+  const draft = activeDraft.value
+  // 未修改、或已有保存请求在途时直接返回，杜绝重复 / 并发请求。
+  if (!memo || !draft || !draft.dirty || draft.saving) return
   draft.saving = true
+  const payload = { title: draft.title, content: draft.content }
   try {
-    const updated = await memoApi.updateMemo(id, {
-      title: draft.title,
-      content: draft.content,
-      version: memo.version,
-    })
+    const updated = await memoApi.updateMemo(memo.id, { ...payload, version: memo.version })
     memo.title = updated.title
     memo.content = updated.content
     memo.version = updated.version
     memo.updated_at = updated.updated_at
-    draft.dirty = false
-    draft.failed = false
+    if (draft.title === payload.title && draft.content === payload.content) {
+      // 保存期间没有新输入：同步服务端规范化后的标题并清掉本地草稿。
+      draft.title = updated.title
+      draft.content = updated.content
+      draft.dirty = false
+      flushDraft(memo.id)
+    } else {
+      // 保存期间又改了内容：新修改继续留在本地草稿，等待下次保存。
+      draft.dirty = true
+      scheduleDraftWrite(memo.id)
+    }
   } catch (error) {
-    draft.failed = true
-    message.error(error instanceof Error ? error.message : '保存失败')
+    message.error(error instanceof Error ? error.message : '保存失败，请重试')
   } finally {
     draft.saving = false
   }
 }
 
-function markDirtyAndSchedule(): void {
-  const id = activeId.value
-  if (id == null) return
-  const draft = draftOf(id)
-  if (!draft) return
-  draft.dirty = true
-  draft.failed = false
-  if (saveTimer) clearTimeout(saveTimer)
-  saveTimer = setTimeout(() => {
-    saveTimer = null
-    void saveMemo(id)
-  }, 1000)
+/** 新建备忘录：先弹窗确认，请求在途时按钮置灰并忽略重复确认。 */
+function confirmCreate(): void {
+  if (creating.value) return
+  dialog.info({
+    title: '新建备忘录',
+    content: '将新建一条空白备忘录，确定新建吗？',
+    positiveText: '新建',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      if (creating.value) return false
+      creating.value = true
+      try {
+        const created = await memoApi.createMemo()
+        memos.value.unshift(created)
+        ensureDraft(created)
+        activate(created.id)
+      } catch (error) {
+        message.error(error instanceof Error ? error.message : '新建备忘录失败')
+        return false
+      } finally {
+        creating.value = false
+      }
+    },
+  })
 }
 
-/** 立即保存当前备忘录（状态栏按钮 / Ctrl+S）。 */
-function saveNow(): void {
-  const id = activeId.value
-  if (id == null) return
-  if (saveTimer) {
-    clearTimeout(saveTimer)
-    saveTimer = null
-  }
-  void saveMemo(id)
-}
-
-/** 切换 tab 前先把旧的未保存内容落盘，避免丢修改。 */
-watch(activeId, async (newId, oldId) => {
-  if (oldId != null) {
-    if (saveTimer) {
-      clearTimeout(saveTimer)
-      saveTimer = null
-    }
-    const oldDraft = drafts.get(oldId)
-    if (oldDraft?.dirty) await saveMemo(oldId)
-  }
-  if (newId != null) {
-    const memo = memos.value.find((item) => item.id === newId)
-    if (memo) ensureDraft(memo.id, memo.title, memo.content)
-  }
-})
-
-async function handleAdd(): Promise<void> {
-  const currentId = activeId.value
-  if (currentId != null) {
-    if (saveTimer) {
-      clearTimeout(saveTimer)
-      saveTimer = null
-    }
-    const draft = drafts.get(currentId)
-    if (draft?.dirty) await saveMemo(currentId)
-  }
-  try {
-    const created = await memoApi.createMemo()
-    memos.value.unshift(created)
-    ensureDraft(created.id, created.title, created.content)
-    activeId.value = created.id
-  } catch (error) {
-    message.error(error instanceof Error ? error.message : '新建备忘录失败')
-  }
-}
-
-function handleClose(name: string | number): void {
-  const id = Number(name)
-  const memo = memos.value.find((item) => item.id === id)
+function confirmDelete(memo: Memo | null): void {
   if (!memo) return
-  const hasUnsaved = draftOf(id)?.dirty ?? false
+  const title = listTitle(memo) || '未命名备忘录'
   dialog.warning({
-    draggable: true,
     title: '删除备忘录',
-    content: hasUnsaved
-      ? `「${memo.title}」有尚未保存的修改，删除后不可恢复。确定删除吗？`
-      : `确定删除「${memo.title}」吗？删除后不可恢复。`,
+    content: isPending(memo.id)
+      ? `「${title}」有尚未保存的修改，删除后不可恢复。确定删除吗？`
+      : `确定删除「${title}」吗？删除后不可恢复。`,
     positiveText: '删除',
     negativeText: '取消',
     onPositiveClick: async () => {
       try {
-        await memoApi.deleteMemo(id)
-        drafts.delete(id)
-        const index = memos.value.findIndex((item) => item.id === id)
+        await memoApi.deleteMemo(memo.id)
+        const index = memos.value.findIndex((item) => item.id === memo.id)
         if (index >= 0) memos.value.splice(index, 1)
-        if (memos.value.length === 0) {
-          // 删空后自动补一条空白备忘录，保证页面始终可继续编辑。
-          const created = await memoApi.createMemo()
-          memos.value.push(created)
-          ensureDraft(created.id, created.title, created.content)
-          activeId.value = created.id
-        } else if (activeId.value === id) {
-          activeId.value = memos.value[Math.min(index, memos.value.length - 1)].id
-        } else if (activeId.value === null) {
-          activeId.value = memos.value[0].id
+        const timer = draftTimers.get(memo.id)
+        if (timer) {
+          clearTimeout(timer)
+          draftTimers.delete(memo.id)
+        }
+        drafts.delete(memo.id)
+        void removeMemoDraft(userId, memo.id)
+        if (activeId.value === memo.id) {
+          activate(memos.value[Math.min(index, memos.value.length - 1)]?.id ?? null)
         }
       } catch (error) {
-        message.error(error instanceof Error ? error.message : '删除失败')
+        message.error(error instanceof Error ? error.message : '删除失败，请重试')
         return false
       }
     },
   })
 }
 
-/** 状态栏：正在保存 / 保存失败 / 有未保存修改 / 已保存。 */
+/** 左下角状态：已保存 / 未保存（带时间戳）/ 正在保存。 */
 const saveStatus = computed(() => {
   const draft = activeDraft.value
-  if (!draft) return { type: 'idle', text: '' }
+  if (!draft) return { type: 'saved', text: '' }
   if (draft.saving) return { type: 'saving', text: '正在保存…' }
-  if (draft.failed) return { type: 'error', text: '保存失败，请重试' }
-  if (draft.dirty) return { type: 'dirty', text: '有未保存的修改' }
-  const memo = memos.value.find((item) => item.id === activeId.value)
+  if (draft.dirty) {
+    return {
+      type: 'dirty',
+      text: `未保存 ${formatShanghaiTime(new Date(draft.editedAt).toISOString())}`,
+    }
+  }
+  const memo = activeMemo.value
   return { type: 'saved', text: memo ? `已保存 ${formatShanghaiTime(memo.updated_at)}` : '' }
 })
 
-function onGlobalKeydown(event: KeyboardEvent): void {
+function onEditorKeydown(event: KeyboardEvent): void {
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
     event.preventDefault()
-    saveNow()
+    void saveActive()
   }
 }
 
 onBeforeUnmount(() => {
-  if (saveTimer) {
-    clearTimeout(saveTimer)
-    saveTimer = null
-  }
-  const id = activeId.value
-  if (id != null) {
-    const draft = drafts.get(id)
-    if (draft?.dirty) void saveMemo(id)
-  }
+  // 离开页面时不发服务端请求，只把未保存内容落到本地草稿。
+  for (const id of [...draftTimers.keys()]) flushDraft(id)
 })
 
 void loadMemos()
@@ -225,114 +290,249 @@ void loadMemos()
       <div>
         <h1 class="page-title">备忘录</h1>
       </div>
-      <n-button type="primary" secondary @click="handleAdd">新建备忘录</n-button>
+      <n-button type="primary" :loading="creating" :disabled="creating" @click="confirmCreate">
+        新建备忘录
+      </n-button>
     </div>
 
-    <n-card class="memo-card">
+    <n-card class="memo-card" :content-style="{ padding: '0' }">
       <n-spin :show="loading">
-        <n-empty
-          v-if="!loading && memos.length === 0"
-          size="large"
-          description="还没有备忘录，新建一条开始记录吧"
-        >
-          <template #extra>
-            <n-button type="primary" @click="handleAdd">新建备忘录</n-button>
-          </template>
-        </n-empty>
+        <div class="memo-shell">
+          <aside class="memo-drawer" aria-label="备忘录列表">
+            <div class="memo-drawer-head">
+              <span class="memo-drawer-title">全部备忘录</span>
+              <span class="memo-count">{{ memos.length }}</span>
+            </div>
+            <p v-if="!loading && memos.length === 0" class="memo-drawer-empty">暂无备忘录</p>
+            <ul v-else class="memo-list">
+              <li v-for="memo in memos" :key="memo.id">
+                <button
+                  type="button"
+                  class="memo-item"
+                  :class="{ 'memo-item--active': memo.id === activeId }"
+                  @click="activate(memo.id)"
+                >
+                  <span class="memo-item-title">{{ listTitle(memo) }}</span>
+                  <span class="memo-item-meta">
+                    <span>{{ formatShanghaiTime(memo.updated_at) }}</span>
+                    <span
+                      v-if="isPending(memo.id)"
+                      class="memo-dirty-dot"
+                      title="有尚未保存的修改"
+                    />
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </aside>
 
-        <n-tabs
-          v-else
-          v-model:value="activeId"
-          type="line"
-          closable
-          addable
-          class="memo-tabs"
-          @add="handleAdd"
-          @close="handleClose"
-        >
-          <n-tab-pane v-for="memo in memos" :key="memo.id" :name="memo.id">
-            <template #tab>
-              <span class="memo-tab">
-                <span class="memo-tab-title">{{ draftOf(memo.id)?.title ?? memo.title }}</span>
-                <span v-if="isActiveDirty(memo.id)" class="memo-dirty-dot" title="有未保存的修改" />
-              </span>
-            </template>
+          <section class="memo-pane">
+            <n-empty
+              v-if="activeId === null"
+              class="memo-pane-empty"
+              size="large"
+              description="还没有备忘录，新建一条开始记录吧"
+            >
+              <template #extra>
+                <n-button
+                  type="primary"
+                  :loading="creating"
+                  :disabled="creating"
+                  @click="confirmCreate"
+                >
+                  新建备忘录
+                </n-button>
+              </template>
+            </n-empty>
 
-            <div v-if="activeDraft" class="memo-editor" @keydown="onGlobalKeydown">
+            <div v-else-if="activeDraft" class="memo-editor" @keydown="onEditorKeydown">
               <n-input
                 v-model:value="activeDraft.title"
                 class="memo-title-input"
                 placeholder="备忘录标题"
                 maxlength="64"
                 show-count
-                @update:value="markDirtyAndSchedule"
+                @update:value="handleEdit"
               />
               <n-input
                 v-model:value="activeDraft.content"
                 type="textarea"
                 class="memo-content-input"
-                placeholder="在这里记录纯文本内容，输入后自动保存（Ctrl+S 立即保存）…"
-                :autosize="{ minRows: 12, maxRows: 32 }"
+                placeholder="在这里记录纯文本内容，点击「保存」后才会提交（Ctrl+S 亦可保存）…"
+                :autosize="{ minRows: 12, maxRows: 30 }"
                 maxlength="10000"
                 show-count
-                @update:value="markDirtyAndSchedule"
+                @update:value="handleEdit"
               />
-              <div class="memo-statusbar">
+              <div class="memo-actions">
                 <span class="memo-status" :class="`memo-status--${saveStatus.type}`">
                   {{ saveStatus.text }}
                 </span>
-                <n-button size="small" secondary :disabled="activeDraft.saving" @click="saveNow">
-                  立即保存
-                </n-button>
+                <n-space :size="10" align="center">
+                  <n-button
+                    secondary
+                    type="error"
+                    :disabled="activeDraft.saving"
+                    @click="confirmDelete(activeMemo)"
+                  >
+                    删除
+                  </n-button>
+                  <n-button
+                    type="primary"
+                    :loading="activeDraft.saving"
+                    :disabled="!activeDraft.dirty"
+                    @click="saveActive"
+                  >
+                    保存
+                  </n-button>
+                </n-space>
               </div>
             </div>
-          </n-tab-pane>
-        </n-tabs>
+          </section>
+        </div>
       </n-spin>
     </n-card>
   </div>
 </template>
 
 <style scoped>
-.memo-tabs {
-  min-height: 420px;
+/* 左侧固定抽屉：列表常驻显示，不参与折叠，右侧保留完整编辑区。 */
+.memo-shell {
+  display: flex;
+  align-items: stretch;
+  min-height: 480px;
 }
 
-.memo-tab {
-  display: inline-flex;
+.memo-drawer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 10px;
+  width: 248px;
+  padding: 16px 12px;
+  border-right: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  background: var(--color-surface-soft);
+}
+
+.memo-drawer-head {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  max-width: 220px;
+  justify-content: space-between;
+  padding: 0 6px;
 }
 
-.memo-tab-title {
+.memo-drawer-title {
+  color: var(--color-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.memo-count {
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.memo-drawer-empty {
+  margin: 0;
+  padding: 4px 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.memo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 560px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.memo-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 9px 10px 9px 9px;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.memo-item:hover {
+  background: var(--color-surface);
+}
+
+.memo-item--active {
+  border-color: var(--color-border);
+  border-left-color: var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-text-strong);
+}
+
+.memo-item-title {
   overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.memo-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .memo-dirty-dot {
+  flex: none;
   width: 7px;
   height: 7px;
-  flex: none;
   border-radius: 50%;
   background: var(--color-warning);
+}
+
+.memo-pane {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 20px 18px;
+}
+
+.memo-pane-empty {
+  padding: 70px 0;
 }
 
 .memo-editor {
   display: grid;
   gap: 12px;
-  padding: 14px 4px 4px;
 }
 
 .memo-title-input {
   max-width: 480px;
 }
 
-.memo-statusbar {
+.memo-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -341,12 +541,39 @@ void loadMemos()
   font-size: 13px;
 }
 
-.memo-status--saving,
 .memo-status--dirty {
   color: var(--color-warning);
 }
 
-.memo-status--error {
-  color: var(--color-danger);
+/* 窄屏：抽屉改为内容区上方的横向列表，避免左右挤压。 */
+@media (max-width: 768px) {
+  .memo-shell {
+    flex-direction: column;
+  }
+
+  .memo-drawer {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+
+  .memo-list {
+    flex-direction: row;
+    max-height: none;
+    overflow-x: auto;
+  }
+
+  .memo-item {
+    flex: none;
+    width: 168px;
+    border-left-width: 1px;
+    border-bottom: 3px solid transparent;
+  }
+
+  .memo-item--active {
+    border-bottom-color: var(--color-primary);
+    border-left-color: transparent;
+  }
 }
 </style>
