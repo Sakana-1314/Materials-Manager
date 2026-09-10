@@ -34,10 +34,12 @@
 | 页面背景 | `--color-bg` | `#f4f6fa` |
 | 卡片背景 | `--color-surface` | `#ffffff` |
 | 弱化背景 | `--color-surface-soft` | `#f8faff` |
+| 中性底色 | `--color-surface-muted` | `#ebedef` |
 | 边框 | `--color-border` | `#e2e7ef` |
 | 弱边框 | `--color-border-subtle` | `#edf0f5` |
 
 禁止用绿色表示普通主操作；绿色仅用于完成、启用、正常等成功语义。
+侧栏、抽屉等需要与白色卡片和页面浅蓝底同时拉开层次的区域使用中性底色 `--color-surface-muted`，不使用蓝色系底色。
 
 ### 3.2 圆角与阴影
 

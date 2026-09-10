@@ -285,7 +285,7 @@ void loadMemos()
 </script>
 
 <template>
-  <div class="page">
+  <div class="page memo-page">
     <div class="page-header">
       <div>
         <h1 class="page-title">备忘录</h1>
@@ -396,11 +396,42 @@ void loadMemos()
 </template>
 
 <style scoped>
+/* 页面高度充满窗口（上下保留内容区内边距）。
+   内容区容器的高度由内容撑开，百分比无法生效，因此用视口高度减去
+   「顶栏 + 内容区上下内边距」这层固定框架高度（移动端数值更小，见文末媒体查询）；
+   高度确定后，内部抽屉与编辑区才能撑满窗口并在各自区域内滚动。 */
+.memo-page {
+  --memo-page-chrome: 124px;
+  height: calc(100vh - var(--memo-page-chrome));
+  height: calc(100dvh - var(--memo-page-chrome));
+  /* 窗口过矮时保住可用的编辑高度，由内容区整体滚动 */
+  min-height: 480px;
+}
+
+/* 卡片纵向撑满页面剩余高度，让内部抽屉与编辑区一起充满窗口。
+   n-spin 的包裹层会打断 flex 链，需要一并传递。 */
+.memo-card {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.memo-card :deep(.n-card-content),
+.memo-card :deep(.n-spin-container),
+.memo-card :deep(.n-spin-content) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
 /* 左侧固定抽屉：列表常驻显示，不参与折叠，右侧保留完整编辑区。 */
 .memo-shell {
   display: flex;
+  flex: 1 1 auto;
   align-items: stretch;
-  min-height: 480px;
+  min-height: 0;
 }
 
 .memo-drawer {
@@ -410,9 +441,10 @@ void loadMemos()
   gap: 10px;
   width: 248px;
   padding: 16px 12px;
-  border-right: 1px solid var(--color-border-subtle);
+  overflow: hidden;
+  border-right: 1px solid var(--color-border);
   border-radius: var(--radius-card) 0 0 var(--radius-card);
-  background: var(--color-surface-soft);
+  background: var(--color-surface-muted);
 }
 
 .memo-drawer-head {
@@ -446,9 +478,10 @@ void loadMemos()
 
 .memo-list {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 4px;
-  max-height: 560px;
+  min-height: 0;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -512,6 +545,7 @@ void loadMemos()
 .memo-pane {
   flex: 1;
   min-width: 0;
+  overflow-y: auto;
   padding: 16px 20px 18px;
 }
 
@@ -547,6 +581,11 @@ void loadMemos()
 
 /* 窄屏：抽屉改为内容区上方的横向列表，避免左右挤压。 */
 @media (max-width: 768px) {
+  /* 移动端框架高度：顶栏 56 + 内容区上下内边距 16 / 24 */
+  .memo-page {
+    --memo-page-chrome: 96px;
+  }
+
   .memo-shell {
     flex-direction: column;
   }
@@ -554,14 +593,15 @@ void loadMemos()
   .memo-drawer {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border);
     border-radius: var(--radius-card) var(--radius-card) 0 0;
   }
 
   .memo-list {
+    flex: none;
     flex-direction: row;
-    max-height: none;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .memo-item {
