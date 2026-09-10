@@ -16,6 +16,8 @@
   --color-bg: #f4f6fa;
   --color-surface: #ffffff;
   --color-surface-soft: #f8faff;
+  /* 中性底色：侧边列表、抽屉等需要与白色卡片和页面浅蓝底都拉开层次的区域 */
+  --color-surface-muted: #ebedef;
   --color-border: #e2e7ef;
   --color-border-subtle: #edf0f5;
   --radius-control: 9px;
