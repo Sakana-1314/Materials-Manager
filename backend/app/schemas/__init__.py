@@ -223,6 +223,35 @@ class MiniProgramUserMergeRequest(RequestModel):
     target_version: int
 
 
+class MemoRead(ReadModel):
+    """管理端个人备忘录（纯文本）：一级 tab 快捷切换多条，按创建人隔离。"""
+
+    id: int
+    title: str
+    content: str
+    created_at: UtcDateTime
+    updated_at: UtcDateTime
+    version: int
+
+
+# 单条备忘录纯文本正文上限（字符）。MySQL TEXT 列（utf8mb4）最坏 4 字节/字符，
+# 配 10000 上限可保证落入 64KB 内且足够长文备忘录使用。
+MEMO_CONTENT_MAX_LENGTH = 10000
+
+
+class MemoCreate(RequestModel):
+    title: Annotated[str, StringConstraints(strip_whitespace=True, max_length=64)] = ""
+    content: str = Field(default="", max_length=MEMO_CONTENT_MAX_LENGTH)
+
+
+class MemoUpdate(RequestModel):
+    title: (
+        Annotated[str, StringConstraints(strip_whitespace=True, max_length=64)] | None
+    ) = None
+    content: str | None = Field(default=None, max_length=MEMO_CONTENT_MAX_LENGTH)
+    version: int
+
+
 class MiniProgramLoginResponse(ReadModel):
     access_token: str | None = None
     registration_token: str | None = None

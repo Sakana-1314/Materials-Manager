@@ -9,6 +9,7 @@ from app.api.v1 import (
     huaxing_inventory,
     inventory,
     material_code_library,
+    memos,
     mini_program,
     purchase_materials,
     purchase_plan_templates,
@@ -37,6 +38,7 @@ router.include_router(system_settings.router)
 router.include_router(stock_materials.router)
 router.include_router(inventory.router)
 router.include_router(material_code_library.router)
+router.include_router(memos.router)
 router.include_router(huaxing_inventory.router)
 router.include_router(secondary_warehouse.router)
 router.include_router(mini_program.management_router)

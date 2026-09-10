@@ -19,6 +19,7 @@ from sqlalchemy import (
     Numeric,
     SmallInteger,
     String,
+    Text,
     UniqueConstraint,
     func,
 )
@@ -663,6 +664,39 @@ class BusinessEventLog(Base):
     after_data: Mapped[dict[str, Any] | None] = mapped_column(JSON)
 
 
+class Memo(Base):
+    """管理端个人备忘录：纯文本记录，一级 tab 快捷切换多条。
+
+    按创建人（created_by）隔离：每个登录用户只能看到和操作自己的备忘录，
+    不随系统管理员共享；删除用户时级联删除其备忘录。
+    """
+
+    __tablename__ = "memo"
+
+    id: Mapped[int] = mapped_column(BIGINT_ID, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="未命名备忘录",
+        server_default="未命名备忘录",
+    )
+    content: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
+    created_by: Mapped[int] = mapped_column(
+        BIGINT_ID, ForeignKey("user.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        UTC_DATETIME, default=_utcnow, server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        UTC_DATETIME,
+        default=_utcnow,
+        server_default=func.now(),
+        onupdate=_utcnow,
+        nullable=False,
+    )
+    version: Mapped[int] = mapped_column(UINT, default=1, server_default="1", nullable=False)
+
+
 class SystemSetting(Base):
     """系统设置键值表：替代把配置塞进 business_event_log 的做法。"""
 
@@ -735,6 +769,7 @@ __all__ = [
     "FileObject",
     "HuaXingInventory",
     "LiteInventory",
+    "Memo",
     "MiniProgramUser",
     "PurchaseMaterial",
     "PurchaseMaterialImage",

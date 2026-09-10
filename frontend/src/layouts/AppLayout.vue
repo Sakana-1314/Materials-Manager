@@ -25,7 +25,7 @@ const link = (label: string, name: string) => ({
 })
 
 const menuOptions = computed<MenuOption[]>(() => {
-  const items: MenuOption[] = [link('工作台', 'dashboard')]
+  const items: MenuOption[] = [link('工作台', 'dashboard'), link('备忘录', 'memos')]
   if (settings.isLiteMode) {
     // 精简模式：二级库只有一级 tab（Excel 导入 + 只读查询），与华星总库存同层级。
     items.push(link('二级库', 'warehouse-lite'))

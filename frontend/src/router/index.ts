@@ -44,6 +44,12 @@ const router = createRouter({
           meta: { title: '工作台' },
         },
         {
+          path: 'memos',
+          name: 'memos',
+          component: () => import('@/views/MemosView.vue'),
+          meta: { title: '备忘录' },
+        },
+        {
           path: 'warehouse/materials',
           name: 'stock-materials',
           component: () => import('@/views/warehouse/StockMaterialsView.vue'),
