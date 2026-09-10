@@ -466,6 +466,20 @@ CREATE TABLE IF NOT EXISTS `stock_operation_line` (
   INDEX `ix_operation_line_material_operation` (`stock_material_id`, `operation_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS `memo` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(64) NOT NULL DEFAULT '未命名备忘录',
+  `content` TEXT NOT NULL,
+  `created_by` BIGINT UNSIGNED NOT NULL,
+  `created_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updated_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `version` INT UNSIGNED NOT NULL DEFAULT 1,
+  CONSTRAINT `pk_memo` PRIMARY KEY (`id`),
+  CONSTRAINT `fk_memo_created_by_user`
+    FOREIGN KEY (`created_by`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  INDEX `ix_memo_created_by` (`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- 首次登录账号，默认密码均为 123456。重复导入不会重置已有账号密码。
 SET @admin_api_token = LOWER(CONCAT(HEX(RANDOM_BYTES(4)), '-', HEX(RANDOM_BYTES(2)),
   '-4', SUBSTRING(HEX(RANDOM_BYTES(2)), 2, 3), '-',

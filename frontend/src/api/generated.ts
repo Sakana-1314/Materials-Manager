@@ -82,6 +82,9 @@ export type ShareUpdateRequest = components['schemas']['ShareUpdateRequest']
 export type ShareRead = components['schemas']['ShareRead']
 export type ShareListRead = components['schemas']['ShareListRead']
 export type SharePublicView = components['schemas']['SharePublicView']
+export type Memo = components['schemas']['MemoRead']
+export type MemoCreate = components['schemas']['MemoCreate']
+export type MemoUpdate = components['schemas']['MemoUpdate']
 
 /* ===== 前端自建视图模型 / 泛型 / Literal（openapi 无对应 schema，手写保留） ===== */
 
