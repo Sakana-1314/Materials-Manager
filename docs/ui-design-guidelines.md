@@ -177,6 +177,8 @@
 4. 单页 `<style scoped>` 只保留该页面独有的布局或交互样式。
 5. 颜色必须优先使用 CSS 变量或主题令牌，避免新增硬编码色值。
 6. 新增重复 UI 前先检查 `frontend/src/components` 是否已有可复用组件。
+7. 图标统一使用组件库图标：Naive UI 的 `NIcon` 包裹 `@vicons/ionicons5`（如 `frontend/src/layouts/AppLayout.vue` 的侧栏导航），不手写内联 SVG 或使用字符占位图标。
+   - 图标尺寸与居中交给组件库：`n-menu` 通过 `collapsed-icon-size` / `icon-size` 统一控制，折叠态的水平居中和行内垂直居中由 `n-menu` 计算，不在页面里再用 margin / padding 手工微调。
 
 ## 8. 变更检查清单
 
@@ -187,4 +189,5 @@
 - [ ] 表格卡片是否使用 `data-card`。
 - [ ] 状态色是否符合语义，而非用于普通装饰。
 - [ ] 图片附件是否复用 `ImageUploader`。
+- [ ] 图标是否来自组件库（`NIcon` + `@vicons/ionicons5`），且折叠态菜单图标是否居中。
 - [ ] 是否通过 `npm run build`、`npm run test` 和 `npm run lint`。
