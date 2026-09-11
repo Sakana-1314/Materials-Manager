@@ -26,6 +26,7 @@ const planDate = ref<number | null>(null)
 const purchaseDate = ref<number | null>(null)
 const consolidationDate = ref<number | null>(null)
 const sailingDate = ref<number | null>(null)
+const contractSignDate = ref<number | null>(null)
 const form = reactive<PurchaseRecordWrite>({
   plan_date: '',
   material_code: '',
@@ -49,6 +50,7 @@ const form = reactive<PurchaseRecordWrite>({
   consolidation_date: undefined,
   consolidation_port: '',
   sailing_date: undefined,
+  contract_sign_date: undefined,
   purchase_date: '',
   salesperson: '',
   status: '',
@@ -80,6 +82,7 @@ function syncForm(value: PurchaseRecord) {
     consolidation_date: value.consolidation_date,
     consolidation_port: value.consolidation_port || '',
     sailing_date: value.sailing_date,
+    contract_sign_date: value.contract_sign_date,
     purchase_date: value.purchase_date || '',
     salesperson: value.salesperson || '',
     status: value.status,
@@ -90,6 +93,7 @@ function syncForm(value: PurchaseRecord) {
   purchaseDate.value = dateToTimestamp(value.purchase_date)
   consolidationDate.value = dateToTimestamp(value.consolidation_date)
   sailingDate.value = dateToTimestamp(value.sailing_date)
+  contractSignDate.value = dateToTimestamp(value.contract_sign_date)
   images.value = [...value.images]
 }
 
@@ -130,6 +134,9 @@ async function save() {
         ? toShanghaiDate(consolidationDate.value)
         : undefined,
       sailing_date: sailingDate.value ? toShanghaiDate(sailingDate.value) : undefined,
+      contract_sign_date: contractSignDate.value
+        ? toShanghaiDate(contractSignDate.value)
+        : undefined,
       material_code: form.material_code?.trim() || undefined,
       category: form.category?.trim() || undefined,
       subitem_no: form.subitem_no?.trim() || undefined,
@@ -294,6 +301,14 @@ onMounted(() => void load())
               <n-form-item label="发船日期">
                 <n-date-picker
                   v-model:value="sailingDate"
+                  type="date"
+                  class="full-width"
+                  clearable
+                />
+              </n-form-item>
+              <n-form-item label="合同签订日期">
+                <n-date-picker
+                  v-model:value="contractSignDate"
                   type="date"
                   class="full-width"
                   clearable

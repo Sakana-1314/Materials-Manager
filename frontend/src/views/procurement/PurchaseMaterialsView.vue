@@ -265,6 +265,7 @@ const batchForm = reactive({
   consolidation_date: null as number | null,
   consolidation_port: '',
   sailing_date: null as number | null,
+  contract_sign_date: null as number | null,
   purchase_date: Date.now(),
   salesperson: '',
   status: '已申购',
@@ -844,6 +845,7 @@ function openBatchMove() {
     consolidation_date: null,
     consolidation_port: '',
     sailing_date: null,
+    contract_sign_date: null,
     purchase_date: Date.now(),
     salesperson: '',
     status: '已申购',
@@ -964,6 +966,9 @@ async function batchMove() {
           : undefined,
         consolidation_port: batchForm.consolidation_port.trim() || null,
         sailing_date: batchForm.sailing_date ? toShanghaiDate(batchForm.sailing_date) : undefined,
+        contract_sign_date: batchForm.contract_sign_date
+          ? toShanghaiDate(batchForm.contract_sign_date)
+          : undefined,
         purchase_date: toShanghaiDate(batchForm.purchase_date),
         salesperson: batchForm.salesperson.trim() || undefined,
         status: batchForm.status.trim(),
@@ -1396,6 +1401,14 @@ onBeforeUnmount(() => {
           <n-form-item label="发船日期">
             <n-date-picker
               v-model:value="batchForm.sailing_date"
+              type="date"
+              class="full-width"
+              clearable
+            />
+          </n-form-item>
+          <n-form-item label="合同签订日期">
+            <n-date-picker
+              v-model:value="batchForm.contract_sign_date"
               type="date"
               class="full-width"
               clearable

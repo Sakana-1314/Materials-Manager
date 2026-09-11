@@ -195,6 +195,7 @@ const purchaseRecord = (
     consolidation_date: request.consolidation_date,
     consolidation_port: request.consolidation_port,
     sailing_date: request.sailing_date,
+    contract_sign_date: line.contract_sign_date,
     status: line.status,
     material_code: line.material_code_snapshot,
     category: line.category_snapshot,
@@ -240,6 +241,7 @@ const movePlansToRecords = (materials: typeof purchaseMaterials, body: MovePurch
     subitem_no: material.subitem_no,
     trace_no: body.trace_no,
     salesperson: body.salesperson,
+    contract_sign_date: body.contract_sign_date,
     images: material.images,
   }))
   const purchaseRequest: (typeof purchaseRequests)[number] = {
@@ -1335,6 +1337,10 @@ export const handlers = [
         line.purchase_responsible_snapshot = body.purchase_responsible
       }
       if (body.status !== undefined) line.status = body.status
+      // 合同签订日期为物资级字段（与后端 service 的行级处理保持一致）
+      if (body.contract_sign_date !== undefined) {
+        line.contract_sign_date = body.contract_sign_date ?? undefined
+      }
     }
 
     return HttpResponse.json(
@@ -1426,6 +1432,7 @@ export const handlers = [
         subitem_no: body.subitem_no,
         trace_no: body.trace_no,
         salesperson: body.salesperson,
+        contract_sign_date: body.contract_sign_date,
         images: body.image_ids.map(
           (id) =>
             line.images.find((image) => image.id === id) || {

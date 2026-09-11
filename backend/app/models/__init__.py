@@ -525,6 +525,8 @@ class PurchaseRequestLine(AuditMixin, Base):
     subitem_no: Mapped[str | None] = mapped_column(String(64))
     trace_no: Mapped[str | None] = mapped_column(String(128), index=True)
     salesperson: Mapped[str | None] = mapped_column(String(128))
+    # 合同签订日期为物资级字段：同一申购单下不同物资可分别签订，故挂在行表而非头表。
+    contract_sign_date: Mapped[date | None] = mapped_column(Date)
 
     @validates("usage")
     def _sync_usage_hash(self, _key: str, value: str) -> str:

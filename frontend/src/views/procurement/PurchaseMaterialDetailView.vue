@@ -47,6 +47,7 @@ const moveForm = reactive({
   consolidation_date: null as number | null,
   consolidation_port: '',
   sailing_date: null as number | null,
+  contract_sign_date: null as number | null,
   purchase_date: Date.now(),
   salesperson: '',
   status: '已申购',
@@ -178,6 +179,7 @@ function openMove() {
     consolidation_date: null,
     consolidation_port: '',
     sailing_date: null,
+    contract_sign_date: null,
     purchase_date: Date.now(),
     salesperson: '',
     status: '已申购',
@@ -202,6 +204,9 @@ async function moveToRecord() {
         : undefined,
       consolidation_port: moveForm.consolidation_port.trim() || null,
       sailing_date: moveForm.sailing_date ? toShanghaiDate(moveForm.sailing_date) : undefined,
+      contract_sign_date: moveForm.contract_sign_date
+        ? toShanghaiDate(moveForm.contract_sign_date)
+        : undefined,
       purchase_date: toShanghaiDate(moveForm.purchase_date),
       salesperson: moveForm.salesperson || undefined,
       status: moveForm.status.trim(),
@@ -386,6 +391,14 @@ onMounted(() => void load())
           <n-form-item label="发船日期">
             <n-date-picker
               v-model:value="moveForm.sailing_date"
+              type="date"
+              class="full-width"
+              clearable
+            />
+          </n-form-item>
+          <n-form-item label="合同签订日期">
+            <n-date-picker
+              v-model:value="moveForm.contract_sign_date"
               type="date"
               class="full-width"
               clearable
