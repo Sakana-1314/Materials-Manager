@@ -294,6 +294,7 @@ export interface PurchaseRecordBatchUpdate {
   consolidation_date?: string | null
   consolidation_port?: string | null
   sailing_date?: string | null
+  contract_sign_date?: string | null
   purchase_date?: string | null
   actual_demand_person?: string
   purchase_responsible?: string
@@ -348,6 +349,7 @@ export interface PurchaseRecordWrite {
   consolidation_date?: string
   consolidation_port?: string | null
   sailing_date?: string
+  contract_sign_date?: string
   purchase_date: string
   salesperson?: string
   status: string
@@ -377,6 +379,7 @@ export interface PurchaseRequestLine {
   subitem_no?: string | null
   trace_no?: string | null
   salesperson?: string | null
+  contract_sign_date?: string | null
   images: FileObject[]
 }
 
@@ -408,6 +411,7 @@ export interface MovePurchasePlansWrite {
   consolidation_date?: string
   consolidation_port?: string | null
   sailing_date?: string
+  contract_sign_date?: string
   purchase_date: string
   salesperson?: string
   status: string

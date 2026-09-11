@@ -467,6 +467,7 @@ async def move_to_record(
             "consolidation_date": "2026-07-19",
             "consolidation_port": "上海港",
             "sailing_date": "2026-07-20",
+            "contract_sign_date": "2026-07-15",
             "purchase_date": "2026-07-18",
             "salesperson": salesperson,
             "status": "已申购",
@@ -850,6 +851,7 @@ async def test_plan_number_uses_date_sequence_and_record_keeps_plan_date(
     assert record["consolidation_date"] == "2026-07-19"
     assert record["consolidation_port"] == "上海港"
     assert record["sailing_date"] == "2026-07-20"
+    assert record["contract_sign_date"] == "2026-07-15"
 
 
 @pytest.mark.asyncio
@@ -1101,6 +1103,103 @@ async def test_multiple_plans_can_move_to_one_purchase_record_batch(client: Asyn
     assert remaining.status_code == 200, remaining.text
     assert remaining.json()["purchase_request_id"] == records[1]["purchase_request_id"]
     assert remaining.json()["version"] == records[1]["version"] + 1
+
+
+@pytest.mark.asyncio
+async def test_contract_sign_date_is_line_level_and_batch_editable(client: AsyncClient) -> None:
+    """合同签订日期是物资级字段：逐条可不同，整单共享字段不受影响。"""
+    headers = await auth_headers(client, "purchase")
+    first = await create_purchase_plan(client, headers, "签订日期计划一", code="DQ-SIGN-1")
+    second = await create_purchase_plan(client, headers, "签订日期计划二", code="DQ-SIGN-2")
+
+    moved = await client.post(
+        "/api/v1/purchase-materials/batch-move-to-record",
+        headers=headers,
+        json={
+            "material_ids": [first["id"], second["id"]],
+            "purchase_order_no": "SG-SIGN-001",
+            "purchase_date": "2026-07-18",
+            "status": "已申购",
+            "contract_sign_date": "2026-07-15",
+        },
+    )
+    assert moved.status_code == 200, moved.text
+    records = moved.json()
+    assert len(records) == 2
+    assert {record["contract_sign_date"] for record in records} == {"2026-07-15"}
+
+    # 未填写时保持为空：同一申购单按相同方式转入，但不传该字段
+    blank_plan = await create_purchase_plan(client, headers, "签订日期计划三", code="DQ-SIGN-3")
+    blank_move = await client.post(
+        f"/api/v1/purchase-materials/{blank_plan['id']}/move-to-record",
+        headers=headers,
+        json={"purchase_date": "2026-07-18", "status": "已申购"},
+    )
+    assert blank_move.status_code == 200, blank_move.text
+    assert blank_move.json()["contract_sign_date"] is None
+
+    # 逐条修改：只影响被点击的这条物资
+    changed = await client.patch(
+        f"/api/v1/purchase-records/{records[0]['line_id']}",
+        headers=headers,
+        json={
+            "version": records[0]["version"],
+            "plan_date": records[0]["plan_date"],
+            "material_name": records[0]["material_name"],
+            "model_spec": records[0]["model_spec"],
+            "unit_name": records[0]["unit_name"],
+            "actual_demand_person": records[0]["actual_demand_person"],
+            "purchase_responsible": records[0]["purchase_responsible"],
+            "purchase_qty": records[0]["purchase_qty"],
+            "usage": records[0]["usage"],
+            "status": records[0]["status"],
+            "contract_sign_date": "2026-07-16",
+        },
+    )
+    assert changed.status_code == 200, changed.text
+    assert changed.json()["contract_sign_date"] == "2026-07-16"
+
+    sibling = await client.get(
+        f"/api/v1/purchase-records/{records[1]['line_id']}", headers=headers
+    )
+    assert sibling.status_code == 200, sibling.text
+    assert sibling.json()["contract_sign_date"] == "2026-07-15"
+
+    # 批量修改：勾选后同一申购单下的多条物资一起改
+    batch = await client.patch(
+        "/api/v1/purchase-records/batch",
+        headers=headers,
+        json={
+            "records": [
+                {"line_id": records[0]["line_id"], "version": changed.json()["version"]},
+                {"line_id": records[1]["line_id"], "version": sibling.json()["version"]},
+            ],
+            "contract_sign_date": "2026-07-17",
+        },
+    )
+    assert batch.status_code == 200, batch.text
+    assert {item["contract_sign_date"] for item in batch.json()} == {"2026-07-17"}
+
+    # 清空：传 null 即清除该物资的签订日期
+    cleared = await client.patch(
+        f"/api/v1/purchase-records/{records[0]['line_id']}",
+        headers=headers,
+        json={
+            "version": batch.json()[0]["version"],
+            "plan_date": batch.json()[0]["plan_date"],
+            "material_name": batch.json()[0]["material_name"],
+            "model_spec": batch.json()[0]["model_spec"],
+            "unit_name": batch.json()[0]["unit_name"],
+            "actual_demand_person": batch.json()[0]["actual_demand_person"],
+            "purchase_responsible": batch.json()[0]["purchase_responsible"],
+            "purchase_qty": batch.json()[0]["purchase_qty"],
+            "usage": batch.json()[0]["usage"],
+            "status": batch.json()[0]["status"],
+            "contract_sign_date": None,
+        },
+    )
+    assert cleared.status_code == 200, cleared.text
+    assert cleared.json()["contract_sign_date"] is None
 
 
 @pytest.mark.asyncio

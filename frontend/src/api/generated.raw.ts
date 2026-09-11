@@ -2005,6 +2005,8 @@ export interface components {
             consolidation_port?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /**
              * Purchase Date
              * Format: date
@@ -2064,6 +2066,8 @@ export interface components {
             consolidation_port?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /** Purchase Date */
             purchase_date?: string | null;
             /** Actual Demand Person */
@@ -2849,6 +2853,8 @@ export interface components {
             consolidation_port?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /**
              * Purchase Date
              * Format: date
@@ -3568,6 +3574,8 @@ export interface components {
             consolidation_port?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /** Status */
             status: string;
             /** Material Code */
@@ -3620,7 +3628,7 @@ export interface components {
         /** PurchaseRecordResultExportRequest */
         PurchaseRecordResultExportRequest: {
             /** Columns */
-            columns: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no")[];
+            columns: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "contract_sign_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no")[];
             /** Purchase Order No */
             purchase_order_no?: string | null;
             /** Trace No */
@@ -3652,7 +3660,7 @@ export interface components {
              */
             empty_subitem_no: boolean;
             /** Sort By */
-            sort_by?: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no") | null;
+            sort_by?: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "contract_sign_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no") | null;
             /**
              * Sort Order
              * @default asc
@@ -3816,6 +3824,8 @@ export interface components {
             consolidation_port?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /** Purchase Date */
             purchase_date?: string | null;
             /** Salesperson */
@@ -11275,7 +11285,7 @@ export interface operations {
                 empty_status?: boolean;
                 /** @description 可使用 | 或 ｜ 分隔多个关键词，同一参数内匹配任意关键词 */
                 keyword?: string | null;
-                search_field?: ("plan_no" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "category" | "material_code" | "material_name" | "model_spec" | "unit_name" | "purchase_qty" | "salesperson" | "status" | "purchase_date" | "usage" | "subitem_no" | "plan_remark" | "record_remark") | null;
+                search_field?: ("plan_no" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "contract_sign_date" | "category" | "material_code" | "material_name" | "model_spec" | "unit_name" | "purchase_qty" | "salesperson" | "status" | "purchase_date" | "usage" | "subitem_no" | "plan_remark" | "record_remark") | null;
                 /** @description 可使用 | 或 ｜ 分隔多个关键词，同一参数内匹配任意关键词 */
                 search_value?: string | null;
                 /** @description 可使用 | 或 ｜ 分隔多个关键词，同一参数内匹配任意关键词 */
@@ -11296,7 +11306,7 @@ export interface operations {
                 subitem_no?: string | null;
                 empty_subitem_no?: boolean;
                 ai_expand?: boolean;
-                sort_by?: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no") | null;
+                sort_by?: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "contract_sign_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no") | null;
                 sort_order?: "asc" | "desc";
             };
             header?: never;

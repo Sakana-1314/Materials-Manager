@@ -6191,6 +6191,7 @@ paths:
             - consolidation_date
             - consolidation_port
             - sailing_date
+            - contract_sign_date
             - category
             - material_code
             - material_name
@@ -6342,6 +6343,7 @@ paths:
             - consolidation_date
             - consolidation_port
             - sailing_date
+            - contract_sign_date
             - category
             - demand_department
             - material_name
@@ -7999,6 +8001,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         purchase_date:
           type: string
           format: date
@@ -8165,6 +8173,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         purchase_date:
           anyOf:
           - type: string
@@ -9733,6 +9747,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         purchase_date:
           type: string
           format: date
@@ -11343,6 +11363,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         status:
           type: string
           title: Status
@@ -11464,6 +11490,7 @@ components:
             - consolidation_date
             - consolidation_port
             - sailing_date
+            - contract_sign_date
             - category
             - demand_department
             - material_name
@@ -11478,7 +11505,7 @@ components:
             - images
             - subitem_no
           type: array
-          maxItems: 22
+          maxItems: 23
           minItems: 1
           title: Columns
         purchase_order_no:
@@ -11562,6 +11589,7 @@ components:
             - consolidation_date
             - consolidation_port
             - sailing_date
+            - contract_sign_date
             - category
             - demand_department
             - material_name
@@ -11943,6 +11971,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         purchase_date:
           anyOf:
           - type: string

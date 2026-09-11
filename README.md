@@ -39,3 +39,5 @@ docker compose up -d
 `20260820_narrow_purchase_request_line_unique.sql`（申购记录唯一索引收窄为 usage 哈希）与
 `20260820_drop_redundant_indexes.sql`（删除仅被前导通配 LIKE 查询的无效索引）。
 链接分享功能需要执行 `20260821_add_share_link.sql`（新增匿名分享链接表）。
+申购记录的「合同签订日期」是物资级字段（`purchase_request_line.contract_sign_date`），
+已有库执行 `20260913_add_contract_sign_date.sql`（新增列，历史行为 NULL；新库用 init.sql 即可）。

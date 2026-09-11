@@ -80,6 +80,7 @@ const RECORD_SORTABLE_KEYS: readonly RecordColumnKey[] = [
   'consolidation_date',
   'consolidation_port',
   'sailing_date',
+  'contract_sign_date',
   'category',
   'demand_department',
   'material_name',
@@ -207,6 +208,7 @@ const editPlanDate = ref<number | null>(null)
 const editPurchaseDate = ref<number | null>(null)
 const editConsolidationDate = ref<number | null>(null)
 const editSailingDate = ref<number | null>(null)
+const editContractSignDate = ref<number | null>(null)
 const editImages = ref<FileObject[]>([])
 const editForm = reactive<PurchaseRecordWrite>({
   plan_date: '',
@@ -231,6 +233,7 @@ const editForm = reactive<PurchaseRecordWrite>({
   consolidation_date: undefined,
   consolidation_port: '',
   sailing_date: undefined,
+  contract_sign_date: undefined,
   purchase_date: '',
   salesperson: '',
   status: '',
@@ -303,6 +306,8 @@ const batchEditForm = reactive({
   consolidation_port: '',
   update_sailing_date: false,
   sailing_date: null as number | null,
+  update_contract_sign_date: false,
+  contract_sign_date: null as number | null,
   update_purchase_date: false,
   purchase_date: null as number | null,
   update_actual_demand_person: false,
@@ -332,6 +337,7 @@ type RecordColumnKey =
   | 'consolidation_date'
   | 'consolidation_port'
   | 'sailing_date'
+  | 'contract_sign_date'
   | 'category'
   | 'demand_department'
   | 'material_name'
@@ -440,6 +446,16 @@ const availableColumns: Array<{
       key: 'sailing_date',
       width: tableColumnWidths.date,
       render: (row) => (row.sailing_date ? formatDate(row.sailing_date) : '\\'),
+    },
+  },
+  {
+    key: 'contract_sign_date',
+    label: '合同签订日期',
+    column: {
+      title: '合同签订日期',
+      key: 'contract_sign_date',
+      width: tableColumnWidths.date,
+      render: (row) => (row.contract_sign_date ? formatDate(row.contract_sign_date) : '\\'),
     },
   },
   {
@@ -574,6 +590,7 @@ const optionalShippingColumnKeys = new Set<RecordColumnKey>([
   'consolidation_date',
   'consolidation_port',
   'sailing_date',
+  'contract_sign_date',
 ])
 const visibleColumnKeys = ref<RecordColumnKey[]>(
   availableColumns
@@ -753,6 +770,7 @@ function syncEditForm(value: PurchaseRecord) {
     consolidation_date: value.consolidation_date,
     consolidation_port: value.consolidation_port || '',
     sailing_date: value.sailing_date,
+    contract_sign_date: value.contract_sign_date,
     purchase_date: value.purchase_date || '',
     salesperson: value.salesperson || '',
     status: value.status,
@@ -763,6 +781,7 @@ function syncEditForm(value: PurchaseRecord) {
   editPurchaseDate.value = dateToTimestamp(value.purchase_date)
   editConsolidationDate.value = dateToTimestamp(value.consolidation_date)
   editSailingDate.value = dateToTimestamp(value.sailing_date)
+  editContractSignDate.value = dateToTimestamp(value.contract_sign_date)
   editImages.value = [...value.images]
 }
 
@@ -905,6 +924,9 @@ async function saveEditRecord() {
         ? toShanghaiDate(editConsolidationDate.value)
         : undefined,
       sailing_date: editSailingDate.value ? toShanghaiDate(editSailingDate.value) : undefined,
+      contract_sign_date: editContractSignDate.value
+        ? toShanghaiDate(editContractSignDate.value)
+        : undefined,
       material_code: editForm.material_code?.trim() || undefined,
       category: editForm.category?.trim() || undefined,
       subitem_no: editForm.subitem_no?.trim() || undefined,
@@ -951,6 +973,8 @@ function openBatchEdit() {
     consolidation_port: '',
     update_sailing_date: false,
     sailing_date: null,
+    update_contract_sign_date: false,
+    contract_sign_date: null,
     update_purchase_date: false,
     purchase_date: null,
     update_actual_demand_person: false,
@@ -1004,6 +1028,11 @@ async function batchUpdate() {
   if (batchEditForm.update_sailing_date) {
     payload.sailing_date = batchEditForm.sailing_date
       ? toShanghaiDate(batchEditForm.sailing_date)
+      : null
+  }
+  if (batchEditForm.update_contract_sign_date) {
+    payload.contract_sign_date = batchEditForm.contract_sign_date
+      ? toShanghaiDate(batchEditForm.contract_sign_date)
       : null
   }
   if (batchEditForm.update_purchase_date) {
@@ -1363,6 +1392,20 @@ onMounted(() => {
             </n-form-item>
             <n-form-item>
               <template #label>
+                <n-checkbox v-model:checked="batchEditForm.update_contract_sign_date">
+                  修改合同签订日期
+                </n-checkbox>
+              </template>
+              <n-date-picker
+                v-model:value="batchEditForm.contract_sign_date"
+                type="date"
+                class="full-width"
+                clearable
+                :disabled="!batchEditForm.update_contract_sign_date"
+              />
+            </n-form-item>
+            <n-form-item>
+              <template #label>
                 <n-checkbox v-model:checked="batchEditForm.update_purchase_date">
                   修改申购日期
                 </n-checkbox>
@@ -1577,6 +1620,14 @@ onMounted(() => {
                 <n-form-item label="发船日期">
                   <n-date-picker
                     v-model:value="editSailingDate"
+                    type="date"
+                    class="full-width"
+                    clearable
+                  />
+                </n-form-item>
+                <n-form-item label="合同签订日期">
+                  <n-date-picker
+                    v-model:value="editContractSignDate"
                     type="date"
                     class="full-width"
                     clearable

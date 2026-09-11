@@ -48,6 +48,7 @@ def purchase_record_read(line: PurchaseRequestLine) -> PurchaseRecordRead:
         consolidation_date=request.consolidation_date,
         consolidation_port=request.consolidation_port,
         sailing_date=request.sailing_date,
+        contract_sign_date=line.contract_sign_date,
         status=line.status,
         material_code=line.material_code_snapshot,
         category=line.category_snapshot,
@@ -168,6 +169,7 @@ async def move_plans_to_record(
             subitem_no=material.subitem_no,
             trace_no=data.trace_no or None,
             salesperson=data.salesperson,
+            contract_sign_date=data.contract_sign_date,
             images=_line_images([link.file for link in material.images]),
         )
         for material in materials
@@ -225,6 +227,7 @@ async def update_purchase_record(
     request.sailing_date = data.sailing_date
     request.purchase_date = data.purchase_date
     line.salesperson = data.salesperson
+    line.contract_sign_date = data.contract_sign_date
     request.remark = data.record_remark
     request.version += 1
     line.plan_date_snapshot = data.plan_date
@@ -341,6 +344,9 @@ async def batch_update_purchase_records(
             line.version += 1
         if "salesperson" in update_fields:
             line.salesperson = data.salesperson
+            line.version += 1
+        if "contract_sign_date" in update_fields:
+            line.contract_sign_date = data.contract_sign_date
             line.version += 1
         updated.append(line)
 

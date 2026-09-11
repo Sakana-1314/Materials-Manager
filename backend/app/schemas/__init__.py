@@ -1207,6 +1207,7 @@ class MovePurchasePlanRequest(RequestModel):
         Annotated[str, StringConstraints(strip_whitespace=True, max_length=128)] | None
     ) = None
     sailing_date: date | None = None
+    contract_sign_date: date | None = None
     purchase_date: date
     salesperson: (
         Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)]
@@ -1331,6 +1332,7 @@ class PurchaseRecordUpdate(RequestModel):
         Annotated[str, StringConstraints(strip_whitespace=True, max_length=128)] | None
     ) = None
     sailing_date: date | None = None
+    contract_sign_date: date | None = None
     purchase_date: date | None = None
     salesperson: (
         Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)]
@@ -1374,6 +1376,7 @@ class BatchUpdatePurchaseRecordsRequest(RequestModel):
         Annotated[str, StringConstraints(strip_whitespace=True, max_length=128)] | None
     ) = None
     sailing_date: date | None = None
+    contract_sign_date: date | None = None
     purchase_date: date | None = None
     actual_demand_person: (
         Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)]
@@ -1412,6 +1415,7 @@ class BatchUpdatePurchaseRecordsRequest(RequestModel):
             "consolidation_date",
             "consolidation_port",
             "sailing_date",
+            "contract_sign_date",
             "purchase_date",
             "actual_demand_person",
             "purchase_responsible",
@@ -1442,6 +1446,7 @@ class PurchaseRecordRead(ReadModel):
     consolidation_date: date | None = None
     consolidation_port: str | None = None
     sailing_date: date | None = None
+    contract_sign_date: date | None = None
     status: str
     material_code: str | None = None
     category: str | None = None
@@ -1475,6 +1480,7 @@ PurchaseRecordResultColumn = Literal[
     "consolidation_date",
     "consolidation_port",
     "sailing_date",
+    "contract_sign_date",
     "category",
     "demand_department",
     "material_name",
@@ -1492,7 +1498,7 @@ PurchaseRecordResultColumn = Literal[
 
 
 class PurchaseRecordResultExportRequest(RequestModel):
-    columns: list[PurchaseRecordResultColumn] = Field(min_length=1, max_length=22)
+    columns: list[PurchaseRecordResultColumn] = Field(min_length=1, max_length=23)
     purchase_order_no: str | None = Field(default=None, max_length=255)
     trace_no: str | None = Field(default=None, max_length=255)
     category: str | None = Field(default=None, max_length=64)
