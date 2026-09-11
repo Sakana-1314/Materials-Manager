@@ -33,7 +33,13 @@ export const toShanghaiDate = (timestamp: number): string => {
   return `${value('year')}-${value('month')}-${value('day')}`
 }
 
-export const dateToTimestamp = (value?: string | null): number =>
-  value ? new Date(`${value}T00:00:00+08:00`).getTime() : Date.now()
+/**
+ * 日期字符串（YYYY-MM-DD）→ 东八区当日零点时间戳。
+ *
+ * 空值必须返回 null：可选日期（集港日期、发船日期等）留空时日期选择器应保持为空，
+ * 不能默认成今天——否则打开一条未填写该字段的记录就会看到“今日日期”，直接保存还会把今天写进库里。
+ */
+export const dateToTimestamp = (value?: string | null): number | null =>
+  value ? new Date(`${value}T00:00:00+08:00`).getTime() : null
 
 export const formatDate = (value?: string): string => (value ? value.replace(/-/g, '/') : '—')
