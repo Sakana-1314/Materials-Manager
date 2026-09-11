@@ -72,6 +72,8 @@ _SYNC_FIELD_CONDITIONS: dict[str, Any] = {
         func.trim(PurchaseRequest.consolidation_port) == "",
     ),
     "sailing_date": PurchaseRequest.sailing_date.is_(None),
+    # 物资级字段（行表）：仅当该行未填写签订日期时才需要外部平台补全。
+    "contract_sign_date": PurchaseRequestLine.contract_sign_date.is_(None),
 }
 
 

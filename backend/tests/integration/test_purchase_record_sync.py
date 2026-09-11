@@ -12,7 +12,9 @@ from tests.integration.test_procurement import create_purchase_plan
 pytestmark = pytest.mark.asyncio
 
 
-async def _move_plan(client, headers, plan_id, trace_no, *, purchase_order_no="SYNC-PO"):
+async def _move_plan(
+    client, headers, plan_id, trace_no, *, purchase_order_no="SYNC-PO", contract_sign_date=None
+):
     response = await client.post(
         f"/api/v1/purchase-materials/{plan_id}/move-to-record",
         headers=headers,
@@ -24,6 +26,7 @@ async def _move_plan(client, headers, plan_id, trace_no, *, purchase_order_no="S
             "consolidation_date": None,
             "consolidation_port": None,
             "sailing_date": None,
+            "contract_sign_date": contract_sign_date,
             "purchase_date": "2026-07-18",
             "salesperson": None,
             "status": "已申购",
@@ -336,6 +339,53 @@ async def test_sync_order_apply_writes_whole_order_in_one_call(client) -> None:
     assert rec_a["contract_no"] == "HT-WRITE"
     assert rec_a["salesperson"] == "王经理"
     assert rec_a["status"] == "已采购"
+
+
+async def test_sync_contract_sign_date_is_line_level_and_only_fills_empty(client) -> None:
+    """合同签订日期（平台「合同签订时间」）为物资级字段：只补空值、按追溯号逐行写。"""
+    headers = await auth_headers(client, "purchase")
+    motor_a = await create_purchase_plan(client, headers, "签订日期同步A", code="SIGN-A")
+    record_a = await _move_plan(client, headers, int(motor_a["id"]), "TR-SIGN-A")
+    motor_b = await create_purchase_plan(client, headers, "签订日期同步B", code="SIGN-B")
+    record_b = await _move_plan(
+        client, headers, int(motor_b["id"]), "TR-SIGN-B", contract_sign_date="2026-07-01"
+    )
+
+    # 该字段可单独作为待补全字段筛选：已填写签订日期的行不再是目标
+    targets = await _targets(client, headers, fields="contract_sign_date")
+    assert [item["trace_no"] for item in targets["items"]] == ["TR-SIGN-A"]
+
+    # 整单回写（新脚本路径）：A 补空、B 的人工值不被覆盖
+    result = await _apply_order(
+        client,
+        headers,
+        "SYNC-PO",
+        [
+            {"trace_no": "TR-SIGN-A", "contract_sign_date": "2026-08-20"},
+            {"trace_no": "TR-SIGN-B", "contract_sign_date": "2026-08-21"},
+        ],
+    )
+    assert result == {
+        "applied": 2,
+        "not_found": 0,
+        "affected_headers": 0,
+        "affected_lines": 1,
+    }
+
+    rec_a = await _record(client, headers, record_a["line_id"])
+    assert rec_a["contract_sign_date"] == "2026-08-20"
+    rec_b = await _record(client, headers, record_b["line_id"])
+    assert rec_b["contract_sign_date"] == "2026-07-01"
+
+    # 幂等：再次回写同一字段不产生变更
+    repeat = await _apply_trace(client, headers, "TR-SIGN-A", {"contract_sign_date": "2026-09-09"})
+    assert repeat == {"affected_headers": 0, "affected_lines": 0}
+    rec_a = await _record(client, headers, record_a["line_id"])
+    assert rec_a["contract_sign_date"] == "2026-08-20"
+
+    # 补全后该字段不再产生待同步目标
+    targets = await _targets(client, headers, fields="contract_sign_date")
+    assert targets["items"] == []
 
 
 async def test_sync_order_apply_counts_unknown_trace(client) -> None:

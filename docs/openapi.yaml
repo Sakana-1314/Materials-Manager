@@ -11728,6 +11728,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         status:
           anyOf:
           - type: string
@@ -11832,6 +11838,12 @@ components:
             format: date
           - type: 'null'
           title: Sailing Date
+        contract_sign_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Contract Sign Date
         status:
           anyOf:
           - type: string

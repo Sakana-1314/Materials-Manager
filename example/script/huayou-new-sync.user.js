@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         华友印尼数据平台同步脚本
 // @namespace    https://materials-manager.qcloud.19890605.xyz/
-// @version      3.2.2
-// @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
+// @version      3.3.0
+// @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号、合同签订日期和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
 // @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
 // @downloadURL  https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/example/script/huayou-new-sync.user.js
@@ -24,7 +24,24 @@
   const PLATFORM_ORIGIN = "http://43.154.152.157:8080";
   const PLATFORM_BASE = `${PLATFORM_ORIGIN}/webroot/decision`;
   const MATERIALS_API = "https://materials-manager.qcloud.19890605.xyz/api/v1";
-  const SYNC_FIELDS = "contract_no,vessel_no,salesperson,status";
+  const SYNC_FIELDS = "contract_no,vessel_no,salesperson,status,contract_sign_date";
+  // 后端旧版本不认识新增同步字段（返回“未知同步字段”）：降级为旧字段列表继续同步，
+  // 避免脚本先于服务端更新时整批中断。
+  const LEGACY_SYNC_FIELDS = "contract_no,vessel_no,salesperson,status";
+  const SIGN_DATE_FIELD = "contract_sign_date";
+  // 平台“物料申购跟踪”报表里的合同签订日期列。列名来自真实 HAR（page/data）：
+  // 该报表第 32 列（1-based）紧跟“采购合同号”之后，表头文本为「合同签订时间」；
+  // 其余候选用于兼容平台模板的轻微改名。
+  const CONTRACT_SIGN_DATE_COLUMNS = [
+    "合同签订时间",
+    "合同签订日期",
+    "签订日期",
+    "合同日期",
+  ];
+  // 报表解析（worker 页内）命中的列名；空表示该报表没有合同签订日期列。
+  let contractSignDateColumn = "";
+  // 服务端是否支持新增同步字段：被拒（旧后端）时置 false，自动降级为旧字段列表。
+  let signDateSyncSupported = true;
   const VIEWLET =
     "%252F%25E6%2595%25B0%25E6%258D%25AE%25E5%2588%2586%25E6%259E%2590" +
     "%252F%25E4%25BB%2593%25E5%2582%25A8%25E7%25AE%25A1%25E7%2590%2586" +
@@ -83,6 +100,26 @@
   const joined = (values) => {
     const value = [...new Set(values.map(clean).filter(Boolean))].join(" / ");
     return value.length <= 128 ? value : `${value.slice(0, 127)}…`;
+  };
+  // 报表里的日期列解析为 ISO 日期（YYYY-MM-DD）：平台可能给「2026-08-20」「2026/8/20」
+  // 「2026年8月20日」「2026-08-20 00:00:00」或「20260820」，后端只接受 ISO 日期。
+  // 无法识别的值（如平台返回未格式化的日期序列号）一律返回空串——宁可不填，也不写错日期。
+  const toIsoDate = (value) => {
+    const text = clean(value);
+    if (!text) return "";
+    const parts = text.match(/^(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+    if (parts) {
+      const [, year, month, day] = parts;
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+    const compact = text.match(/^(\d{4})(\d{2})(\d{2})$/);
+    if (compact) return `${compact[1]}-${compact[2]}-${compact[3]}`;
+    return "";
+  };
+  // 同一追溯号可能有多批次行：日期取最新的有效值（与何佳脚本一致）。
+  const latestDate = (values) => {
+    const dates = values.map(toIsoDate).filter(Boolean).sort();
+    return dates.at(-1) || "";
   };
   const sleep = (milliseconds) =>
     new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -317,6 +354,8 @@
     salesperson: joined(rows.map((row) => row["采购人"])),
     contractNo: joined(rows.map((row) => row["采购合同号"])),
     vesselNo: joined(rows.map((row) => row["船名"])),
+    // 合同签订日期为物资级字段：按追溯号（行）回写，后端只补空值。
+    contractSignDate: latestDate(rows.map((row) => row[contractSignDateColumn])),
     status: progressStatus(rows, quantityRows),
   });
   // 按申购单号查询一次，返回该单下每个追溯码的聚合结果（追溯码 -> 结果）。
@@ -325,6 +364,9 @@
       throw structuralError("导出内容缺少“序号”表头，可能未登录或报表模板已变化");
     }
     const sections = reportSections(text);
+    // 报表可能分多个 canvas 块（表头重复），逐个块的表头里找一个命中的列名。
+    const headerNames = [...new Set(sections.flatMap((section) => section.headers))];
+    contractSignDateColumn = CONTRACT_SIGN_DATE_COLUMNS.find((name) => headerNames.includes(name)) || "";
     const trackingRows = [];
     const quantityRows = [];
     for (const section of sections) {
@@ -495,7 +537,12 @@
       }
       if (!allRows.length) {
         // 表头正常但无任何数据行：该申购单在平台无记录，返回空结果（不终止整批）
-        GM_setValue(responseKey, { id: taskId, ok: true, result: {} });
+        GM_setValue(responseKey, {
+          id: taskId,
+          ok: true,
+          result: {},
+          contractSignDateColumn: CONTRACT_SIGN_DATE_COLUMNS.find((name) => header.includes(name)) || "",
+        });
         return;
       }
       const text = [
@@ -506,6 +553,8 @@
         id: taskId,
         ok: true,
         result: parseOrderReport(text),
+        // 上报命中的列名（空 = 报表没有合同签订日期列），供主脚本提示一次
+        contractSignDateColumn,
       });
     } catch (error) {
       GM_setValue(responseKey, {
@@ -553,12 +602,28 @@
     const limit = int(config.batchSize, 30, 1, 200);
     const cursor = Number(GM_getValue(key("cursor"), 0)) || 0;
     const minPo = clean(config.minPurchaseOrderNo);
-    const base = `${MATERIALS_API}/purchase-record-sync/order-targets?limit=${limit}&cursor=${cursor}&fields=${encodeURIComponent(SYNC_FIELDS)}`;
-    const url = minPo ? `${base}&min_purchase_order_no=${encodeURIComponent(minPo)}` : base;
-    const result = requireShape(
-      await apiRequest({ method: "GET", url }),
-      "整单目标接口",
-    );
+    const fields = () => (signDateSyncSupported ? SYNC_FIELDS : LEGACY_SYNC_FIELDS);
+    const targetsUrl = (fieldList) => {
+      const base = `${MATERIALS_API}/purchase-record-sync/order-targets?limit=${limit}&cursor=${cursor}&fields=${encodeURIComponent(fieldList)}`;
+      return minPo ? `${base}&min_purchase_order_no=${encodeURIComponent(minPo)}` : base;
+    };
+    let payload;
+    try {
+      payload = await apiRequest({ method: "GET", url: targetsUrl(fields()) });
+    } catch (error) {
+      // 服务端尚未更新（不认识 contract_sign_date）时降级为旧字段列表，本次同步其余字段照常。
+      if (signDateSyncSupported && /未知同步字段/.test(error?.message || "")) {
+        signDateSyncSupported = false;
+        log(
+          "服务端暂不支持合同签订日期字段（未知同步字段），已降级为旧字段同步；请更新后端后重试",
+          "warn",
+        );
+        payload = await apiRequest({ method: "GET", url: targetsUrl(fields()) });
+      } else {
+        throw error;
+      }
+    }
+    const result = requireShape(payload, "整单目标接口");
     if (!Array.isArray(result.items))
       throw structuralError("整单目标接口缺少 items 数组");
     for (const item of result.items) {
@@ -688,7 +753,8 @@
             }
             throw error;
           }
-          return response.result;
+          // 返回完整响应：result（追溯号 → 结果）+ contractSignDateColumn（命中的平台列名）
+          return response;
         }
         await sleep(400);
       }
@@ -742,6 +808,7 @@
       ["采购人", result.salesperson],
       ["状态", result.status],
       ["合同号", result.contractNo],
+      ["合同签订日期", result.contractSignDate],
       ["船名", result.vesselNo],
     ]
       .filter(([, value]) => value)
@@ -754,6 +821,8 @@
       ["vessel_no", result.vesselNo],
       ["salesperson", result.salesperson],
       ["status", result.status],
+      // 旧后端不支持该字段时跳过，避免整单回写被 422 拒绝
+      ...(signDateSyncSupported ? [[SIGN_DATE_FIELD, result.contractSignDate]] : []),
     ]) {
       if (value) payload[field] = value;
     }
@@ -853,6 +922,7 @@
       log("查询将复用浏览器平台会话；如需补登会使用脚本账号自动登录");
       let orderIndex = 0;
       let aborted = false;
+      let signDateColumnWarned = false;
       for (const order of pendingOrders) {
         orderIndex += 1;
         const orderNo = clean(order.purchase_order_no);
@@ -860,7 +930,15 @@
         const orderTargetsCount = traceNos.length;
         status(`${orderIndex}/${pendingOrders.length} ${orderNo}`, "running");
         try {
-          const perTrace = await queryOrder(orderNo);
+          const queryResult = await queryOrder(orderNo);
+          const perTrace = queryResult.result || {};
+          if (!queryResult.contractSignDateColumn && !signDateColumnWarned) {
+            signDateColumnWarned = true;
+            log(
+              `平台报表未包含合同签订日期列（候选：${CONTRACT_SIGN_DATE_COLUMNS.join("、")}），本次不同步该字段，其余字段照常同步`,
+              "warn",
+            );
+          }
           const items = [];
           for (const traceNo of traceNos) {
             const result = perTrace[traceNo];

@@ -3722,6 +3722,8 @@ export interface components {
             consolidation_date?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /** Status */
             status?: string | null;
             /** Trace No */
@@ -3769,6 +3771,8 @@ export interface components {
             consolidation_date?: string | null;
             /** Sailing Date */
             sailing_date?: string | null;
+            /** Contract Sign Date */
+            contract_sign_date?: string | null;
             /** Status */
             status?: string | null;
         };
