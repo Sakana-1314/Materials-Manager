@@ -1,7 +1,31 @@
 <script setup lang="ts">
-import { computed, h, ref } from 'vue'
+import { computed, h, ref, type Component as VueComponent } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
-import type { MenuOption } from 'naive-ui'
+import { NIcon, type MenuOption } from 'naive-ui'
+import {
+  AlertCircleOutline,
+  ArrowDownCircleOutline,
+  ArrowUpCircleOutline,
+  BarcodeOutline,
+  BusinessOutline,
+  CalendarOutline,
+  CartOutline,
+  ClipboardOutline,
+  CubeOutline,
+  DocumentTextOutline,
+  FolderOpenOutline,
+  GridOutline,
+  InformationCircleOutline,
+  LinkOutline,
+  MenuOutline,
+  OptionsOutline,
+  PeopleOutline,
+  PhonePortraitOutline,
+  ReceiptOutline,
+  SearchOutline,
+  SettingsOutline,
+  SwapHorizontalOutline,
+} from '@vicons/ionicons5'
 import { useMediaQuery } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
 import { useSettingsStore } from '@/stores/settings'
@@ -19,50 +43,65 @@ const drawerOpen = ref(false)
 const closeDrawer = () => {
   drawerOpen.value = false
 }
-const link = (label: string, name: string) => ({
+/** 统一用组件库图标（Naive UI 的 NIcon + @vicons/ionicons5），尺寸与居中由 n-menu 控制。 */
+const renderIcon = (icon: VueComponent) => () => h(NIcon, null, { default: () => h(icon) })
+
+const link = (label: string, name: string, icon: VueComponent) => ({
   label: () => h(RouterLink, { to: { name }, onClick: closeDrawer }, { default: () => label }),
   key: name,
+  icon: renderIcon(icon),
 })
 
 const menuOptions = computed<MenuOption[]>(() => {
-  const items: MenuOption[] = [link('工作台', 'dashboard'), link('备忘录', 'memos')]
+  const items: MenuOption[] = [
+    link('工作台', 'dashboard', GridOutline),
+    link('备忘录', 'memos', DocumentTextOutline),
+  ]
   if (settings.isLiteMode) {
     // 精简模式：二级库只有一级 tab（Excel 导入 + 只读查询），与华星总库存同层级。
-    items.push(link('二级库', 'warehouse-lite'))
+    items.push(link('二级库', 'warehouse-lite', CubeOutline))
   } else {
     items.push({
       label: '二级库',
       key: 'warehouse-group',
+      icon: renderIcon(CubeOutline),
       children: [
-        link('库存查询', 'stock'),
-        link('物资档案', 'stock-materials'),
-        link('操作记录', 'operations'),
-        ...(auth.can('warehouse:write') ? [link('入库', 'inbound'), link('出库', 'outbound')] : []),
+        link('库存查询', 'stock', SearchOutline),
+        link('物资档案', 'stock-materials', FolderOpenOutline),
+        link('操作记录', 'operations', SwapHorizontalOutline),
+        ...(auth.can('warehouse:write')
+          ? [
+              link('入库', 'inbound', ArrowDownCircleOutline),
+              link('出库', 'outbound', ArrowUpCircleOutline),
+            ]
+          : []),
       ],
     })
   }
-  items.push(link('华星总库存', 'hua-xing-stock'))
+  items.push(link('华星总库存', 'hua-xing-stock', BusinessOutline))
   items.push({
     label: '申购管理',
     key: 'procurement-group',
+    icon: renderIcon(CartOutline),
     children: [
-      link('申购计划', 'purchase-materials'),
-      link('周期性计划', 'purchase-plan-templates'),
-      link('未编码物资', 'uncoded-materials'),
-      link('物料编码库', 'material-code-library'),
-      link('申购记录', 'purchase-records'),
+      link('申购计划', 'purchase-materials', ClipboardOutline),
+      link('周期性计划', 'purchase-plan-templates', CalendarOutline),
+      link('未编码物资', 'uncoded-materials', AlertCircleOutline),
+      link('物料编码库', 'material-code-library', BarcodeOutline),
+      link('申购记录', 'purchase-records', ReceiptOutline),
     ],
   })
   if (auth.can('settings:write'))
     items.push({
       label: '系统管理',
       key: 'settings-group',
+      icon: renderIcon(SettingsOutline),
       children: [
-        link('管理端用户', 'users'),
-        link('小程序用户', 'mini-program-users'),
-        link('高级设置', 'advanced-settings'),
-        link('分享链接', 'share-links'),
-        link('关于', 'about'),
+        link('管理端用户', 'users', PeopleOutline),
+        link('小程序用户', 'mini-program-users', PhonePortraitOutline),
+        link('高级设置', 'advanced-settings', OptionsOutline),
+        link('分享链接', 'share-links', LinkOutline),
+        link('关于', 'about', InformationCircleOutline),
       ],
     })
   return items
@@ -109,18 +148,7 @@ function logout() {
             aria-label="打开导航菜单"
             @click="drawerOpen = true"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              aria-hidden="true"
-            >
-              <path d="M3 6h18M3 12h18M3 18h18" />
-            </svg>
+            <n-icon :size="20"><MenuOutline /></n-icon>
           </button>
           <n-breadcrumb>
             <n-breadcrumb-item v-if="!isMobile">备件管理</n-breadcrumb-item>
