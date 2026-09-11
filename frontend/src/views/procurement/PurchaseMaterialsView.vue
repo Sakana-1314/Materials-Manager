@@ -220,7 +220,8 @@ const tableAreaRef = ref<HTMLElement | null>(null)
 const isTableFullscreen = ref(false)
 const formRef = ref<FormInst | null>(null)
 const images = ref<FileObject[]>([])
-const createPlanDate = ref(Date.now())
+// 打开新建/编辑时由 openCreate（默认今天）/openEdit（取记录值）赋值，避免组件挂载即固定日期。
+const createPlanDate = ref<number | null>(null)
 const createAdvancedSections = ref<string[]>([])
 const filterOptions = ref<PurchaseFilterOptions>({
   actual_demand_persons: [],
@@ -751,7 +752,8 @@ function applyMaterialCode(item: MaterialCodeLibrary) {
   form.unit_name = item.unit_name
 }
 async function save() {
-  if (!createPlanDate.value) {
+  const planDate = createPlanDate.value
+  if (!planDate) {
     message.error('请选择需求日期')
     return
   }
@@ -761,7 +763,7 @@ async function save() {
     form.image_ids = images.value.map((x) => x.id)
     const payload = {
       ...form,
-      plan_date: toShanghaiDate(createPlanDate.value),
+      plan_date: toShanghaiDate(planDate),
       subitem_no: form.subitem_no?.trim() || undefined,
     }
     if (editing.value) {
