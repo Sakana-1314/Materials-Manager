@@ -43,6 +43,7 @@ _SYNC_FIELDS = frozenset(
         "consolidation_port",
         "consolidation_date",
         "sailing_date",
+        "contract_sign_date",
         "status",
     }
 )
@@ -177,6 +178,10 @@ def _apply_mutation(
             and _is_blank(line.salesperson)
         ):
             line.salesperson = data.salesperson.strip()
+            changed = True
+        # 合同签订日期是物资级字段（行级），同样只补空值，不覆盖人工填写。
+        if data.contract_sign_date is not None and line.contract_sign_date is None:
+            line.contract_sign_date = data.contract_sign_date
             changed = True
         if (
             data.status is not None

@@ -1674,6 +1674,8 @@ class PurchaseRecordSyncTraceUpdate(RequestModel):
     ) = None
     consolidation_date: date | None = None
     sailing_date: date | None = None
+    # 物资级字段：按追溯号（行）回写，与集港/发船等单据级日期不同。
+    contract_sign_date: date | None = None
     status: (
         Annotated[str, StringConstraints(strip_whitespace=True, max_length=128)] | None
     ) = None
