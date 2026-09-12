@@ -169,6 +169,13 @@
 - 普通统计标签优先使用中性色或主题浅色，不滥用状态色。
 - 加载、成功、失败反馈优先使用 Naive UI 的 message、notification、dialog 和 loading 状态。
 
+### 6.1 加载遮罩
+
+- 数据加载的**局部**遮罩统一复用 `frontend/src/components/LoadingMask.vue`：模糊遮挡背后内容并居中显示 loading（可带一行文案），不使用整页遮罩。
+- 遮罩范围由宿主元素决定（`position: absolute`），宿主元素必须有定位上下文：`.page`、`.n-card`、`.share-table-card`、`.settings-grid` 等已提供，新增使用处需一并确认。
+- 禁止在页面内自造遮罩样式或恢复“整块变淡”的旧做法；整页阻塞遮罩仅限导出等全局操作（`ExportLoadingOverlay`）。
+- 需要防止重复提交的确认弹窗（如全量更新导入）统一复用 `frontend/src/composables/useImportConfirm.ts`：确认后按钮立即转圈并禁用，并禁用取消/遮罩/Esc 关闭。
+
 ## 7. 实现约束
 
 1. Naive UI 主题覆盖集中在 `frontend/src/theme.ts`。

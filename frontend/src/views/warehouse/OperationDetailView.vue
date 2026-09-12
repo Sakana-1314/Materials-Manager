@@ -6,6 +6,7 @@ import type { OperationType, SourceType, StockOperation } from '@/api/generated'
 import { inventoryApi } from '@/api/inventory'
 import { useAuthStore } from '@/stores/auth'
 import { formatShanghaiTime, toIsoWithTimezone } from '@/utils/time'
+import LoadingMask from '@/components/LoadingMask.vue'
 import OperationLinesEditor, {
   type OperationLineModel,
 } from '@/components/OperationLinesEditor.vue'
@@ -192,7 +193,8 @@ onMounted(load)
 </script>
 
 <template>
-  <div v-if="operation" v-loading="loading" class="page">
+  <div v-if="operation" class="page">
+    <LoadingMask :show="loading" text="加载中…" />
     <div class="detail-toolbar">
       <n-button secondary @click="router.back()">← 返回操作记录</n-button>
       <n-space v-if="auth.can('warehouse:write')">

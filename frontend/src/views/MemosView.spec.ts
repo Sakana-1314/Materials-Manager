@@ -1,14 +1,5 @@
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
-import {
-  NButton,
-  NCard,
-  NDialogProvider,
-  NEmpty,
-  NInput,
-  NMessageProvider,
-  NSpace,
-  NSpin,
-} from 'naive-ui'
+import { NButton, NCard, NDialogProvider, NEmpty, NInput, NMessageProvider, NSpace } from 'naive-ui'
 import { createPinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
@@ -65,7 +56,6 @@ async function mountView(memos: Memo[]): Promise<VueWrapper> {
         NInput,
         NMessageProvider,
         NSpace,
-        NSpin,
       },
     },
   })

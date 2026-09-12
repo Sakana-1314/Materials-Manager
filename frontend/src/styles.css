@@ -20,6 +20,8 @@
   --color-surface-muted: #ebedef;
   --color-border: #e2e7ef;
   --color-border-subtle: #edf0f5;
+  /* 局部加载遮罩底色（配合 LoadingMask 的 backdrop-filter 使用） */
+  --color-mask-surface: rgb(244 246 250 / 58%);
   --radius-control: 9px;
   --radius-card: 14px;
   --shadow-card: 0 8px 24px rgb(15 23 42 / 5%);
@@ -46,6 +48,8 @@ a {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  /* 作为页面级局部加载遮罩（LoadingMask）的定位上下文 */
+  position: relative;
 }
 .page-header {
   display: flex;

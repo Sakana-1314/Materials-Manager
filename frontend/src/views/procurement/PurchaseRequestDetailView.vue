@@ -6,6 +6,7 @@ import type { FileObject, PurchaseRecord, PurchaseRecordWrite } from '@/api/gene
 import { procurementApi } from '@/api/procurement'
 import { useAuthStore } from '@/stores/auth'
 import ImageUploader from '@/components/ImageUploader.vue'
+import LoadingMask from '@/components/LoadingMask.vue'
 import MaterialSelector from '@/components/MaterialSelector.vue'
 import QuantityInput from '@/components/QuantityInput.vue'
 import { dateToTimestamp, formatShanghaiTime, toShanghaiDate } from '@/utils/time'
@@ -193,7 +194,8 @@ onMounted(() => void load())
 </script>
 
 <template>
-  <div v-if="record" v-loading="loading" class="page">
+  <div v-if="record" class="page">
+    <LoadingMask :show="loading" text="加载中…" />
     <div class="detail-toolbar">
       <n-button secondary @click="router.push('/procurement/records')">← 返回申购记录</n-button>
       <n-button

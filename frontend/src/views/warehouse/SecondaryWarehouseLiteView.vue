@@ -10,6 +10,7 @@ import {
   preventTableColumnCompression,
   tableColumnWidths,
 } from '@/constants/table'
+import LoadingMask from '@/components/LoadingMask.vue'
 import { useImportConfirm } from '@/composables/useImportConfirm'
 import { useImportJob } from '@/composables/useImportJob'
 import { usePagedTable } from '@/composables/usePagedTable'
@@ -204,6 +205,7 @@ function onFileChange(event: Event) {
     </n-card>
 
     <n-card class="data-card">
+      <LoadingMask :show="importing" text="正在导入并全量更新，请勿重复提交…" />
       <n-data-table
         remote
         :columns="columns"

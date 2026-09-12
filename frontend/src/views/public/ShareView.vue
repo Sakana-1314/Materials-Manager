@@ -6,6 +6,7 @@ import type { FileObject, SharePublicView } from '@/api/generated'
 import { shareApi } from '@/api/share'
 import { AppError } from '@/api/client'
 import ImageThumbnails from '@/components/ImageThumbnails.vue'
+import LoadingMask from '@/components/LoadingMask.vue'
 import { defaultShareColumnKeys } from '@/constants/shareColumns'
 import { formatDate, formatShanghaiTime } from '@/utils/time'
 
@@ -298,26 +299,25 @@ onMounted(async () => {
       </header>
 
       <section class="share-table-card">
-        <n-spin :show="loading">
-          <div v-if="error" class="share-error">
-            <n-result status="error" title="无法查看分享" :description="error">
-              <template #footer>
-                <span class="share-error-hint">链接可能已过期，或已被分享人撤回。</span>
-              </template>
-            </n-result>
-          </div>
-          <n-data-table
-            v-else-if="data"
-            :bordered="false"
-            :columns="columns"
-            :data="rows"
-            :row-key="rowKey"
-            :scroll-x="scrollX"
-            striped
-            size="small"
-            class="share-table"
-          />
-        </n-spin>
+        <LoadingMask :show="loading" text="加载中…" />
+        <div v-if="error" class="share-error">
+          <n-result status="error" title="无法查看分享" :description="error">
+            <template #footer>
+              <span class="share-error-hint">链接可能已过期，或已被分享人撤回。</span>
+            </template>
+          </n-result>
+        </div>
+        <n-data-table
+          v-else-if="data"
+          :bordered="false"
+          :columns="columns"
+          :data="rows"
+          :row-key="rowKey"
+          :scroll-x="scrollX"
+          striped
+          size="small"
+          class="share-table"
+        />
       </section>
 
       <footer class="share-footer">
@@ -395,6 +395,8 @@ onMounted(async () => {
   min-width: 0;
   padding: 14px 28px 20px;
   background: #fff;
+  /* 作为局部加载遮罩（LoadingMask）的定位上下文 */
+  position: relative;
 }
 
 .share-table {

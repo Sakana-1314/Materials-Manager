@@ -25,14 +25,6 @@ async function bootstrap() {
     configureImageBaseUrl('')
   }
   const app = createApp(App)
-  app.directive('loading', {
-    mounted: (element: HTMLElement, binding) => {
-      element.style.opacity = binding.value ? '0.65' : ''
-    },
-    updated: (element: HTMLElement, binding) => {
-      element.style.opacity = binding.value ? '0.65' : ''
-    },
-  })
   const pinia = createPinia()
   app.use(pinia).use(router)
   // 二级库模式等系统配置在 mount 前加载，保证菜单/路由守卫首次导航即可读到。
