@@ -14,7 +14,10 @@ export interface UseImportJobOptions {
 export interface UseImportJob {
   /** 是否正在导入中（提交 + 轮询期间为 true） */
   running: Ref<boolean>
-  /** 执行一次导入：提交 → 轮询到终态 → 成功返回 result / 失败抛 AppError */
+  /**
+   * 执行一次导入：提交 → 轮询到终态 → 成功返回 result / 失败抛 AppError；
+   * 已有导入进行中时直接抛 AppError(IMPORT_IN_PROGRESS)，不重复提交。
+   */
   run: (file: File) => Promise<Record<string, unknown> | null>
 }
 
@@ -29,6 +32,14 @@ export function useImportJob(options: UseImportJobOptions): UseImportJob {
   const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
   async function run(file: File): Promise<Record<string, unknown> | null> {
+    // 同步重入保护：挡住双击在同一 tick 内触发的第二次提交（第一次调用已同步置位）
+    if (running.value) {
+      throw new AppError({
+        code: 'IMPORT_IN_PROGRESS',
+        message: '导入正在进行中，请稍候',
+        request_id: '',
+      })
+    }
     running.value = true
     try {
       let current = await start(file)
