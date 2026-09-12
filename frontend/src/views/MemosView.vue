@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import { useDialog, useMessage } from 'naive-ui'
 import type { Memo } from '@/api/generated'
 import { memoApi } from '@/api/memos'
+import LoadingMask from '@/components/LoadingMask.vue'
 import { useAuthStore } from '@/stores/auth'
 import { formatShanghaiTime } from '@/utils/time'
 import {
@@ -296,101 +297,96 @@ void loadMemos()
     </div>
 
     <n-card class="memo-card" :content-style="{ padding: '0' }">
-      <n-spin :show="loading">
-        <div class="memo-shell">
-          <aside class="memo-drawer" aria-label="备忘录列表">
-            <div class="memo-drawer-head">
-              <span class="memo-drawer-title">全部备忘录</span>
-              <span class="memo-count">{{ memos.length }}</span>
-            </div>
-            <p v-if="!loading && memos.length === 0" class="memo-drawer-empty">暂无备忘录</p>
-            <ul v-else class="memo-list">
-              <li v-for="memo in memos" :key="memo.id">
-                <button
-                  type="button"
-                  class="memo-item"
-                  :class="{ 'memo-item--active': memo.id === activeId }"
-                  @click="activate(memo.id)"
-                >
-                  <span class="memo-item-title">{{ listTitle(memo) }}</span>
-                  <span class="memo-item-meta">
-                    <span>{{ formatShanghaiTime(memo.updated_at) }}</span>
-                    <span
-                      v-if="isPending(memo.id)"
-                      class="memo-dirty-dot"
-                      title="有尚未保存的修改"
-                    />
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </aside>
+      <LoadingMask :show="loading" text="加载中…" />
+      <div class="memo-shell">
+        <aside class="memo-drawer" aria-label="备忘录列表">
+          <div class="memo-drawer-head">
+            <span class="memo-drawer-title">全部备忘录</span>
+            <span class="memo-count">{{ memos.length }}</span>
+          </div>
+          <p v-if="!loading && memos.length === 0" class="memo-drawer-empty">暂无备忘录</p>
+          <ul v-else class="memo-list">
+            <li v-for="memo in memos" :key="memo.id">
+              <button
+                type="button"
+                class="memo-item"
+                :class="{ 'memo-item--active': memo.id === activeId }"
+                @click="activate(memo.id)"
+              >
+                <span class="memo-item-title">{{ listTitle(memo) }}</span>
+                <span class="memo-item-meta">
+                  <span>{{ formatShanghaiTime(memo.updated_at) }}</span>
+                  <span v-if="isPending(memo.id)" class="memo-dirty-dot" title="有尚未保存的修改" />
+                </span>
+              </button>
+            </li>
+          </ul>
+        </aside>
 
-          <section class="memo-pane">
-            <n-empty
-              v-if="activeId === null"
-              class="memo-pane-empty"
-              size="large"
-              description="还没有备忘录，新建一条开始记录吧"
-            >
-              <template #extra>
+        <section class="memo-pane">
+          <n-empty
+            v-if="activeId === null"
+            class="memo-pane-empty"
+            size="large"
+            description="还没有备忘录，新建一条开始记录吧"
+          >
+            <template #extra>
+              <n-button
+                type="primary"
+                :loading="creating"
+                :disabled="creating"
+                @click="confirmCreate"
+              >
+                新建备忘录
+              </n-button>
+            </template>
+          </n-empty>
+
+          <div v-else-if="activeDraft" class="memo-editor" @keydown="onEditorKeydown">
+            <n-input
+              v-model:value="activeDraft.title"
+              class="memo-title-input"
+              placeholder="备忘录标题"
+              maxlength="64"
+              show-count
+              @update:value="handleEdit"
+            />
+            <n-input
+              v-model:value="activeDraft.content"
+              type="textarea"
+              class="memo-content-input"
+              placeholder="在这里记录纯文本内容，点击「保存」后才会提交（Ctrl+S 亦可保存）…"
+              :autosize="{ minRows: 12, maxRows: 30 }"
+              maxlength="10000"
+              show-count
+              @update:value="handleEdit"
+            />
+            <div class="memo-actions">
+              <span class="memo-status" :class="`memo-status--${saveStatus.type}`">
+                {{ saveStatus.text }}
+              </span>
+              <n-space :size="10" align="center">
+                <n-button
+                  secondary
+                  type="error"
+                  :disabled="activeDraft.saving"
+                  @click="confirmDelete(activeMemo)"
+                >
+                  删除
+                </n-button>
                 <n-button
                   type="primary"
-                  :loading="creating"
-                  :disabled="creating"
-                  @click="confirmCreate"
+                  :loading="activeDraft.saving"
+                  :disabled="!activeDraft.dirty"
+                  @click="saveActive"
                 >
-                  新建备忘录
+                  保存
                 </n-button>
-              </template>
-            </n-empty>
-
-            <div v-else-if="activeDraft" class="memo-editor" @keydown="onEditorKeydown">
-              <n-input
-                v-model:value="activeDraft.title"
-                class="memo-title-input"
-                placeholder="备忘录标题"
-                maxlength="64"
-                show-count
-                @update:value="handleEdit"
-              />
-              <n-input
-                v-model:value="activeDraft.content"
-                type="textarea"
-                class="memo-content-input"
-                placeholder="在这里记录纯文本内容，点击「保存」后才会提交（Ctrl+S 亦可保存）…"
-                :autosize="{ minRows: 12, maxRows: 30 }"
-                maxlength="10000"
-                show-count
-                @update:value="handleEdit"
-              />
-              <div class="memo-actions">
-                <span class="memo-status" :class="`memo-status--${saveStatus.type}`">
-                  {{ saveStatus.text }}
-                </span>
-                <n-space :size="10" align="center">
-                  <n-button
-                    secondary
-                    type="error"
-                    :disabled="activeDraft.saving"
-                    @click="confirmDelete(activeMemo)"
-                  >
-                    删除
-                  </n-button>
-                  <n-button
-                    type="primary"
-                    :loading="activeDraft.saving"
-                    :disabled="!activeDraft.dirty"
-                    @click="saveActive"
-                  >
-                    保存
-                  </n-button>
-                </n-space>
-              </div>
+              </n-space>
             </div>
-          </section>
-        </div>
-      </n-spin>
+          </div>
+        </section>
+      </div>
     </n-card>
   </div>
 </template>
@@ -408,8 +404,7 @@ void loadMemos()
   min-height: 480px;
 }
 
-/* 卡片纵向撑满页面剩余高度，让内部抽屉与编辑区一起充满窗口。
-   n-spin 的包裹层会打断 flex 链，需要一并传递。 */
+/* 卡片纵向撑满页面剩余高度，让内部抽屉与编辑区一起充满窗口。 */
 .memo-card {
   display: flex;
   flex: 1 1 auto;
@@ -417,9 +412,7 @@ void loadMemos()
   min-height: 0;
 }
 
-.memo-card :deep(.n-card-content),
-.memo-card :deep(.n-spin-container),
-.memo-card :deep(.n-spin-content) {
+.memo-card :deep(.n-card-content) {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;

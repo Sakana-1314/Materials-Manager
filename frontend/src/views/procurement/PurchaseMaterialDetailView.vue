@@ -23,6 +23,7 @@ import MaterialCodeSelector from '@/components/MaterialCodeSelector.vue'
 import PurchaseRecordHistoryDialog from '@/components/PurchaseRecordHistoryDialog.vue'
 import { dateToTimestamp, formatShanghaiTime, toShanghaiDate } from '@/utils/time'
 import ImageUploader from '@/components/ImageUploader.vue'
+import LoadingMask from '@/components/LoadingMask.vue'
 import QuantityInput from '@/components/QuantityInput.vue'
 import { defaultPurchaseOrderNo } from '@/utils/purchase'
 
@@ -225,7 +226,8 @@ onMounted(() => void load())
 </script>
 
 <template>
-  <div v-if="material" v-loading="loading" class="page">
+  <div v-if="material" class="page">
+    <LoadingMask :show="loading" text="加载中…" />
     <div class="detail-toolbar">
       <n-button secondary @click="router.push('/procurement/materials')">← 返回申购计划</n-button>
       <n-space v-if="auth.can('purchase:write')">

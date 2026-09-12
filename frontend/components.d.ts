@@ -14,6 +14,7 @@ declare module 'vue' {
     FilterExpandButton: typeof import('./src/components/FilterExpandButton.vue')['default']
     ImageThumbnails: typeof import('./src/components/ImageThumbnails.vue')['default']
     ImageUploader: typeof import('./src/components/ImageUploader.vue')['default']
+    LoadingMask: typeof import('./src/components/LoadingMask.vue')['default']
     MaterialCodeSelector: typeof import('./src/components/MaterialCodeSelector.vue')['default']
     MaterialSelector: typeof import('./src/components/MaterialSelector.vue')['default']
     NAlert: typeof import('naive-ui')['NAlert']

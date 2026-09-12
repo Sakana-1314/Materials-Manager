@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { inventoryApi } from '@/api/inventory'
 import type { DashboardSummary, InventoryBalance } from '@/api/generated'
+import LoadingMask from '@/components/LoadingMask.vue'
 
 const router = useRouter()
 const loading = ref(true)
@@ -56,7 +57,8 @@ onMounted(load)
 </script>
 
 <template>
-  <div v-loading="loading" class="page">
+  <div class="page">
+    <LoadingMask :show="loading" text="加载中…" />
     <div class="page-header">
       <div>
         <h1 class="page-title">工作台</h1>

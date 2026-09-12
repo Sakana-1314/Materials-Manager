@@ -10,6 +10,7 @@ import type {
   StockMaterialWrite,
 } from '@/api/generated'
 import ImageUploader from '@/components/ImageUploader.vue'
+import LoadingMask from '@/components/LoadingMask.vue'
 import QuantityInput from '@/components/QuantityInput.vue'
 import { useAuthStore } from '@/stores/auth'
 import { isDecimalString } from '@/utils/decimal'
@@ -147,7 +148,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div v-if="material" v-loading="loading" class="page">
+  <div v-if="material" class="page">
+    <LoadingMask :show="loading" text="加载中…" />
     <div class="detail-toolbar">
       <n-button secondary @click="router.push({ name: 'stock-materials' })">
         ← 返回物资档案

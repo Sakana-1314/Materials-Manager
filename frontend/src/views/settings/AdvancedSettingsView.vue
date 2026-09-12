@@ -3,6 +3,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useMessage } from 'naive-ui'
 import { aiSearchApi } from '@/api/aiSearch'
 import { systemSettingsApi } from '@/api/systemSettings'
+import LoadingMask from '@/components/LoadingMask.vue'
 import { inventoryModeOptionsFor } from '@/utils/settings'
 import type {
   MiniProgramFeatureMode,
@@ -245,7 +246,8 @@ onMounted(load)
       </n-button>
     </div>
 
-    <div v-loading="loading" class="settings-grid">
+    <div class="settings-grid">
+      <LoadingMask :show="loading" text="加载中…" />
       <n-card class="settings-card model-card" title="模型服务" :bordered="false">
         <template #header-extra>
           <div class="switch-control">
@@ -444,6 +446,8 @@ onMounted(load)
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
   gap: 18px;
+  /* 作为局部加载遮罩（LoadingMask）的定位上下文 */
+  position: relative;
 }
 
 .settings-card {
