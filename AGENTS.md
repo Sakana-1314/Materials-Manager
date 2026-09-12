@@ -5,34 +5,35 @@
 
 ## 项目概况
 
-- 前端：Vue 3 + TypeScript + Vite + Naive UI + Pinia，位于 `frontend/`。
-- 后端：FastAPI + SQLAlchemy 异步，位于 `backend/`。
+- 前端（网页端）：Vue 3 + TypeScript + Vite + Naive UI + Pinia，位于 `web/`。
+- 后端（服务端）：FastAPI + SQLAlchemy 异步，位于 `server/`。
 - 小程序：微信小程序，位于 `miniprogram/`。
 - 前后端契约统一维护在 `docs/openapi.yaml`，前端类型由它生成（`src/api/generated.raw.ts`、`src/api/generated.ts`），**禁止手改生成文件**。
-- 部署：Docker Compose（后端 + nginx 托管前端静态产物）。前端/后端镜像由 CI 在合并后构建。
+- 数据库初始化与迁移 SQL 位于 `docs/references/database/`，env 模板位于 `docs/env/`。
+- 部署：Docker Compose（后端 + nginx 托管前端静态产物）。前后端镜像由 CI 在合并后构建；`web/.dockerignore` 与 `server/.dockerignore` 各自对应其构建上下文。
 - 默认工作目录：仓库根目录 `/workspace/备件管理系统`。
 
 ## 必读先做
 
 动手改代码前，先阅读并遵守：
 
-- `docs/openapi.yaml` — 接口契约；改后端接口时同步契约，并用 `pnpm generate:api`（frontend）重新生成前端类型。
+- `docs/openapi.yaml` — 接口契约；改后端接口时同步契约，并用 `npm run generate:api`（在 `web/` 目录）重新生成前端类型。
 - `docs/ui-design-guidelines.md` — UI 组件与样式约定。
 - `docs/api-error-conventions.md` — 后端错误约定。
 - `.github/workflows/` — CI 流水线（契约一致性校验 / 接口测试 / 构建镜像）。
 
 ## 验证命令（提交前必须通过）
 
-在 `frontend/` 目录执行：
+在 `web/` 目录执行：
 
 ```bash
 npx vue-tsc -b            # TypeScript 类型检查
-npx eslint <改动的文件>    # 或 cd frontend && npm run lint（全量）
+npx eslint <改动的文件>    # 或 cd web && npm run lint（全量）
 npm run test              # vitest 单测（如有涉及组件）
 npm run build             # 类型检查 + 生产构建
 ```
 
-后端在 `backend/` 目录：`pytest`。
+后端在 `server/` 目录：`pytest`。
 注意 CI 含「校验 openapi / generated.ts 未漂移」：改接口契约后必须重新生成并提交生成文件，否则 CI 失败。
 
 ## 代码与提交规范
@@ -46,10 +47,10 @@ npm run build             # 类型检查 + 生产构建
 
 > 原则：**凭证可以加密（或哈希）入库，但界面必须每次都回显已保存的值，避免每次重新生成 / 重置。**
 
-- **存储**：接口令牌、API Key 等敏感凭证不得明文落库，须加密（如 Fernet 对称加密，参考 `backend/app/services/ai_search_service.py` 的 `_encrypt_api_key` / `_decrypt_api_key`，密文存 `*_encrypted` 字段）或哈希后存储；需要界面回显的凭证必须**加密**（可逆）入库，哈希仅用于纯认证查找。
+- **存储**：接口令牌、API Key 等敏感凭证不得明文落库，须加密（如 Fernet 对称加密，参考 `server/app/services/ai_search_service.py` 的 `_encrypt_api_key` / `_decrypt_api_key`，密文存 `*_encrypted` 字段）或哈希后存储；需要界面回显的凭证必须**加密**（可逆）入库，哈希仅用于纯认证查找。
 - **回显**：读取接口必须解密回显明文凭证，前端每次进入页面都能看到已保存的值（如 AI 搜索配置读取时 `api_key` 字段始终回显，用户无需每次重置）。**禁止**让界面出现「库中只存哈希，请重新生成后再复制」之类需要用户每次重新生成 / 输入的提示。
 - **用户接口令牌（已按约定改造）**：`user` 表双列存储——`api_token_hash`（SHA-256，认证快速查找）+ `api_token_enc`（Fernet 密文，可逆回显）；`/users` 读取与 PATCH 每次解密回显（见 `dictionary_service._echo_api_token`）。仅存哈希的历史数据在令牌下次成功用于接口调用时由认证路径自动加密回写（见 `core.permissions.find_user_by_api_token`），此后持续回显，无需用户重新生成。
-- **涉及此类存储 / 回显改动时**：同步更新 `docs/openapi.yaml` 契约并重新生成前端类型（`pnpm generate:api`），在 PR 描述中说明加解密与回显方案。
+- **涉及此类存储 / 回显改动时**：同步更新 `docs/openapi.yaml` 契约并重新生成前端类型（在 `web/` 目录执行 `npm run generate:api`），在 PR 描述中说明加解密与回显方案。
 
 ## 标准开发与发布工作流（必须遵守）
 

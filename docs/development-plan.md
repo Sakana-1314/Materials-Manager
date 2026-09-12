@@ -1,6 +1,6 @@
 # 电气车间备件管理系统——开发方案
 
-系统 Logo 统一使用同域名静态资源 `/logo.png`（`frontend/public/logo.png`），供页面 `branding.ts LOGO_URL` 与 `index.html` favicon/og:image 引用；`/qrcode.png` 为小程序码（网页端分享弹窗/小程序扫码）。
+系统 Logo 统一使用同域名静态资源 `/logo.png`（`web/public/logo.png`），供页面 `branding.ts LOGO_URL` 与 `index.html` favicon/og:image 引用；`/qrcode.png` 为小程序码（网页端分享弹窗/小程序扫码）。
 
 ## 1. 项目目标
 
@@ -149,7 +149,7 @@ DRAFT -> SUBMITTED -> PROCESSING -> PARTIALLY_RECEIVED -> COMPLETED
 
 数据库保存：文件 `id`、`original_name`、`mime_type`、`size_bytes`、`width`、`height`、`sha256`。业务附件表只保存 `file_id`；图片接口地址及磁盘文件名均由 `file_id` 推导，不持久化域名或路径，`mime_type` 固定为 `image/png`。
 
-上传入口可接受 `image/jpeg`、`image/png`、`image/webp`；单图建议不超过 10 MB，每个物资最多 9 张。应用启动时自动确保 `backend/data/uploads/` 存在。图片读取无需鉴权，并可通过 `size` 指定最大边长，按比例生成 WebP 预览以降低传输量。
+上传入口可接受 `image/jpeg`、`image/png`、`image/webp`；单图建议不超过 10 MB，每个物资最多 9 张。应用启动时自动确保 `server/data/uploads/` 存在。图片读取无需鉴权，并可通过 `size` 指定最大边长，按比例生成 WebP 预览以降低传输量。
 
 通过 `stock_material_image` 和 `purchase_material_image` 两张关联表绑定图片，字段为 `material_id`、`file_id`、`sort_order`，从而保留外键完整性。
 
@@ -294,7 +294,7 @@ suggested_purchase_qty = 近 6 个自然月内未被冲销的 OUTBOUND 流水数
 - Pydantic v2
 - SQLAlchemy 2.x async ORM
 - `asyncmy` MySQL 驱动
-- `example/database/init.sql` 空库初始化
+- `docs/references/database/init.sql` 空库初始化
 - JWT access token；密码使用 Argon2
 - Pillow，用于校验图片并统一转换为 PNG
 - pytest、pytest-asyncio、httpx
@@ -303,7 +303,7 @@ suggested_purchase_qty = 近 6 个自然月内未被冲销的 OUTBOUND 流水数
 ### 7.2 目录建议
 
 ```text
-backend/
+server/
   app/
     main.py
     api/v1/
@@ -468,7 +468,7 @@ backend/
 | POST | `/purchase-materials/batch-move-to-record` | 将多条已编码计划批量转为同一批申购记录 |
 | POST | `/purchase-records/{id}/restore-to-plan` | 将被打回的申购记录恢复为正常申购计划，并删除记录专属字段 |
 
-Excel 布局模板位于 `backend/app/templates/*.json`，随后端代码统一版本管理并在运行时生成工作簿；仓库不保存原始 XLSX 模板。
+Excel 布局模板位于 `server/app/templates/*.json`，随后端代码统一版本管理并在运行时生成工作簿；仓库不保存原始 XLSX 模板。
 
 补录编码直接修改申购计划：
 
@@ -612,7 +612,7 @@ Excel 布局模板位于 `backend/app/templates/*.json`，随后端代码统一�
 ### 9.4 前端目录建议
 
 ```text
-frontend/
+web/
   src/
     api/
       client.ts
@@ -648,7 +648,7 @@ frontend/
 - 记录 `request_id`，应用日志中包含用户、接口、耗时和错误码，但不记录密码/token。
 - 查询接口强制分页，默认 20，最大 200。
 - 模糊搜索字段建立合适索引；业务号、物料编码、状态和时间建立组合索引。
-- 每日备份 MySQL 和 `backend/data/uploads/`，两者保持同一保留周期。
+- 每日备份 MySQL 和 `server/data/uploads/`，两者保持同一保留周期。
 
 ## 11. 两个 agent 的并行开发边界
 
@@ -664,10 +664,10 @@ frontend/
 
 ### 11.2 后端 agent
 
-负责 `backend/`、`docs/openapi.yaml` 和 `docker-compose.yml`：
+负责 `server/`、`docs/openapi.yaml` 和 `docker-compose.yml`：
 
 1. 项目脚手架、认证和四角色简单校验。
-2. SQLAlchemy 模型、`example/database/init.sql` 和种子数据。
+2. SQLAlchemy 模型、`docs/references/database/init.sql` 和种子数据。
 3. 二级库物资、库存余额和流水事务。
 4. 安全库存与缺货计算。
 5. 申购计划、未编码查询和编码直接补录。
@@ -677,7 +677,7 @@ frontend/
 
 ### 11.3 前端 agent
 
-负责 `frontend/`：
+负责 `web/`：
 
 1. Vue3/Vite/Router/Naive UI/Pinia 脚手架。
 2. 登录、布局和四角色菜单。

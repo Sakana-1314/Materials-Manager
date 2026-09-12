@@ -18,7 +18,7 @@
 Linux Runner 示例：
 
 ```bash
-cd frontend
+cd web
 npm ci
 VITE_USE_MOCK=false \
 VITE_API_BASE_URL=https://api.example.com \
@@ -29,7 +29,7 @@ npm run build
 PowerShell Runner 示例：
 
 ```powershell
-Set-Location frontend
+Set-Location web
 npm ci
 $env:VITE_USE_MOCK = 'false'
 $env:VITE_API_BASE_URL = 'https://api.example.com'
@@ -37,7 +37,7 @@ $env:VITE_IMAGE_BASE_URL = 'https://img.example.com'
 npm run build
 ```
 
-构建产物位于 `frontend/dist/`，CD 阶段只需把该目录发布到静态站点、对象存储或 CDN。该方案不依赖 Docker 构建参数，也不需要修改现有 Docker 镜像。
+构建产物位于 `web/dist/`，CD 阶段只需把该目录发布到静态站点、对象存储或 CDN。该方案不依赖 Docker 构建参数，也不需要修改现有 Docker 镜像。
 
 ## 后端跨域
 
@@ -50,7 +50,7 @@ Access-Control-Allow-Origin: https://spares.example.com
 Vary: Origin, Referer
 ```
 
-该逻辑覆盖 OPTIONS 预检和正常响应，并为所有响应（含结构化错误响应）补齐 CORS Header。预检会回显浏览器请求的 Header，并允许常用 HTTP 方法；响应同时暴露 `Content-Disposition`、`X-Request-ID` 以及接口性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries`（含义见 `../backend/README.md` 的「接口性能响应头」），前端与浏览器开发者工具可直接读到服务端各阶段耗时。本项目不使用 HTTP 404 状态码，错误响应统一为结构化业务错误体，详见 `../docs/api-error-conventions.md`。
+该逻辑覆盖 OPTIONS 预检和正常响应，并为所有响应（含结构化错误响应）补齐 CORS Header。预检会回显浏览器请求的 Header，并允许常用 HTTP 方法；响应同时暴露 `Content-Disposition`、`X-Request-ID` 以及接口性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries`（含义见 `../server/README.md` 的「接口性能响应头」），前端与浏览器开发者工具可直接读到服务端各阶段耗时。本项目不使用 HTTP 404 状态码，错误响应统一为结构化业务错误体，详见 `../docs/api-error-conventions.md`。
 
 可配置项：
 
@@ -93,7 +93,7 @@ APP_CORS_MAX_AGE=86400
 
 ## EdgeOne Pages 部署
 
-项目使用 EdgeOne Pages（Makers）托管前端静态站，部署配置位于 `frontend/edgeone.json`：
+项目使用 EdgeOne Pages（Makers）托管前端静态站，部署配置位于 `web/edgeone.json`：
 
 ```json
 {
@@ -106,7 +106,7 @@ APP_CORS_MAX_AGE=86400
 }
 ```
 
-- 该文件放在 `frontend/`（EdgeOne Pages 项目的根目录），`outputDirectory: "dist"` 指向构建产物。
+- 该文件放在 `web/`（EdgeOne Pages 项目的根目录），`outputDirectory: "dist"` 指向构建产物。
 - Vite 通过 `build.assetsDir: 'yangrucheng-assets'` 把带内容 hash 的 JS/CSS 产物输出到 `dist/yangrucheng-assets/`，这些文件名带 hash、内容不可变，适合长期缓存。
 - 图片（`logo.png`、`qrcode.png` 等）位于 `dist/` 根目录（来自 `public/`），因此 png/jpg 缓存规则用全站后缀匹配 `/*.png`、`/*.jpg` 而非限定在 `yangrucheng-assets/` 内。
 - `edgeone.json` 的 `source` 是 URL 通配符（以 `/` 开头、最多一个 `*`），非文件系统路径。14 天 = `max-age=1209600`。

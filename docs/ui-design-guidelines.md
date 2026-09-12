@@ -16,7 +16,7 @@
 
 ## 3. 设计令牌
 
-设计令牌同时维护在 `frontend/src/theme.ts` 和 `frontend/src/styles.css`。
+设计令牌同时维护在 `web/src/theme.ts` 和 `web/src/styles.css`。
 
 ### 3.1 颜色
 
@@ -97,7 +97,7 @@
 - 行悬停使用淡蓝背景，不改变文字颜色。
 - 分页放在卡片底部右侧，并使用顶部分隔线。
 - 行点击可进入详情时，操作列仍应保留明确的文字操作或保证鼠标状态可感知。
-- 列宽按内容类型分级，统一引用 `frontend/src/constants/table.ts`：
+- 列宽按内容类型分级，统一引用 `web/src/constants/table.ts`：
   - 单位、状态、数量等短字段使用约 `80–110px`。
   - 日期、人员、编码等中等字段使用约 `112–176px`。
   - 名称使用约 `220px`，型号规格使用约 `240px`。
@@ -138,11 +138,11 @@
 - 导出按钮统一命名为“导出”，具体导出内容通过按钮标题、下拉选项和操作反馈说明。
 - 页面只有一种导出方式时，点击“导出”直接执行；存在多种导出方式时，使用同一个“导出”按钮的下拉菜单承载。
 - 下拉选项应明确区分“查询结果”“已选数据”和业务模板等导出范围；依赖勾选数据的选项在未选择时禁用。
-- 导出入口统一复用 `frontend/src/components/ExportButton.vue`，页面只负责提供选项和执行对应业务逻辑。
+- 导出入口统一复用 `web/src/components/ExportButton.vue`，页面只负责提供选项和执行对应业务逻辑。
 
 ## 5. 图片附件上传
 
-图片附件统一使用 `frontend/src/components/ImageUploader.vue`，不得直接在页面内新增原生文件选择器或另一套上传卡片。
+图片附件统一使用 `web/src/components/ImageUploader.vue`，不得直接在页面内新增原生文件选择器或另一套上传卡片。
 
 统一要求：
 
@@ -171,20 +171,20 @@
 
 ### 6.1 加载遮罩
 
-- 数据加载的**局部**遮罩统一复用 `frontend/src/components/LoadingMask.vue`：模糊遮挡背后内容并居中显示 loading（可带一行文案），不使用整页遮罩。
+- 数据加载的**局部**遮罩统一复用 `web/src/components/LoadingMask.vue`：模糊遮挡背后内容并居中显示 loading（可带一行文案），不使用整页遮罩。
 - 遮罩范围由宿主元素决定（`position: absolute`），宿主元素必须有定位上下文：`.page`、`.n-card`、`.share-table-card`、`.settings-grid` 等已提供，新增使用处需一并确认。
 - 禁止在页面内自造遮罩样式或恢复“整块变淡”的旧做法；整页阻塞遮罩仅限导出等全局操作（`ExportLoadingOverlay`）。
-- 需要防止重复提交的确认弹窗（如全量更新导入）统一复用 `frontend/src/composables/useImportConfirm.ts`：确认后按钮立即转圈并禁用，并禁用取消/遮罩/Esc 关闭。
+- 需要防止重复提交的确认弹窗（如全量更新导入）统一复用 `web/src/composables/useImportConfirm.ts`：确认后按钮立即转圈并禁用，并禁用取消/遮罩/Esc 关闭。
 
 ## 7. 实现约束
 
-1. Naive UI 主题覆盖集中在 `frontend/src/theme.ts`。
-2. 跨页面布局和视觉类集中在 `frontend/src/styles.css`。
-3. 表格列宽令牌集中在 `frontend/src/constants/table.ts`。
+1. Naive UI 主题覆盖集中在 `web/src/theme.ts`。
+2. 跨页面布局和视觉类集中在 `web/src/styles.css`。
+3. 表格列宽令牌集中在 `web/src/constants/table.ts`。
 4. 单页 `<style scoped>` 只保留该页面独有的布局或交互样式。
 5. 颜色必须优先使用 CSS 变量或主题令牌，避免新增硬编码色值。
-6. 新增重复 UI 前先检查 `frontend/src/components` 是否已有可复用组件。
-7. 图标统一使用组件库图标：Naive UI 的 `NIcon` 包裹 `@vicons/ionicons5`（如 `frontend/src/layouts/AppLayout.vue` 的侧栏导航），不手写内联 SVG 或使用字符占位图标。
+6. 新增重复 UI 前先检查 `web/src/components` 是否已有可复用组件。
+7. 图标统一使用组件库图标：Naive UI 的 `NIcon` 包裹 `@vicons/ionicons5`（如 `web/src/layouts/AppLayout.vue` 的侧栏导航），不手写内联 SVG 或使用字符占位图标。
    - 图标尺寸与居中交给组件库：`n-menu` 通过 `collapsed-icon-size` / `icon-size` 统一控制，折叠态的水平居中和行内垂直居中由 `n-menu` 计算，不在页面里再用 margin / padding 手工微调。
 
 ## 8. 变更检查清单

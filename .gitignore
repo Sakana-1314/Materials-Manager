@@ -1,25 +1,26 @@
-# Python backend
-backend/.venv/
-backend/**/__pycache__/
-backend/.pytest_cache/
-backend/.pytest-run-*/
-backend/.mypy_cache/
-backend/.ruff_cache/
-backend/data/uploads/*
-!backend/data/uploads/.gitkeep
-backend/data/logs/
-backend/data/template/
+# Python server
+server/.venv/
+server/**/__pycache__/
+server/.pytest_cache/
+server/.pytest-run-*/
+server/.mypy_cache/
+server/.ruff_cache/
+server/data/uploads/*
+!server/data/uploads/.gitkeep
+server/data/logs/
+server/data/template/
 
-# Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
+# Web
+web/node_modules/
+web/dist/
+web/.env
+web/.env.local
 
 # Local configuration and databases
 .env
-backend/.env
-backend/*.db
+docs/env/.env
+server/.env
+server/*.db
 
 # other
 outputs/

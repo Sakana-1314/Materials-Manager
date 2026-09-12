@@ -6,19 +6,20 @@
 
 - 库存流水可修正、冲销并自动重算后续余额，完整保留业务轨迹。
 - 申购计划可暂缺编码，到货时可关联或新建二级库物资。
-- 前后端契约统一维护在 [docs/openapi.yaml](docs/openapi.yaml)，Excel 模板随后端代码版本管理，初始化数据集中在 [example](example)。
-- FastAPI + SQLAlchemy 异步后端、Vue 3 + TypeScript 前端，支持 Docker 镜像部署。
+- 前后端契约统一维护在 [docs/openapi.yaml](docs/openapi.yaml)，Excel 模板随后端代码版本管理，初始化数据集中在 [docs/references/database](docs/references/database)。
+- FastAPI + SQLAlchemy 异步后端（`server/`）、Vue 3 + TypeScript 前端（`web/`），支持 Docker 镜像部署。
 
 ## 部署
 
 前端由独立 CI/CD 构建并与后端分离部署时，参见 [前后端分离部署](docs/frontend-separated-deployment.md)，通过构建变量注入后端和图片 CDN 地址。
 
-Docker Compose 方案依赖外部 MySQL 8.0+ 和外部网络 `1panel-network`。配置示例、初始化
-SQL 位于 `example/`；Excel 模板位于 `backend/app/templates/`，随代码一同构建和发布。
+Docker Compose 方案依赖外部 MySQL 8.0+ 和外部网络 `1panel-network`。配置示例位于
+`docs/env/`，初始化 SQL 位于 `docs/references/database/`；Excel 模板位于 `server/app/templates/`，
+随代码一同构建和发布。
 
 ```bash
-cp example/.env.example .env
-mysql -h <host> -u <user> -p <database> < example/database/init.sql
+cp docs/env/.env.example .env
+mysql -h <host> -u <user> -p <database> < docs/references/database/init.sql
 docker compose pull
 docker compose up -d
 ```
@@ -27,9 +28,9 @@ docker compose up -d
 `APP_WECHAT_MINI_PROGRAM_APP_ID` 和 `APP_WECHAT_MINI_PROGRAM_APP_SECRET`。多个小程序分别在
 这两个变量中按相同顺序用英文逗号分隔，可追加任意数量；管理后台会按 AppID 分开记录微信
 身份，并可人工合并属于同一人员的账号。
-`example/database/init.sql` 仅用于初始化
+`docs/references/database/init.sql` 仅用于初始化
 新数据库；已有数据库升级前先备份，再执行
-对应的 `example/database/migrations/` 脚本。接口令牌功能需要执行
+对应的 `docs/references/database/migrations/` 脚本。接口令牌功能需要执行
 `20260804_add_user_api_token.sql`；令牌哈希化升级执行 `20260820_hash_user_api_token.sql`；
 令牌可逆加密回显升级执行 `20260912_add_user_api_token_enc.sql`（新增 `api_token_enc` 列，
 读取接口据此解密回显已保存令牌，避免每次重新生成；旧令牌下次调用时自动加密回写）。

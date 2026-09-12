@@ -5,13 +5,13 @@ on:
     branches: ["**"]
     tags: ["v*"]
     paths:
-      - "backend/**"
-      - "frontend/**"
+      - "server/**"
+      - "web/**"
       - ".github/workflows/build-images.yml"
   pull_request:
     paths:
-      - "backend/**"
-      - "frontend/**"
+      - "server/**"
+      - "web/**"
       - ".github/workflows/build-images.yml"
   workflow_dispatch:
 
@@ -41,18 +41,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 检测后端/前端文件变更
+      - name: 检测服务端/网页端文件变更
         id: filter
         uses: dorny/paths-filter@v3
         with:
           # 只输出 true/false，不列出具体文件
           list-files: none
           filters: |
-            backend:
-              - 'backend/**'
+            server:
+              - 'server/**'
               - '.github/workflows/build-images.yml'
-            frontend:
-              - 'frontend/**'
+            web:
+              - 'web/**'
               - '.github/workflows/build-images.yml'
 
       - name: 汇总需要构建的组件
@@ -60,14 +60,14 @@ jobs:
         run: |
           # 手动触发时固定构建前后端两个组件
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo 'components=["backend","frontend"]' >> "$GITHUB_OUTPUT"
+            echo 'components=["server","web"]' >> "$GITHUB_OUTPUT"
           else
             COMPONENTS="[]"
-            if [ "${{ steps.filter.outputs.backend }}" = "true" ]; then
-              COMPONENTS="$(printf '%s' "$COMPONENTS" | jq -c '. + ["backend"]')"
+            if [ "${{ steps.filter.outputs.server }}" = "true" ]; then
+              COMPONENTS="$(printf '%s' "$COMPONENTS" | jq -c '. + ["server"]')"
             fi
-            if [ "${{ steps.filter.outputs.frontend }}" = "true" ]; then
-              COMPONENTS="$(printf '%s' "$COMPONENTS" | jq -c '. + ["frontend"]')"
+            if [ "${{ steps.filter.outputs.web }}" = "true" ]; then
+              COMPONENTS="$(printf '%s' "$COMPONENTS" | jq -c '. + ["web"]')"
             fi
             echo "components=$COMPONENTS" >> "$GITHUB_OUTPUT"
           fi
@@ -93,16 +93,16 @@ jobs:
       - name: 设置组件构建参数
         id: settings
         run: |
-          if [ "${{ matrix.component }}" = "backend" ]; then
-            echo "context=." >> "$GITHUB_OUTPUT"
-            echo "dockerfile=./backend/Dockerfile" >> "$GITHUB_OUTPUT"
+          if [ "${{ matrix.component }}" = "server" ]; then
+            echo "context=./server" >> "$GITHUB_OUTPUT"
+            echo "dockerfile=./server/Dockerfile" >> "$GITHUB_OUTPUT"
             echo "build_args<<EOF" >> "$GITHUB_OUTPUT"
             echo "BUILD_TIME=${{ steps.buildinfo.outputs.build_time }}" >> "$GITHUB_OUTPUT"
             echo "GIT_SHA=${{ github.sha }}" >> "$GITHUB_OUTPUT"
             echo "EOF" >> "$GITHUB_OUTPUT"
-          elif [ "${{ matrix.component }}" = "frontend" ]; then
-            echo "context=./frontend" >> "$GITHUB_OUTPUT"
-            echo "dockerfile=./frontend/Dockerfile" >> "$GITHUB_OUTPUT"
+          elif [ "${{ matrix.component }}" = "web" ]; then
+            echo "context=./web" >> "$GITHUB_OUTPUT"
+            echo "dockerfile=./web/Dockerfile" >> "$GITHUB_OUTPUT"
           fi
 
       - name: 配置 Docker Buildx

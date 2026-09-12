@@ -39,7 +39,7 @@ MCP 不接受 SQL、数据库表名或任意 URL，只能按 OpenAPI 中登记�
 - `GET /api/v1/files/images/orphans?older_than_hours=24`：超级管理员查看未引用记录、无记录磁盘文件及磁盘缺失记录。
 - `DELETE /api/v1/files/images/orphans?older_than_hours=24`：删除未引用记录和无记录磁盘文件；默认 24 小时保护期，避免误删刚上传但尚未绑定的图片。
 
-数据库结构以最新版 `../example/database/init.sql` 为准，业务服务不会在运行时修改数据库结构。
+数据库结构以最新版 `../docs/references/database/init.sql` 为准，业务服务不会在运行时修改数据库结构。
 
 FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 `docs/development-plan.md` 实现。
 
@@ -75,19 +75,19 @@ FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 `docs/development-plan.md` 实�
 ```bash
 python -m venv .venv
 .venv/Scripts/pip install -e ".[dev]"
-copy ..\example\backend.env.example .env
-mysql -h <数据库地址> -u <用户名> -p <数据库名> < ../example/database/init.sql
+copy ..\docs\env\backend.env.example .env
+mysql -h <数据库地址> -u <用户名> -p <数据库名> < ../docs/references/database/init.sql
 mkdir data\template
-copy ..\example\template\*.json data\template\
+copy app\templates\*.json data\template\
 .venv/Scripts/uvicorn app.main:app --reload
 ```
 
-空数据库初始化通过 `../example/database/init.sql` 完成；`/health` 仅检查数据库连接。已有数据库的
+空数据库初始化通过 `../docs/references/database/init.sql` 完成；`/health` 仅检查数据库连接。已有数据库的
 结构调整必须通过版本化迁移脚本执行，不提供远程任意 SQL 接口。接口文档位于
 `http://localhost:8000/api/docs`。初始账号为 `admin`、`warehouse`、`purchase`、`readonly`，
 初始密码均为 `123456`。
 已有数据库启用接口令牌前需备份并执行
-`../example/database/migrations/20260804_add_user_api_token.sql`。
+`../docs/references/database/migrations/20260804_add_user_api_token.sql`。
 
 ## 验证与契约
 
@@ -102,11 +102,11 @@ python scripts/export_openapi.py
 `APP_WECHAT_MINI_PROGRAM_APP_ID` 和 `APP_WECHAT_MINI_PROGRAM_APP_SECRET`。多个小程序分别按
 相同顺序用英文逗号分隔，例如 `wx-app-1,wx-app-2` 和 `secret-1,secret-2`，两边数量必须一致，
 并可继续追加。AppSecret 只能保存在后端。已有单小程序数据库升级时先备份并执行
-`../example/database/upgrade-multi-miniprogram.sql`，执行前必须把脚本中的 `NULL` 替换为
+`../docs/references/database/upgrade-multi-miniprogram.sql`，执行前必须把脚本中的 `NULL` 替换为
 原小程序的真实 AppID。
-图片位于 `backend/data/uploads/`，应与 MySQL 使用相同备份周期。
+图片位于 `server/data/uploads/`，应与 MySQL 使用相同备份周期。
 
-运行日志默认写入 `backend/data/logs/spare-parts-api.log`。日志每天轮转，历史文件按
+运行日志默认写入 `server/data/logs/spare-parts-api.log`。日志每天轮转，历史文件按
 `YYYY-MM` 目录归档并保留 90 天；可通过 `APP_LOG_DIR` 和 `APP_LOG_BACKUP_COUNT` 调整。
 控制台默认输出 ANSI 颜色，设置 `NO_COLOR=1` 可关闭。请求日志依次采用
 `EO-Connecting-IP`、`X-Real-IP`、`X-Forwarded-For` 中的有效 IP；部署时应由可信反向代理覆盖这些请求头。
