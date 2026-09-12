@@ -12,6 +12,8 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.responses import PlainTextResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from app.core.db_timing import begin_database_timing, finish_database_timing
+
 logger = logging.getLogger("spare_parts.api")
 
 
@@ -76,7 +78,10 @@ class RefererCORSMiddleware:
     """Allow cross-origin requests using Referer first, then Origin as fallback."""
 
     _allow_methods = "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"
-    _expose_headers = "Content-Disposition, X-Request-ID, X-Response-Time"
+    _expose_headers = (
+        "Content-Disposition, X-Request-ID, X-Response-Time, "
+        "X-DB-Time, X-DB-Queries, X-Compute-Time"
+    )
 
     def __init__(
         self,
@@ -158,21 +163,43 @@ class RealIPMiddleware:
 
 
 async def request_context(request: Request, call_next: RequestResponseEndpoint) -> Response:
-    """为每个请求注入 request_id、耗时响应头并记录访问日志。"""
+    """为每个请求注入 request_id、接口性能响应头并记录访问日志。
+
+    响应头都在服务端计量（从收到请求到生成响应），不含网络传输时间，便于定位瓶颈：
+
+    - ``X-Response-Time``：服务端处理总耗时（毫秒）。
+    - ``X-DB-Time``：其中数据库语句执行耗时合计（毫秒）。
+    - ``X-Compute-Time``：其中应用计算耗时（毫秒）= 总耗时 - 数据库耗时，
+      含参数校验、权限、序列化等非数据库工作。
+    - ``X-DB-Queries``：本次请求执行的 SQL 条数（配合耗时判断 N+1 等问题）。
+    """
     request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))[:128]
     request.state.request_id = request_id
+    db_timing = begin_database_timing()
     started = time.perf_counter()
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    finally:
+        finish_database_timing()
     elapsed_ms = (time.perf_counter() - started) * 1000
+    db_ms = min(db_timing.total_ms, elapsed_ms)
+    compute_ms = elapsed_ms - db_ms
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Response-Time"] = f"{elapsed_ms:.2f}"
+    response.headers["X-DB-Time"] = f"{db_ms:.2f}"
+    response.headers["X-Compute-Time"] = f"{compute_ms:.2f}"
+    response.headers["X-DB-Queries"] = str(db_timing.statement_count)
     client_ip = request.client.host if request.client else "unknown"
     logger.info(
-        "HTTP %s %s -> %s | %.2f ms | client_ip=%s | user=%s | request_id=%s",
+        "HTTP %s %s -> %s | %.2f ms | db=%.2f ms/%s query | compute=%.2f ms | "
+        "client_ip=%s | user=%s | request_id=%s",
         request.method,
         request.url.path,
         response.status_code,
         elapsed_ms,
+        db_ms,
+        db_timing.statement_count,
+        compute_ms,
         client_ip,
         getattr(request.state, "username", "anonymous"),
         request_id,

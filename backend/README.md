@@ -43,6 +43,27 @@ MCP 不接受 SQL、数据库表名或任意 URL，只能按 OpenAPI 中登记�
 
 FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 `docs/development-plan.md` 实现。
 
+## 接口性能响应头
+
+每个 HTTP 响应的头部都带有服务端耗时分项（均在服务端计量，不含网络传输时间），可用于判断
+接口慢在数据库、慢在应用计算，还是慢在网络链路：
+
+| 响应头 | 含义 |
+| --- | --- |
+| `X-Response-Time` | 服务端处理总耗时（毫秒），从收到请求到生成响应 |
+| `X-DB-Time` | 其中数据库语句执行耗时合计（毫秒） |
+| `X-Compute-Time` | 其中应用计算耗时（毫秒）= 总耗时 - 数据库耗时，含参数校验、权限、编码、序列化等 |
+| `X-DB-Queries` | 本次请求执行的 SQL 条数，便于识别 N+1 |
+| `X-Request-ID` | 本次请求标识，与访问日志中的 `request_id` 一致（请求头传入时沿用） |
+
+示例：`X-Response-Time: 63.44` + `X-DB-Time: 0.79` + `X-Compute-Time: 62.65` 表示耗时几乎
+全在应用计算（密码哈希等）；`X-DB-Time` 接近 `X-Response-Time` 则说明瓶颈在数据库。
+
+数据库耗时由 SQLAlchemy 的 `before_cursor_execute` / `after_cursor_execute` 事件按请求上下文
+（`app/core/db_timing.py` 的 `ContextVar`）累计，后台任务（定时清理、Webhook 投递等）的 SQL
+不计入任何请求。访问日志同样记录 `db=… query` 与 `compute=…` 分项。跨域部署时这四个耗时头
+（含 `X-Response-Time`）都已在 `Access-Control-Expose-Headers` 中暴露。
+
 ## 跨域配置
 
 后端通过 `RefererCORSMiddleware` 处理跨域，优先从 `Referer` 解析前端站点，缺失或无效时回退到 `Origin`，并为预检和正常响应补齐 CORS Header。本项目不使用 HTTP 404 状态码：资源不存在返回 `400 + NOT_FOUND`，未匹配路径返回 `400 + ROUTE_NOT_FOUND`，详见 `../docs/api-error-conventions.md`。跨域完整说明见 `../docs/frontend-separated-deployment.md`。
