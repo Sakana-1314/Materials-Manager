@@ -45,7 +45,7 @@
 
 ### 不在约定范围内
 
-- **前端路由级「页面不存在」**（`frontend/src/views/NotFoundView.vue`）：属于浏览器端 UI
+- **前端路由级「页面不存在」**（`web/src/views/NotFoundView.vue`）：属于浏览器端 UI
   展示，不涉及 HTTP 状态码。
 - **对上游服务的 404 适配**（`ai_search_service` 判断上游 AI 接口 404 并转换为
   `AI_ENDPOINT_NOT_FOUND`）：这是消费外部服务的逻辑，不属于本 API 契约，可自由使用 404 判断。
@@ -86,7 +86,7 @@
 
 ## 代码实现位置
 
-- 后端错误码 → 默认状态码映射：`backend/app/core/errors.py`
-- 业务错误全局处理：`backend/app/main.py`（`handle_app_error`）
-- 框架级 404 重映射：`backend/app/main.py`（`handle_http_exception`）
-- 前端 mock 与后端保持一致的映射：`frontend/src/mocks/handlers.ts`（`DEFAULT_STATUS_BY_CODE`）
+- 后端错误码 → 默认状态码映射：`server/app/core/errors.py`
+- 业务错误全局处理：`server/app/main.py`（`handle_app_error`）
+- 框架级 404 重映射：`server/app/main.py`（`handle_http_exception`）
+- 前端 mock 与后端保持一致的映射：`web/src/mocks/handlers.ts`（`DEFAULT_STATUS_BY_CODE`）

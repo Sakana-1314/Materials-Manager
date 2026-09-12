@@ -13,7 +13,7 @@ npm run dev
 
 ## 接入后端
 
-复制 `../example/frontend.env.example` 为 `.env.local`。本地联调可将 `VITE_API_BASE_URL` 设置为 `http://localhost:8000/api/v1`；使用 Vite 同源代理时则设置为 `/api/v1`，并通过 `VITE_API_PROXY` 指定后端。
+复制 `../docs/env/frontend.env.example` 为 `.env.local`。本地联调可将 `VITE_API_BASE_URL` 设置为 `http://localhost:8000/api/v1`；使用 Vite 同源代理时则设置为 `/api/v1`，并通过 `VITE_API_PROXY` 指定后端。
 
 生产环境由 CI/CD 在 `npm run build` 前注入：
 

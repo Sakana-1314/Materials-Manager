@@ -10,7 +10,7 @@ from sqlalchemy.schema import CreateTable
 import app.models  # noqa: F401
 from app.core.database import Base
 
-INIT_SQL = Path(__file__).parents[2] / "example" / "database" / "init.sql"
+INIT_SQL = Path(__file__).parents[2] / "docs" / "references" / "database" / "init.sql"
 CREATE_TABLE = re.compile(
     r"CREATE TABLE IF NOT EXISTS `([^`]+)` \((.*?)\) ENGINE=",
     re.DOTALL,

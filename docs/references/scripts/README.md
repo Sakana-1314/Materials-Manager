@@ -2,6 +2,10 @@
 
 本目录用于存放备件管理系统配套的 Tampermonkey / Violentmonkey 用户脚本。
 
+> 目录调整说明：本目录原为 `example/script/`，已随仓库结构整理迁移到 `docs/references/scripts/`。
+> 两个脚本的 `@updateURL` / `@downloadURL` 已同步指向新地址并递增 `@version`；已安装旧地址的
+> 脚本不会自动更新，需要在脚本管理器中按本目录的新地址更新一次（或重新新建脚本粘贴内容）。
+
 ## 华友印尼数据平台同步
 
 脚本文件：`huayou-new-sync.user.js`
@@ -38,7 +42,7 @@
 
 凭据保存在用户脚本管理器的私有存储中，不写入仓库源码或网页 `localStorage`。查询时脚本会在
 后台短暂打开参数化报表页，得到结果后自动关闭。脚本 3.x 依赖后端“按申购单号整单目标/回写”
-接口（见 `backend/app/api/v1/purchase_record_sync.py`）；合同签订日期需要后端满足
+接口（见 `server/app/api/v1/purchase_record_sync.py`）；合同签订日期需要后端满足
 `purchase-record-sync` 字段白名单包含 `contract_sign_date`（本仓库 main 已支持，旧镜像需先更新）。
 
 ## 华友何佳状态同步
