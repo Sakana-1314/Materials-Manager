@@ -55,4 +55,28 @@ describe('useImportJob', () => {
 
     await expect(run(new File(['x'], 'stock.xlsx'))).rejects.toThrow('IMPORT_IN_PROGRESS')
   })
+
+  it('rejects a second run while an import is in progress without resubmitting', async () => {
+    let startResolve!: (value: ExcelImportJob) => void
+    const start = vi.fn(
+      () =>
+        new Promise<ExcelImportJob>((resolve) => {
+          startResolve = resolve
+        }),
+    )
+    const poll = vi.fn(async () => job(1, 'SUCCEEDED'))
+    const { running, run } = useImportJob({ start, poll, intervalMs: 1 })
+
+    const first = run(new File(['x'], 'stock.xlsx'))
+    await expect(run(new File(['x'], 'stock.xlsx'))).rejects.toMatchObject({
+      code: 'IMPORT_IN_PROGRESS',
+      message: '导入正在进行中，请稍候',
+    })
+    expect(start).toHaveBeenCalledTimes(1)
+    expect(poll).not.toHaveBeenCalled()
+
+    startResolve(job(1, 'SUCCEEDED'))
+    await expect(first).resolves.toEqual({ imported_count: 5 })
+    expect(running.value).toBe(false)
+  })
 })

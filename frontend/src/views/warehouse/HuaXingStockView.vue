@@ -10,6 +10,7 @@ import {
   preventTableColumnCompression,
   tableColumnWidths,
 } from '@/constants/table'
+import { useImportConfirm } from '@/composables/useImportConfirm'
 import { useImportJob } from '@/composables/useImportJob'
 import { usePagedTable } from '@/composables/usePagedTable'
 import { formatShanghaiTime } from '@/utils/time'
@@ -75,6 +76,7 @@ const importJob = useImportJob({
   poll: (jobId) => huaXingInventoryApi.importJob(jobId),
 })
 const importing = computed(() => importJob.running.value)
+const confirmImport = useImportConfirm(dialog)
 const lastImportAt = ref('')
 async function loadLastImport() {
   try {
@@ -163,19 +165,15 @@ function showImportSummary(result: Record<string, unknown> | null) {
 }
 
 async function importFile(file: File) {
-  try {
-    const result = await importJob.run(file)
-    showImportSummary(result)
-    filters.materialCode = ''
-    filters.name = ''
-    filters.modelSpec = ''
-    filters.purchaseDepartment = []
-    filters.purchaser = []
-    page.value = 1
-    await query()
-  } catch (error) {
-    message.error(error instanceof Error ? error.message : '导入失败')
-  }
+  const result = await importJob.run(file)
+  showImportSummary(result)
+  filters.materialCode = ''
+  filters.name = ''
+  filters.modelSpec = ''
+  filters.purchaseDepartment = []
+  filters.purchaser = []
+  page.value = 1
+  await query()
 }
 
 function onFileChange(event: Event) {
@@ -183,14 +181,12 @@ function onFileChange(event: Event) {
   const file = input.files?.[0]
   input.value = ''
   if (!file) return
-  dialog.warning({
-    draggable: true,
+  confirmImport({
     title: '全量更新华星总库存',
     content: `确认导入“${file.name}”吗？现有华星总库存将被全部删除，并由该文件完整替换。`,
-    positiveText: '确认全量更新',
-    negativeText: '取消',
-    positiveButtonProps: { type: 'primary' },
-    onPositiveClick: () => importFile(file),
+    runningText: '正在导入并全量更新，请勿重复提交，完成后自动刷新列表…',
+    run: () => importFile(file),
+    onError: (error) => message.error(error instanceof Error ? error.message : '导入失败'),
   })
 }
 </script>
@@ -203,6 +199,7 @@ function onFileChange(event: Event) {
         v-if="auth.can('warehouse:write')"
         type="primary"
         :loading="importing"
+        :disabled="importing"
         @click="openFilePicker"
       >
         导入表格全量更新
