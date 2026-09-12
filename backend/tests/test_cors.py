@@ -61,6 +61,11 @@ async def test_cors_headers_are_added_to_not_found_response(client: AsyncClient)
     exposed = response.headers["access-control-expose-headers"].lower()
     assert "content-disposition" in exposed
     assert "x-request-id" in exposed
+    # 接口性能头需在跨域场景显式暴露，前端/浏览器才能读到。
+    assert "x-response-time" in exposed
+    assert "x-db-time" in exposed
+    assert "x-db-queries" in exposed
+    assert "x-compute-time" in exposed
 
 
 async def test_cors_ignores_malformed_referer_and_uses_origin(client: AsyncClient) -> None:

@@ -6,6 +6,7 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import StaticPool
 
 from app.core.config import settings
+from app.core.db_timing import register_database_timing
 
 NAMING_CONVENTION = {
     "ix": "ix_%(column_0_label)s",
@@ -25,6 +26,8 @@ if settings.database_url.startswith("sqlite+aiosqlite:///:memory:"):
     engine_kwargs["poolclass"] = StaticPool
 
 engine = create_async_engine(settings.database_url, **engine_kwargs)
+# 统计每条 SQL 的服务端执行耗时，供 X-DB-Time / X-DB-Queries 响应头与访问日志使用。
+register_database_timing(engine)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False, autoflush=False)
 
 
