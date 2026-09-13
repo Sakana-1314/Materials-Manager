@@ -1,0 +1,76 @@
+name: 同步接口文档到 Apifox
+
+# 把仓库里的 OpenAPI 契约同步到 Apifox 项目，作为团队查看 / Mock 的唯一来源。
+# 令牌与项目 ID 分别来自仓库 Secret（APIFOX_ACCESS_TOKEN）与变量（APIFOX_PROJECT_ID）。
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/openapi.yaml"
+      - "server/app/**"
+      - "server/scripts/export_openapi.py"
+      - ".github/workflows/apifox.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apifox-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: 同步 openapi.yaml 到 Apifox
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 校验 Apifox 配置是否齐全
+        env:
+          APIFOX_ACCESS_TOKEN: ${{ secrets.APIFOX_ACCESS_TOKEN }}
+          APIFOX_PROJECT_ID: ${{ vars.APIFOX_PROJECT_ID }}
+        run: |
+          if [ -z "$APIFOX_ACCESS_TOKEN" ]; then
+            echo "缺少仓库 Secret：APIFOX_ACCESS_TOKEN" >&2
+            exit 1
+          fi
+          if [ -z "$APIFOX_PROJECT_ID" ]; then
+            echo "缺少仓库变量：APIFOX_PROJECT_ID" >&2
+            exit 1
+          fi
+
+      - name: 推送到 Apifox
+        env:
+          APIFOX_ACCESS_TOKEN: ${{ secrets.APIFOX_ACCESS_TOKEN }}
+          APIFOX_PROJECT_ID: ${{ vars.APIFOX_PROJECT_ID }}
+        run: |
+          set -e
+          # 传入 OpenAPI 文档内容 + 覆盖策略，接口与数据模型按 title/路径自动合并，
+          # 不动 Apifox 里手写的测试用例与 Mock 期望。
+          BODY="$(jq -n --rawfile spec docs/openapi.yaml '{
+            input: $spec,
+            options: {
+              targetEndpointFolderId: 0,
+              targetSchemaFolderId: 0,
+              endpointOverwriteBehavior: "AUTO_MERGE",
+              schemaOverwriteBehavior: "AUTO_MERGE",
+              updateFolderOfChangedEndpoint: false,
+              prependBasePath: false
+            }
+          }')"
+          CODE="$(printf '%s' "$BODY" | curl -sS -o /tmp/apifox-response.json -w '%{http_code}' \
+            -X POST "https://api.apifox.com/v1/projects/${APIFOX_PROJECT_ID}/import-openapi" \
+            -H "Authorization: Bearer ${APIFOX_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -H "X-Apifox-Version: 2022-11-16" \
+            --data-binary @-)"
+          echo "HTTP $CODE"
+          cat /tmp/apifox-response.json
+          if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 300 ]; then
+            echo "❌ 同步到 Apifox 失败" >&2
+            exit 1
+          fi
+          echo "✅ 已同步到 Apifox 项目 ${APIFOX_PROJECT_ID}"

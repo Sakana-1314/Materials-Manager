@@ -1,0 +1,376 @@
+# 前端架构
+
+网页端位于 `web/`，是 Vue 3 + TypeScript + Vite 单页应用：UI 用 Naive UI，状态用 Pinia，HTTP 用 axios，接口类型由 `docs/openapi.yaml` 生成。后端见 [/dev-backend](/dev-backend)，数据模型与状态机见 [/dev-data-model](/dev-data-model)、[/dev-state-machines](/dev-state-machines)，页面样式约定见 [/ui-design-guidelines](/ui-design-guidelines)，错误码处理见 [/api-error-conventions](/api-error-conventions)。
+
+## 技术栈与命令
+
+| 类别 | 依赖 | 版本（`web/package.json`） |
+| --- | --- | --- |
+| 框架 | `vue` | `^3.5.17` |
+| 路由 | `vue-router` | `^4.5.1` |
+| 状态 | `pinia` | `^3.0.3` |
+| UI | `naive-ui` | `^2.42.0` |
+| HTTP | `axios` | `^1.10.0` |
+| 组合式工具 | `@vueuse/core` | `^13.5.0` |
+| 图标 | `@vicons/ionicons5` | `^0.13.0` |
+| 构建 | `vite` / `@vitejs/plugin-vue` / `unplugin-vue-components` | `^7.0.4` / `^6.0.0` / `^28.8.0` |
+| 类型 | `typescript` / `vue-tsc` | `~5.8.3` / `^3.0.3` |
+| 测试 | `vitest` / `jsdom` / `@vue/test-utils` / `msw` | `^3.2.4` / `^26.1.0` / `^2.4.6` / `^2.10.4` |
+| 契约生成 | `openapi-typescript` | `^7.8.0` |
+
+`package.json` 的 scripts：
+
+| 命令 | 作用 |
+| --- | --- |
+| `npm run dev` | 启动 Vite 开发服务器（端口 5173，见 `web/vite.config.ts`） |
+| `npm run build` | `vue-tsc -b && vite build`（先类型检查再构建） |
+| `npm run preview` | 预览构建产物 |
+| `npm run test` | `vitest run`（单测） |
+| `npm run test:watch` | 监听模式单测 |
+| `npm run lint` / `npm run format` | `eslint . --max-warnings 0` / `prettier --write .` |
+| `npm run generate:api` | `openapi-typescript ../docs/openapi.yaml -o src/api/generated.raw.ts` |
+
+测试文件为 `*.spec.ts`，共 27 个；`web/vitest.config.ts` 中 `setupFiles: ['./src/test/setup.ts']`（仅 `afterEach(() => vi.restoreAllMocks())`）。
+
+## 目录结构
+
+`find web/src -type f` 结果按目录分组（省略 `*.spec.ts` 时在括号内注明）：
+
+```text
+web/src/
+├── App.vue                     根组件：n-config-provider（中文 locale + themeOverrides）包 4 个 provider + router-view
+├── main.ts                     启动引导：按开关启动 MSW → 拉图片加速配置 → createApp + 加载 settings store → mount
+├── theme.ts                    Naive UI 全局主题覆盖（GlobalThemeOverrides）
+├── styles.css                  全局样式与 CSS 变量（--color-*、--radius-*）
+├── env.d.ts                    ImportMetaEnv 声明 + __BUILD_TIME__
+├── api/
+│   ├── client.ts               axios 实例、拦截器、AppError
+│   ├── generated.raw.ts        openapi-typescript 生成产物（禁止手改）
+│   ├── generated.ts            类型别名层 + 前端自建视图模型（手写）
+│   ├── aiSearch.ts  auth.ts  dictionaries.ts  files.ts  huaXingInventory.ts
+│   ├── inventory.ts  memos.ts  procurement.ts  purchasePlanTemplates.ts
+│   └── secondaryWarehouse.ts  share.ts  systemSettings.ts  version.ts
+├── components/                 15 个 .vue（另含 7 个 .spec.ts）
+├── composables/                6 个 .ts（另含 5 个 .spec.ts）
+├── config/env.ts               VITE_* 解析与派生（另有 env.spec.ts）
+├── constants/                  branding.ts  purchase.ts  shareColumns.ts  table.ts（另有 shareColumns.spec.ts）
+├── layouts/AppLayout.vue       唯一布局：侧边菜单/移动端抽屉 + 顶栏用户菜单
+├── mocks/                      browser.ts  handlers.ts  data.ts（MSW mock）
+├── router/index.ts             路由表 + beforeEach 守卫
+├── stores/                     auth.ts  settings.ts（另有 settings.spec.ts）
+├── test/setup.ts               vitest setup
+├── types/                      navigation.ts  export.ts（另有 navigation.spec.ts）
+├── utils/                      10 个 .ts（decimal / download / image / memoDrafts / purchase /
+│                               routeQuery / settings / tableRowNavigation / tableText / time）
+└── views/
+    ├── LoginView.vue  MemosView.vue  NotFoundView.vue
+    ├── dashboard/DashboardView.vue
+    ├── procurement/  （7 个页面）
+    ├── public/ShareView.vue
+    ├── settings/     （5 个页面）
+    └── warehouse/    （8 个页面）
+```
+
+`web/components.d.ts` 由 `unplugin-vue-components` 生成（Naive UI 组件自动按需引入），同样不应手改。
+
+按主题分组，点上方标签切换。
+
+<Tabs :tabs="[
+  { id: 't0', title: '路由与状态管理' },
+  { id: 't1', title: 'API 与契约生成' },
+  { id: 't2', title: '组件与 composable' },
+  { id: 't3', title: '工具、布局与页面' },
+  { id: 't4', title: 'Mock、构建与部署' }
+]">
+
+<TabsContent id="t0">
+
+### 路由表
+
+来源：`web/src/router/index.ts`。`meta.permission` 是唯一权限点；**`meta.roles` 当前未实现**。除下表标注「公开」外，其余路由都要求已登录。
+
+| 路径 | name | 组件文件 | 鉴权 | 公开 |
+| --- | --- | --- | --- | --- |
+| `/login` | `login` | `views/LoginView.vue` | 无 | ✅ `meta.public` |
+| `/` | — | `layouts/AppLayout.vue` | 需登录 | ❌（`redirect: /dashboard`） |
+| `/dashboard` | `dashboard` | `views/dashboard/DashboardView.vue` | 需登录 | ❌ |
+| `/memos` | `memos` | `views/MemosView.vue` | 需登录 | ❌ |
+| `/warehouse/materials` | `stock-materials` | `views/warehouse/StockMaterialsView.vue` | 需登录 | ❌ |
+| `/warehouse/materials/:id` | `stock-material-detail` | `views/warehouse/StockMaterialDetailView.vue` | 需登录 | ❌ |
+| `/warehouse/inbound` | `inbound` | `views/warehouse/OperationEditorView.vue`（`props: { operationType: 'INBOUND' }`） | `warehouse:write` | ❌ |
+| `/warehouse/outbound` | `outbound` | `views/warehouse/OperationEditorView.vue`（`props: { operationType: 'OUTBOUND' }`） | `warehouse:write` | ❌ |
+| `/warehouse/stock` | `stock` | `views/warehouse/StockView.vue` | 需登录 | ❌ |
+| `/warehouse/hua-xing-stock` | `hua-xing-stock` | `views/warehouse/HuaXingStockView.vue` | 需登录 | ❌ |
+| `/warehouse/lite` | `warehouse-lite` | `views/warehouse/SecondaryWarehouseLiteView.vue` | 需登录 | ❌ |
+| `/warehouse/operations` | `operations` | `views/warehouse/OperationsView.vue` | 需登录 | ❌ |
+| `/warehouse/operations/:id` | `operation-detail` | `views/warehouse/OperationDetailView.vue` | 需登录 | ❌ |
+| `/procurement/materials` | `purchase-materials` | `views/procurement/PurchaseMaterialsView.vue`（`keepAlive`） | 需登录 | ❌ |
+| `/procurement/materials/:id` | `purchase-material-detail` | `views/procurement/PurchaseMaterialDetailView.vue` | 需登录 | ❌ |
+| `/procurement/purchase-plan-templates` | `purchase-plan-templates` | `views/procurement/PurchasePlanTemplatesView.vue`（`keepAlive`） | 需登录 | ❌ |
+| `/procurement/uncoded-materials` | `uncoded-materials` | `views/procurement/UncodedMaterialsView.vue` | 需登录 | ❌ |
+| `/procurement/material-code-library` | `material-code-library` | `views/procurement/MaterialCodeLibraryView.vue` | 需登录 | ❌ |
+| `/procurement/records` | `purchase-records` | `views/procurement/PurchaseRequestsView.vue`（`keepAlive`） | 需登录 | ❌ |
+| `/procurement/records/:id` | `purchase-record-detail` | `views/procurement/PurchaseRequestDetailView.vue` | 需登录 | ❌ |
+| `/settings/advanced` | `advanced-settings` | `views/settings/AdvancedSettingsView.vue` | `settings:write` | ❌ |
+| `/settings/ai-search` | — | 无组件，`redirect: { name: 'advanced-settings' }` | — | — |
+| `/settings/users` | `users` | `views/settings/UsersView.vue` | `settings:write` | ❌ |
+| `/settings/mini-program-users` | `mini-program-users` | `views/settings/MiniProgramUsersView.vue` | `settings:write` | ❌ |
+| `/settings/about` | `about` | `views/settings/AboutView.vue` | `settings:write` | ❌ |
+| `/settings/share-links` | `share-links` | `views/settings/ShareLinksView.vue` | `settings:write` | ❌ |
+| `/share/:token` | `share` | `views/public/ShareView.vue` | 无 | ✅ `meta.public` |
+| `/:pathMatch(.*)*` | — | `views/NotFoundView.vue` | 无 | ✅ `meta.public` |
+
+路由守卫 `router.beforeEach`（同步函数，顺序即执行顺序）：
+
+1. 设置标题：`` document.title = `${to.meta.title || '系统'} - HXNI 电气无忧` ``。
+2. 非 `public` 且 `auth.isAuthenticated` 为 false → `{ name: 'login', query: { redirect: to.fullPath } }`。
+3. 目标是 `login` 但已登录 → `{ name: 'dashboard' }`。
+4. `to.meta.permission` 存在且 `auth.can(permission)` 为 false → `{ name: 'dashboard' }`。
+5. `settings.isLiteMode` 为 true 且目标 name 属于 `FULL_WAREHOUSE_ROUTES`（`stock-materials`、`stock-material-detail`、`inbound`、`outbound`、`stock`、`operations`、`operation-detail`）→ `{ name: 'warehouse-lite' }`。
+
+说明：
+
+- 鉴权判定用 `stores/auth.ts` 的 `isAuthenticated`（= `token && user` 都存在）与 `can(permission)`；`can` 查 `types/navigation.ts` 的 `rolePermissions`（`SUPER_ADMIN` → 全部 4 项，`WAREHOUSE_ADMIN` → `warehouse:write` + `read`，`PURCHASE_ADMIN` → `purchase:write` + `read`，`READ_ONLY` → `read`）。
+- 无权限时的表现：**静默重定向到工作台**。当前未实现独立的 403 页面、无权限提示或按钮级全局拦截（页面内部按需用 `auth.can()` 自行隐藏入口，如 `layouts/AppLayout.vue` 的入库/出库菜单项、系统管理分组）。
+- `meta.keepAlive` 只在 3 个列表路由上声明；守卫不读取该字段，`AppLayout.vue` 用它控制 `<keep-alive>`。
+
+### 状态管理
+
+`web/src/stores/` 下只有 2 个 store，均为 setup 语法（`defineStore(id, () => {...})`）。
+
+| store | state | getters | actions | 持久化 | 一句话职责 |
+| --- | --- | --- | --- | --- | --- |
+| `stores/auth.ts`（`useAuthStore`） | `user: User \| null`、`token: string \| null` | `isAuthenticated`（`Boolean(token && user)`） | `login(payload)`、`refresh()`（调 `/auth/me` 回填 user）、`logout()`、`can(permission)` | 读写 `localStorage`：`access_token`、`refresh_token`、`auth_user`；`user`/`token` 初值在 store 定义时就读取 `auth_user` / `access_token` | 登录态与角色权限判断 |
+| `stores/settings.ts`（`useSettingsStore`） | `secondaryWarehouseMode: SecondaryWarehouseMode`（初值 `'full'`）、`loaded: boolean` | `isLiteMode`（`secondaryWarehouseMode === 'lite'`） | `load()`（调 `systemSettingsApi.miniProgramFeatures()`，失败回退 `'full'`，`loaded` 置 true 后不再重复请求） | 无持久化（每次启动重新拉公开配置） | 全局二级库模式，供路由守卫与侧边菜单在首次导航前同步读取 |
+
+`main.ts` 在 `app.mount('#app')` 之前 `await useSettingsStore(pinia).load()`，因此守卫里能同步读到 `isLiteMode`。
+
+</TabsContent>
+
+<TabsContent id="t1">
+
+### API 客户端与契约生成
+
+#### `web/src/api/client.ts`
+
+- 实例：`axios.create({ baseURL: apiBaseUrl, timeout: 15_000, paramsSerializer: { indexes: null } })`（数组参数序列化为重复 key，不带 `[]`）。
+- `baseURL` 来自 `web/src/config/env.ts` 的 `apiBaseUrl`：`resolveApiBaseUrl(import.meta.env.VITE_API_BASE_URL)`，未配置时回退 `/api/v1`；只填域名（纯 origin）时自动补 `/api/v1`。同文件还导出 `imageBaseUrl`（`VITE_IMAGE_BASE_URL`，缺省 = `apiBaseUrl/files/images`）、`buildTime`（构建期注入的 `__BUILD_TIME__`）、`resolveMcpUrl(apiBaseUrl, token)`（拼 `mcp/?token=`）。
+- 请求拦截器：`localStorage` 有 `access_token` 时注入 `Authorization: Bearer <token>`；每个请求生成 `config.headers['X-Request-ID'] = crypto.randomUUID()`。
+- 版本头：客户端不做统一注入，只由业务模块按需传 `If-Match` —— `procurement.deleteMaterial`、`procurement.restoreRecordToPlan`、`purchasePlanTemplates.deleteTemplate`、`inventory.deleteMaterial`、`dictionaries.deleteMiniProgramUser`（值均为 `String(version)`）。
+- `X-API-Token`：**前端当前未实现**（代码中无该请求头，接口令牌仅在「管理端用户」页展示/复制与 MCP 链接里使用）。
+- 401 处理：仅当 `status === 401 && data.code === 'INVALID_TOKEN' && 未重试过 && localStorage 有 refresh_token` 时，调用 `renewAccessToken()`（`POST /auth/refresh`，`timeout: 15_000`，自带 `X-Request-ID`）并重放原请求；并发请求共用模块级 `refreshRequest` promise，避免刷新风暴。刷新失败或其余 401 场景执行 `clearSession()`（删除三个 localStorage key，直接操作 localStorage，不经 store）并在 `location.pathname !== '/login'` 时 `location.assign('/login')` 整页跳转。
+- 错误归一化：响应体带 `code` 时抛 `AppError`（保留 `code` / `message` / `details` / `request_id`）；否则按有无 `response` 构造 `SERVER_ERROR`（`服务请求失败（HTTP <status>），请稍后重试`）或 `NETWORK_ERROR`（`无法连接服务器，请检查网络后重试`），`request_id` 取自本次请求的 `X-Request-ID`。
+- 响应头读取：**前端当前未消费任何响应头**（无 `X-Response-Time` / 服务端 `X-Request-ID` 的读取逻辑）。
+- 超时覆盖：默认 15s；`systemSettings.imageAcceleration`、`systemSettings.miniProgramFeatures` 为 3000ms；`aiSearch.testSettings` 为 35s；`procurement.importMaterialCodes`、`secondaryWarehouse.import`、`huaXingInventory.import` 为 120s。
+
+#### 契约生成
+
+| 文件 | 说明 |
+| --- | --- |
+| `docs/openapi.yaml` | 唯一事实源（后端导出） |
+| `web/src/api/generated.raw.ts` | 由 `npm run generate:api`（即 `openapi-typescript`）从 `docs/openapi.yaml` 生成，**禁止手改** |
+| `web/src/api/generated.ts` | 手写的类型别名层：能一一映射的写 `export type X = components['schemas']['X']`，再补充前端自建视图模型（`Page<T>`、`PagedQueryParams`、`ManagedUser`、`OperationWrite`、`PurchaseRequest` 等）；**不是生成产物，但仍不应手改生成段** |
+
+#### `web/src/api/` 模块职责
+
+| 模块 | 接口域 | 职责 |
+| --- | --- | --- |
+| `auth.ts` | `/auth/login`、`/auth/refresh`、`/auth/me` | 登录、刷新令牌、取当前用户 |
+| `inventory.ts` | `/dashboard/summary`、`/stock-materials*`、`/inventory/*` | 工作台汇总、物资档案 CRUD + 小程序码、补库策略、库存查询、低库存、出入库、流水查询/修改/冲减、补库草稿 |
+| `procurement.ts` | `/material-code-library*`、`/purchase-materials*`、`/purchase-records*`、`/excel-export-jobs/:id` | 申购计划/记录 CRUD 与批量操作、筛选选项、计划转记录、未编码物资、物料编码库导入与检查、各类导出与导出任务轮询 |
+| `purchasePlanTemplates.ts` | `/purchase-plan-templates*` | 周期性计划模板 CRUD 与「生成申购计划」 |
+| `huaXingInventory.ts` | `/huaxing-inventory*` | 华星总库存查询、筛选选项、Excel 导入任务与最近导入 |
+| `secondaryWarehouse.ts` | `/secondary-warehouse*` | 精简二级库列表、Excel 导入任务与最近导入 |
+| `dictionaries.ts` | `/users*`、`/mini-program-users*` | 管理端用户 CRUD 与接口令牌重置、小程序用户查询/更新/删除/合并 |
+| `systemSettings.ts` | `/system-settings/*` | 图片加速配置、小程序功能开关、Webhook 渠道读取/更新/测试 |
+| `aiSearch.ts` | `/ai-search/*` | AI 搜索扩展、状态、配置读取/更新/测试 |
+| `share.ts` | `/shares*` | 创建/读取/列取/更新/撤回匿名分享链接 |
+| `memos.ts` | `/memos*` | 个人备忘录 CRUD |
+| `files.ts` | `/files/images*` | 图片上传与删除 |
+| `version.ts` | `/version` | 版本信息（关于页） |
+
+`web/src/utils/download.ts` 中的 `exportDownloadUrl(fileUuid)` 直接拼导出文件下载地址（该端点不鉴权）。
+
+</TabsContent>
+
+<TabsContent id="t2">
+
+### 公共组件清单
+
+`web/src/components/` 下 15 个 `.vue`（不含 `.spec.ts`）：
+
+| 组件 | 职责 | 关键 props / emits |
+| --- | --- | --- |
+| `ColumnVisibilityPicker.vue` | 表格列显隐勾选，可选按 `storageKey` 从 `localStorage` 恢复/持久化（最后一列不允许取消） | props：`value: string[]`、`options: ColumnOption[]`、`storageKey?: string`；emit：`update:value` |
+| `ExportButton.vue` | 导出下拉按钮（Naive UI `NDropdown`），无选项或无数据时禁用 | props：`options: ExportOption[]`、`loading?`、`disabled?`（默认 false）；emit：`select: [key: string]` |
+| `ExportLoadingOverlay.vue` | 全屏「正在生成 Excel，请稍候…」遮罩 | props：`show: boolean` |
+| `FilterExpandButton.vue` | 筛选区展开/收起按钮（`aria-expanded`） | props：`expanded: boolean`；emit：`update:expanded` |
+| `ImageThumbnails.vue` | 图片缩略图（最多显示 3 张 + 剩余数量），用 `imagePreviewUrl`/`imageUrl` | props：`images: FileObject[]` |
+| `ImageUploader.vue` | 图片上传（校验类型/大小、上传/删除、预览），并处理 ESC 只关一层预览的捕获逻辑 | props：`files: FileObject[]`、`disabled?`、`max?`（默认 9）；emit：`update:files` |
+| `LoadingMask.vue` | 元素内局部加载遮罩（模糊宿主 + 居中 loading） | props：`show: boolean`、`text?: string` |
+| `MaterialCodeSelector.vue` | 物料编码库弹窗选择器，支持按编码/名称/型号检索分页 | props：`modelValue: string`、`defaultName?`、`defaultModelSpec?`、`disabled?`；emits：`update:modelValue`、`select: [MaterialCodeLibrary]` |
+| `MaterialSelector.vue` | 二级库物资下拉选择（支持关键词加载与排除已选） | props：`value: number \| null`、`disabled?`、`excludeIds?: number[]`；emits：`update:value`、`select: [StockMaterial?]` |
+| `OperationLinesEditor.vue` | 出入库行编辑器（选物资 + 数量，出库多一列领用信息） | props：`lines: OperationLineModel[]`、`type: 'INBOUND' \| 'OUTBOUND'`、`disabled?`；emit：`update:lines` |
+| `PurchaseRecordHistoryDialog.vue` | 申购记录历史弹窗（按名称/型号检索历史记录表格） | props：`show: boolean`、`initialName?`；emit：`update:show` |
+| `QuantityInput.vue` | 数量输入框：正则限制 1 位小数，用 `isDecimalString` / `compareDecimal` 校验并显示 error/success 状态 | props：`value: string`、`decimalPlaces?`（默认 1）、`max?`、`disabled?`、`placeholder?`；emit：`update:value` |
+| `ReverseOperationDialog.vue` | 出入库流水冲减弹窗（按行填写冲减数量，`reversed` 回传操作 id） | props：`show: boolean`、`operation: StockOperation \| null`；emits：`update:show`、`reversed: [id: number]` |
+| `ShareLinkDialog.vue` | 分享链接生成弹窗（三步：确认 → 选择失效时间 → 生成并复制链接） | props：`show: boolean`、`shareType: ShareType`、`itemIds?: number[]`、`title: string`；emit：`update:show` |
+| `SortableHeader.vue` | 表头排序下拉（默认/升序/降序），高亮当前排序状态 | props：`label: string`、`sortByKey: string`、`sortBy: string \| null`、`sortOrder: 'asc' \| 'desc' \| null`；emit：`select` |
+
+### Composable 清单
+
+`web/src/composables/` 下 6 个 `.ts`（不含 `.spec.ts`），全部为函数式组合式 API：
+
+| Composable | 职责 | 关键返回项 | 典型使用位置 |
+| --- | --- | --- | --- |
+| `usePagedTable.ts` | 统一列表分页/加载/筛选/URL 同步：`load/query/changePage/changePageSize/resetFilters`，可选 `rollbackEmptyPage` 防空页回退、`paginated: false` 全量拉取、`urlSync` 把 page/page_size/筛选写回 URL | `items`、`total`、`page`、`pageSize`、`loading`、`filters`、`pageSizeOptions`、`load`、`query`、`changePage`、`changePageSize`、`resetFilters`、`syncRoute` | 13 个列表页（仓库 5、申购 5、设置 3） |
+| `useExportJob.ts` | 异步导出任务轮询：提交 → 轮询到 `SUCCEEDED`/`FAILED`（默认 1500ms 间隔），失败抛 `AppError` | `running`、`run(payload)` | `PurchaseRequestsView`、`PurchaseMaterialsView` |
+| `useImportJob.ts` | 异步导入任务轮询：同样的提交+轮询流程，带同步重入保护（重复提交抛 `IMPORT_IN_PROGRESS`），成功返回 `result` | `running`、`run(file)` | `HuaXingStockView`、`SecondaryWarehouseLiteView`、`MaterialCodeLibraryView` |
+| `useImportConfirm.ts` | 全量更新导入的确认弹窗：确认后立刻禁用按钮并切换进行中文案，防重复提交（`maskClosable/closeOnEsc` 均为 false），错误交给 `onError` | 返回 `confirmImport(options)` 函数 | 同上三个导入页面 |
+| `useImplicitAiSearch.ts` | 隐式 AI 搜索：用户显式展开关键词优先，源输入变化时自动清除展开值 | `searchName`、`applyExpandedName(value)`、`clearExpandedName()` | `PurchaseRequestsView`、`PurchaseMaterialsView` |
+| `useShiftWheelHorizontalScroll.ts` | 在表格滚动容器上支持 Shift+滚轮横向滚动 | 无返回值（内部挂/卸 `wheel` 监听，`passive: false`） | 申购 3 个列表页 |
+
+</TabsContent>
+
+<TabsContent id="t3">
+
+### 其它 src 子目录
+
+#### `web/src/utils/`
+
+| 文件 | 职责 |
+| --- | --- |
+| `decimal.ts` | Decimal 字符串处理：**前端数量/库存全部用字符串而不是 number**，避免浮点误差与后端 `Decimal` 精度丢失。导出 `isDecimalString(value, decimalPlaces = 1, allowZero = false)`（正则 `^\d+(?:\.\d)?$` + 小数位/整数位上限 + 是否允许 0）、`decimalPlacesOf`、`normalizeDecimal`、`compareDecimal`、`subtractDecimal`，内部用 `BigInt` 对齐小数位比较与相减 |
+| `download.ts` | Blob/URL 下载、`exportDownloadUrl(fileUuid)`、解析 `Content-Disposition` 文件名、`downloadBlobWithDisposition` |
+| `image.ts` | 图片类型/大小校验（允许 `image/jpeg`/`png`/`webp`，上限 10MB）、`configureImageBaseUrl`、`imageUrl`、`imagePreviewUrl` |
+| `memoDrafts.ts` | 备忘录未保存草稿的 IndexedDB 暂存：按 `${userId}:${memoId}` 隔离，不可用时静默降级为无操作，另有 `hasPendingDraft` |
+| `purchase.ts` | 申购默认值辅助：`defaultPurchaseOrderNo`、`getLastPurchaseResponsible`、`rememberPurchaseResponsible`（本地记住上次填写人） |
+| `routeQuery.ts` | 路由 query 读写辅助：`routeQueryString`、`routeQueryPositiveInteger`、`compactRouteQuery`（压缩空值） |
+| `settings.ts` | `inventoryModeOptionsFor(secondaryWarehouseMode)`：精简模式下不提供「可读写」选项 |
+| `tableRowNavigation.ts` | `createTableRowClickGuard()`：区分行点击与行内按钮/选择交互，避免误跳转 |
+| `tableText.ts` | `renderTwoLineText(primary, secondary)`：表格单元格两行文本渲染 |
+| `time.ts` | 时间格式化（东八区）：`formatShanghaiTime`、`toIsoWithTimezone`、`toShanghaiDate`、`formatDate`、`dateToTimestamp`（空值返回 null，避免日期选择器默认成今天） |
+
+#### `web/src/constants/`、`types/`、`config/`
+
+| 文件 | 职责 |
+| --- | --- |
+| `constants/branding.ts` | `LOGO_URL = '/logo.png'` |
+| `constants/purchase.ts` | 申购默认值/选项：`defaultPurchasePlanStatus`、`purchasePlanStatusOptions`、`defaultDemandDepartment`、`defaultPurchaseUrgency`、`purchaseUrgencyOptions`、`purchaseCategoryOptions` |
+| `constants/shareColumns.ts` | 分享页可展示列定义（键名与后端 Literal 严格一致）：`SHARE_PLAN_COLUMNS`、`SHARE_RECORD_COLUMNS`、`shareColumnOptions()`、`SHARE_DEFAULT_HIDDEN_KEYS = ['status']`、`defaultShareColumnKeys()`，供 `ShareView` 渲染与 `ShareLinksView` 勾选共用 |
+| `constants/table.ts` | `tableColumnWidths`（unit/quantity/date/datetime/status/person/code/identifier/name/material/model/text/action）、`preventTableColumnCompression`、`getTableScrollX` |
+| `types/navigation.ts` | `Permission` 字面量联合（`warehouse:write`、`purchase:write`、`settings:write`、`read`）、`rolePermissions: Record<Role, Permission[]>`、`roleLabels: Record<Role, string>` |
+| `types/export.ts` | `ExportOption = DropdownOption & { label: string; key: string }` |
+| `config/env.ts` | VITE_* 解析（见 API 客户端一节的 baseURL 说明） |
+| `theme.ts` | Naive UI `themeOverrides`（主题色 `#3f63d8`、圆角与阴影等），由 `App.vue` 传给 `n-config-provider` |
+| `styles.css` | 全局样式与 CSS 变量：字体栈、`--color-primary/-success/-warning/-danger`、文本/边框/表面色、`--radius-control`、局部加载遮罩底色等 |
+
+#### `web/src/layouts/` 与 `web/src/views/`
+
+`layouts/AppLayout.vue` 是唯一布局：`n-layout` + 侧边菜单（`menuOptions` 由 `auth.can()`、`settings.isLiteMode` 动态拼装：工作台、备忘录、二级库分组或精简二级库、华星总库存、申购管理、系统管理），顶栏含用户信息与退出（`auth.logout()` + 跳 `login`）；`useMediaQuery('(max-width: 768px)')` 时侧栏切换为抽屉。
+
+| 目录 | 页面文件 | 一句话职责 |
+| --- | --- | --- |
+| `views/` | `LoginView.vue` | 登录页：账号密码表单 + 演示提示，调 `auth.login`，支持 `?redirect=` |
+| | `MemosView.vue` | 个人备忘录：多 tab 快捷切换、点击保存才提交、IndexedDB 草稿暂存 |
+| | `NotFoundView.vue` | 404 页面 |
+| `views/dashboard/` | `DashboardView.vue` | 工作台：汇总卡片（`inventoryApi.summary`）与低库存/近期流水概览 |
+| `views/warehouse/` | `StockMaterialsView.vue` | 二级库物资档案列表与新增/编辑弹窗、补库策略、小程序码 |
+| | `StockMaterialDetailView.vue` | 物资档案详情（含图片、出入库记录、补库策略） |
+| | `OperationEditorView.vue` | 入库/出库登记（按 `props.operationType` 复用），含行编辑与校验 |
+| | `OperationsView.vue` | 出入库操作记录列表（筛选 + 详情 + 冲减入口） |
+| | `OperationDetailView.vue` | 单条流水详情与修改、冲减 |
+| | `StockView.vue` | 库存查询（余额/低库存），支持生成补库草稿跳申购计划 |
+| | `HuaXingStockView.vue` | 华星总库存查询与 Excel 全量导入（`useImportJob` + `useImportConfirm`） |
+| | `SecondaryWarehouseLiteView.vue` | 精简模式二级库：Excel 导入 + 只读查询 |
+| `views/procurement/` | `PurchaseMaterialsView.vue` | 申购计划列表：筛选/排序/批量更新/批量转记录/导出，列显隐与 URL 同步 |
+| | `PurchaseMaterialDetailView.vue` | 申购计划详情与编辑 |
+| | `PurchasePlanTemplatesView.vue` | 周期性计划模板列表、编辑与「生成申购计划」 |
+| | `UncodedMaterialsView.vue` | 未编码物资列表（`coded: false`）与批量编码、导出 |
+| | `MaterialCodeLibraryView.vue` | 物料编码库列表与 Excel 导入 |
+| | `PurchaseRequestsView.vue` | 申购记录列表：筛选/排序/批量更新/恢复为计划/分享/导出 |
+| | `PurchaseRequestDetailView.vue` | 申购记录详情与编辑（含图片） |
+| `views/settings/` | `AdvancedSettingsView.vue` | 高级设置：AI 搜索配置、小程序功能开关、图片加速、Webhook |
+| | `UsersView.vue` | 管理端用户管理：角色、启用状态、接口令牌回显/重置、MCP 链接 |
+| | `MiniProgramUsersView.vue` | 小程序用户查询、更新、删除与合并 |
+| | `ShareLinksView.vue` | 分享链接管理：列表、更新展示列/失效时间、撤回 |
+| | `AboutView.vue` | 关于页：`versionApi.get()` 版本信息与 `buildTime` 构建时间 |
+| `views/public/` | `ShareView.vue` | 匿名分享预览页（凭 token 拉数据、按配置列渲染、失败提示失效） |
+
+</TabsContent>
+
+<TabsContent id="t4">
+
+### MSW Mock
+
+| 文件 | 作用 |
+| --- | --- |
+| `web/src/mocks/browser.ts` | `setupWorker(...handlers)` 导出 `worker` |
+| `web/src/mocks/handlers.ts` | 83 个 `http.*` 处理器、65 个唯一路径，全部以 `${apiBaseUrl}` 拼接（另含 1 个 `${imageBaseUrl}/:id` 返回 SVG 占位图），带 `page()`/`error()`/`actor(request)` 等辅助函数 |
+| `web/src/mocks/data.ts` | 内存种子数据：`users`、`miniProgramUsers`、`stockMaterials`、`operations`、`purchaseMaterials`、`purchaseRequests`、`purchasePlanTemplates`、`huaXingInventory`、`nextIds`、`mockFileId` |
+
+启用条件在 `web/src/main.ts`：
+
+```ts
+import.meta.env.VITE_USE_MOCK === 'true' ||
+(import.meta.env.VITE_USE_MOCK !== 'false' && import.meta.env.DEV)
+```
+
+即：显式 `true` 强制启用；显式 `false` 关闭；未设置时**开发环境默认启用、生产构建默认关闭**。启动参数为 `{ onUnhandledRequest: 'bypass', serviceWorker: { url: '/mockServiceWorker.js' } }`，worker 文件在 `web/public/mockServiceWorker.js`。
+
+已覆盖的接口域：`/auth/*`、`/dashboard/summary`、`/system-settings/*`、`/ai-search/*`、`/users*`、`/mini-program-users*`、`/stock-materials*`、`/inventory/*`、`/purchase-materials*`（含 `batch*`、`move-to-record`、`export-results`）、`/purchase-records*`（含 `batch`、`restore-to-plan`、`export-results`）、`/purchase-plan-templates*`、`/material-code-library/import*`、`/huaxing-inventory*`（不含 last-import）、`/excel-export-jobs/*`、`/shares*`、`/files/images*`、图片预览地址。
+
+未覆盖（`onUnhandledRequest: 'bypass'` 会透传到网络，因此这些页在纯 mock 模式下不可用）：
+
+| 未覆盖接口 | 对应前端调用 |
+| --- | --- |
+| `/memos*`（列表/新建/更新/删除） | `api/memos.ts`（备忘录页） |
+| `/version` | `api/version.ts`（关于页） |
+| `/secondary-warehouse*`（list、import、import-jobs、last-import） | `api/secondaryWarehouse.ts` |
+| `/material-code-library`（列表）、`/material-code-library/exists`、`/material-code-library/last-import` | `api/procurement.ts` 对应方法 |
+| `/purchase-materials/export-purchase-application`、`/export-purchase-approval`、`/export-uncoded` | 三份同步（非任务式）导出 |
+| `/huaxing-inventory/last-import` | 华星导入页「上次导入」 |
+
+### 构建与代理
+
+`web/vite.config.ts`：
+
+| 项 | 值 |
+| --- | --- |
+| 插件 | `@vitejs/plugin-vue`、`unplugin-vue-components` + `NaiveUiResolver()`（Naive UI 组件自动按需引入，产物清单写入 `web/components.d.ts`） |
+| alias | `@` → `web/src` |
+| 全局常量 | `define: { __BUILD_TIME__: JSON.stringify(new Date().toISOString()) }` |
+| 构建产物 | `build.assetsDir: 'yangrucheng-assets'`（静态资源目录名，与 `web/edgeone.json` 的缓存规则对应） |
+| dev server | `server.port: 5173` |
+| 代理 | **仅当 `VITE_USE_MOCK === 'false'` 时**启用 `{ '/api': env.VITE_API_PROXY \|\| 'http://localhost:8000' }`；未设置或设为 `true` 时不配置代理（走 MSW） |
+
+`web/vitest.config.ts`：独立于 `vite.config.ts`（不加载其插件链以外的配置），`environment: 'jsdom'`、`setupFiles: ['./src/test/setup.ts']`、同样的 `@` alias 与 `__BUILD_TIME__`。
+
+`web/tsconfig.json`：空 `files`，只做 project references（`tsconfig.app.json`、`tsconfig.node.json`）。
+
+| 文件 | 关键项 |
+| --- | --- |
+| `web/tsconfig.app.json` | 继承 `@vue/tsconfig/tsconfig.dom.json`；`paths: { "@/*": ["src/*"] }`；`types: ["vitest/globals"]`；`strict`、`noUnusedLocals`、`noUnusedParameters` 均为 true；`include` 覆盖 `src/**/*.ts|tsx|vue` |
+| `web/tsconfig.node.json` | 覆盖 `vite.config.ts`、`vitest.config.ts`、`eslint.config.js`；`moduleResolution: Bundler`、`verbatimModuleSyntax`、`noEmit`、`strict` |
+
+环境变量清单：`web/.env.example` **不存在**，模板在 `docs/env/frontend.env.example`；变量声明见 `web/src/env.d.ts`。
+
+| 变量 | 说明 |
+| --- | --- |
+| `VITE_USE_MOCK` | `true` 强制启用 MSW；`false` 关闭并启用 Vite 代理；未设置时按 `import.meta.env.DEV` 决定 |
+| `VITE_API_BASE_URL` | 接口基础地址，缺省 `/api/v1`；只填域名时自动补 `/api/v1` |
+| `VITE_IMAGE_BASE_URL` | 图片读取前缀，缺省为 `VITE_API_BASE_URL/files/images` |
+| `VITE_API_PROXY` | **仅供 `npm run dev` 的 Vite 代理目标**，生产构建不读取 |
+
+注意：这些值在**构建阶段**被写入静态产物，部署后改环境变量无效，需重新构建（详见 [/frontend-separated-deployment](/frontend-separated-deployment)）。
+
+### 部署
+
+- 构建变量注入与跨域/CDN 配置见 [/frontend-separated-deployment](/frontend-separated-deployment)。
+- `web/Dockerfile`：两阶段构建 —— `node:22-alpine` 执行 `npm ci` + `npm run build`（`ARG VITE_USE_MOCK=false`、`ARG VITE_API_BASE_URL=/api/v1` 经 `ENV` 注入），再用 `nginx:1.27-alpine` 托管 `/app/dist`；`EXPOSE 80`，健康检查 `wget -q --spider http://127.0.0.1/`。
+- `web/nginx.conf`：`location /api/` 反代到 `http://backend:8000`（带 `X-Real-IP`/`X-Forwarded-*`，`proxy_read_timeout 60s`）；`location /` 用 `try_files $uri $uri/ /index.html` 支持 history 路由；静态资源（js/css/图片/字体）7 天 `immutable` 缓存；`client_max_body_size 50m`。
+- `web/edgeone.json`：静态托管的输出目录 `dist` 与 `/yangrucheng-assets/*`、`*.png`、`*.jpg` 的 14 天缓存头。
+
+</TabsContent>
+
+</Tabs>

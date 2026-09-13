@@ -8,7 +8,7 @@
 
 ## 项目概况
 
-- 项目名称：**HXNI 电气无忧**（英文标识 `Electrical-Manager`）。以电气车间二级库库存与申购协同起步，逐步扩展到电气车间其他业务；不涉及物资价格和成本核算。
+- 项目名称：**HXNI 电气无忧**（英文标识 `Electrical-Manager`）。面向华星镍业检修维护部电气自动化车间，覆盖二级库库存、申购计划、请购与到货、采购跟踪、精简库存、图片附件、表格导入导出、链接分享、用户权限、AI 搜索/MCP 与备忘录；不涉及物资价格和成本核算。
 - 前端（网页端）：Vue 3 + TypeScript + Vite + Naive UI + Pinia，位于 `web/`。
 - 后端（服务端）：FastAPI + SQLAlchemy 异步，位于 `server/`。
 - 小程序：微信小程序，位于 `miniprogram/`。
@@ -24,7 +24,7 @@
 
 - `docs/openapi.yaml` — 接口契约；改后端接口时同步契约，并用 `npm run generate:api`（在 `web/` 目录）重新生成前端类型。
 - `docs/websites/pages/ui-design-guidelines.md` — UI 组件与样式约定。
-- `docs/websites/pages/api-error-conventions.md` — 后端错误约定。
+- `docs/websites/pages/api-error-conventions.md`（错误响应与状态码规则）、`docs/websites/pages/api-error-codes.md`（全部错误码总表，改错误码必须同步，见 `server/tests/test_error_code_docs.py`）。
 - `.github/workflows/` — CI 流水线（契约一致性校验 / 接口测试 / 构建镜像 / 发布站点）。
 
 ## 项目站点（必须遵守）
@@ -34,6 +34,25 @@
 - `base` 必须与仓库路径一致（`/Electrical-Manager/`）；**仓库改名后要同步改** `.vitepress/config.ts` 的 `base` 与 README／AGENTS 里的站点地址。
 - 发布由 `.github/workflows/website.yml` 在 `main` 变更时自动完成：构建 `docs/websites` 后推送到 `gh-pages` 分支，由 GitHub Pages 发布；不要手工提交构建产物。
 - 本地预览：`cd docs/websites && npm install && npm run dev`；提交前跑一次 `npm run build` 确认能构建。
+- **长页面必须拆成二级 tab**：用站点自带的 `<Tabs>` / `<TabsContent>` 组件（见 `.vitepress/theme/components/`），
+  不要把一个主题写成几百行的滚动长文。tab 列表写在 `<Tabs :tabs="[{ id, title }, …]">` 上，面板用同名 id：
+
+  ```md
+  <Tabs :tabs="[{ id: 'a', title: '标题 A' }, { id: 'b', title: '标题 B' }]">
+  <TabsContent id="a">
+  …markdown…
+  </TabsContent>
+  <TabsContent id="b">
+  …markdown…
+  </TabsContent>
+  </Tabs>
+  ```
+
+  这些是站内 Vue 组件，**在 GitHub 上浏览 markdown 时会显示成标签文本**，因此 README 与其它给 GitHub 看的
+  文档不要用它们（README 只用普通 markdown 表格）。
+- 文档页面之间互相引用用站点绝对路径（如 `/dev-data-model`、`/api-error-codes`），不要用相对路径 `../`；
+  VitePress 构建会检查死链，写错会在 CI 里失败。
+- 站点文档不要写项目演进史或「以后会覆盖什么业务」，只描述当前实现与当前功能。
 
 ## 验证命令（提交前必须通过）
 

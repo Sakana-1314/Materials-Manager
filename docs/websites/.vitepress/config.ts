@@ -21,9 +21,9 @@ export default defineConfig({
     outline: { level: [2, 3], label: '本页目录' },
     nav: [
       { text: '功能', link: '/#功能' },
-      { text: '使用指南', link: '/guide' },
-      { text: '接口约定', link: '/api-error-conventions' },
-      { text: '开发方案', link: '/development-plan' },
+      { text: '文档', link: '/guide' },
+      { text: 'API', link: '/api' },
+      { text: '开发', link: '/dev-overview' },
     ],
     sidebar: [
       {
@@ -31,19 +31,33 @@ export default defineConfig({
         items: [
           { text: '功能总览', link: '/' },
           { text: '使用与部署指南', link: '/guide' },
+          { text: '接口文档与 Mock', link: '/api' },
         ],
       },
       {
-        text: '开发约定',
+        text: '接口约定',
         items: [
-          { text: '开发方案', link: '/development-plan' },
-          { text: 'API 错误与状态码约定', link: '/api-error-conventions' },
+          { text: '错误与状态码约定', link: '/api-error-conventions' },
+          { text: '错误码总表', link: '/api-error-codes' },
+        ],
+      },
+      {
+        text: '开发资料',
+        collapsed: false,
+        items: [
+          { text: '系统概述', link: '/dev-overview' },
+          { text: '数据模型（表结构）', link: '/dev-data-model' },
+          { text: '状态机', link: '/dev-state-machines' },
+          { text: '核心数据流', link: '/dev-flows' },
+          { text: '后端架构', link: '/dev-backend' },
+          { text: '前端架构', link: '/dev-frontend' },
+          { text: '测试与质量', link: '/dev-testing' },
+        ],
+      },
+      {
+        text: '设计与部署',
+        items: [
           { text: 'UI 设计规范', link: '/ui-design-guidelines' },
-        ],
-      },
-      {
-        text: '部署与测试',
-        items: [
           { text: '前后端分离部署', link: '/frontend-separated-deployment' },
           { text: '人工功能测试方案', link: '/manual-functional-test-plan' },
         ],
