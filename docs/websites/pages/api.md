@@ -20,7 +20,7 @@
 | --- | --- |
 | 项目 ID | `8831739`（仓库变量 `APIFOX_PROJECT_ID`） |
 | 访问令牌 | 仓库 Secret `APIFOX_ACCESS_TOKEN` |
-| 合并策略 | 接口与数据模型按路径 / 名称 `AUTO_MERGE`，不覆盖手写用例 |
+| 合并策略 | 接口与数据模型按路径 / 名称 `OVERWRITE_EXISTING`（契约是唯一来源，示例与说明随契约覆盖）；不用 `AUTO_MERGE`——它会保留 Apifox 侧已有的返回示例，导致改了示例演示站仍是旧数据 |
 | Mock 服务 | `https://m1.apifoxmock.com/m1/8831739-8625818-default` |
 
 | 想做什么 | 怎么做 |
