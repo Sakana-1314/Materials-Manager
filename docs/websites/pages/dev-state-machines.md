@@ -146,7 +146,15 @@ stateDiagram-v2
 | 冲销数量 > `remaining_qty` | 同上 | 拒绝 | `409 INSUFFICIENT_QUANTITY`（消息含剩余可冲数量） |
 | 冲销流水本身（`reversal_of_id` 非空） | 再次冲销 | 拒绝 | `409 REVERSAL_NOT_ALLOWED`（前端隐藏按钮，后端 `reverse_operation` 自行校验） |
 | 任意 | 幂等重复提交 | 返回原冲销流水 | 无 |
-冲销流水的 `occurred_at = max(now, 原流水 occurred_at + 1µs)`，继承原流水 `subitem_no`，`receiver_name`/`receiver_unit` 强制为空；冲销**不触发** Webhook 事件（只有 `reversal_of_id IS NULL` 的新流水才 `enqueue_event`）。`StockOperationRead.is_reversed` 的语义是「这条记录本身是冲销记录」（`reversal_of_id is not None`），不是「已被冲销」；是否还能冲销要看明细行的 `remaining_qty`。原流水可分多次冲销剩余数量，上限由 `remaining_qty` 控制。
+
+| 项 | 规则 |
+| --- | --- |
+| `occurred_at` | `max(now, 原流水 occurred_at + 1µs)` |
+| `subitem_no` | 继承原流水 |
+| `receiver_name` / `receiver_unit` | 强制为空 |
+| Webhook | 不触发（只有 `reversal_of_id IS NULL` 的新流水才 `enqueue_event`） |
+| `is_reversed` 语义 | 「这条记录**本身是**冲销记录」（`reversal_of_id is not None`），不是「已被冲销」 |
+| 还能不能冲销 | 看明细行的 `remaining_qty`；原流水可分多次冲销剩余数量 |
 #### 4.4 已确认流水修改（重放而非状态流转）
 `PATCH /inventory/operations/{id}` 允许改类型、时间、原因、领用人、子项号、物资明细与数量，随后按 `occurred_at, operation_id, line_id` 顺序**重放受影响物资的全部流水**，重算每条流水的 `before_qty`/`after_qty` 与 `stock_balance.quantity`（`inventory_service.replay_materials`）。
 
@@ -197,7 +205,14 @@ stateDiagram-v2
 | `PENDING`/`RUNNING` | 进程重启 | `FAILED` | `error_code=SERVER_RESTARTED`，并删除临时文件（`mark_stale_jobs_failed`） |
 | `SUCCEEDED`/`FAILED` | 查询 `GET .../import-jobs/{job_id}` | 不变 | 不存在 `400 NOT_FOUND` |
 | `RUNNING` | 处理器抛 `AppError` | `FAILED` | 记 `error_code`/`error_message`（截断 1000 字符） |
-三种 `import_type` 与各自的表头：`LITE_INVENTORY`（`物资名称/型号规格/单位/数量/备注`）、`MATERIAL_CODE_LIBRARY`（`编码/名称/型号/记账单位名称`）、`HUAXING_INVENTORY`。三者都是**全量替换**（`DELETE` 全表 + 分批 2000 行 `INSERT`，单次 `commit`），因此没有「逐行状态」；解析失败的错误码以类型前缀区分，如 `LITE_IMPORT_HEADERS_MISSING`、`HUAXING_IMPORT_CODE_REQUIRED`、`MATERIAL_CODE_IMPORT_DUPLICATE`。
+
+| `import_type` | 必需表头 | 写入方式 |
+| --- | --- | --- |
+| `LITE_INVENTORY` | 物资名称、型号规格、单位、数量、备注 | 全量替换（`DELETE` 全表 + 分批 2000 行 `INSERT`，单次 `commit`），无逐行状态 |
+| `MATERIAL_CODE_LIBRARY` | 编码、名称、型号、记账单位名称 | 同上 |
+| `HUAXING_INVENTORY` | 见导入模板 | 同上 |
+
+解析失败的错误码以类型前缀区分，如 `LITE_IMPORT_HEADERS_MISSING`、`HUAXING_IMPORT_CODE_REQUIRED`、`MATERIAL_CODE_IMPORT_DUPLICATE`。
 ### 7. Excel 导出任务状态机
 ```mermaid
 stateDiagram-v2
@@ -216,7 +231,11 @@ stateDiagram-v2
 | 查询行数 > 10000 | `POST /purchase-records/export-results` | 任务转 `FAILED` | `400 EXPORT_RESULT_LIMIT_EXCEEDED`，`details={total, limit}` |
 | `SUCCEEDED` | `GET /excel-export-jobs/{job_id}`、`GET /excel-export-jobs/files/{file_uuid}` | 不变 | 状态查询非创建者且非超管 `400 NOT_FOUND`；文件匿名下载，缺失/过期 `400 EXPORT_FILE_EXPIRED` |
 | 任意 | 在 `exports/` 目录留下 `.tmp` 孤儿文件 | 24 小时后被清理任务删除 | 原子写盘中途崩溃所致 |
-导出类型：`PURCHASE_PLAN_RESULTS`、`PURCHASE_RECORD_RESULTS`（异步 + 进度）；另有同步导出（`/purchase-materials/export-uncoded`、`/export-purchase-application`、`/export-purchase-approval`），其校验失败码为 `409 PURCHASE_APPLICATION_EXPORT_FIELDS_REQUIRED` / `409 PURCHASE_APPROVAL_EXPORT_FIELDS_REQUIRED`。
+
+| 类型 | 接口 | 说明 |
+| --- | --- | --- |
+| 异步导出 | `PURCHASE_PLAN_RESULTS`、`PURCHASE_RECORD_RESULTS` | 生成任务 + 查进度 |
+| 同步导出 | `/purchase-materials/export-uncoded`、`/export-purchase-application`、`/export-purchase-approval` | 直接返回文件；字段缺失时报 `409 PURCHASE_APPLICATION_EXPORT_FIELDS_REQUIRED` / `409 PURCHASE_APPROVAL_EXPORT_FIELDS_REQUIRED` |
 ### 8. Webhook 投递状态机
 ```mermaid
 stateDiagram-v2

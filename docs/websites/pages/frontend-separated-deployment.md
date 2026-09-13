@@ -44,7 +44,10 @@ Access-Control-Allow-Origin: https://spares.example.com
 Vary: Origin, Referer
 ```
 
-响应同时暴露 `Content-Disposition`、`X-Request-ID` 与接口性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries`（含义见 [server/README.md](https://github.com/Sakana-1314/Electrical-Manager/blob/main/server/README.md) 的「接口性能响应头」）。本项目不使用 HTTP 404，错误响应统一为结构化业务错误体，详见 [API 错误与状态码约定](/api-error-conventions)。
+| 项 | 内容 |
+| --- | --- |
+| 响应头 | 暴露 `Content-Disposition`、`X-Request-ID` 与性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries` |
+| 错误体 | 不使用 HTTP 404，错误统一为结构化业务错误体，见 [API 错误与状态码约定](/api-error-conventions) |
 
 | 配置 | 默认 | 说明 |
 | --- | --- | --- |

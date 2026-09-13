@@ -1,11 +1,12 @@
 # 前端架构
-`web/` 是 Vue 3 + TypeScript + Vite 单页应用：UI 用 Naive UI，状态用 Pinia，HTTP 用 axios，接口类型由 `docs/openapi.yaml` 生成。后端见 [/dev-backend](/dev-backend)，数据模型与状态机见 [/dev-data-model](/dev-data-model)、[/dev-state-machines](/dev-state-machines)，页面样式约定见 [/ui-design-guidelines](/ui-design-guidelines)，错误码处理见 [/api-error-conventions](/api-error-conventions)。
+`web/` 是 Vue 3 + TypeScript + Vite 单页应用：UI 用 Naive UI，状态用 Pinia，HTTP 用 axios，接口类型由 `docs/openapi.yaml` 生成。
 ## 技术栈与命令
 | 类别 | 依赖 | 版本（`web/package.json`） |
 | --- | --- | --- |
 | 框架与运行时 | `vue`、`vue-router`、`pinia`、`naive-ui`、`axios`、`@vueuse/core`、`@vicons/ionicons5` | `^3.5.17`、`^4.5.1`、`^3.0.3`、`^2.42.0`、`^1.10.0`、`^13.5.0`、`^0.13.0` |
 | 构建与类型 | `vite`、`@vitejs/plugin-vue`、`unplugin-vue-components`、`typescript`、`vue-tsc` | `^7.0.4`、`^6.0.0`、`^28.8.0`、`~5.8.3`、`^3.0.3` |
 | 测试与契约 | `vitest`、`jsdom`、`@vue/test-utils`、`msw`、`openapi-typescript` | `^3.2.4`、`^26.1.0`、`^2.4.6`、`^2.10.4`、`^7.8.0` |
+
 | 命令 | 作用 |
 | --- | --- |
 | `npm run dev` | 启动 Vite 开发服务器（端口 5173，见 `web/vite.config.ts`） |
@@ -85,7 +86,13 @@ web/src/
 | 3 | 目标是 `login` 但已登录 → `{ name: 'dashboard' }` |
 | 4 | `to.meta.permission` 存在且 `auth.can(permission)` 为 false → `{ name: 'dashboard' }` |
 | 5 | `settings.isLiteMode` 为 true 且目标 name 属于 `FULL_WAREHOUSE_ROUTES`（`stock-materials`、`stock-material-detail`、`inbound`、`outbound`、`stock`、`operations`、`operation-detail`）→ `{ name: 'warehouse-lite' }` |
-鉴权判定用 `stores/auth.ts` 的 `isAuthenticated`（`token && user` 都存在）与 `can(permission)`；`can` 查 `types/navigation.ts` 的 `rolePermissions`（`SUPER_ADMIN` → 全部 4 项，`WAREHOUSE_ADMIN` → `warehouse:write` + `read`，`PURCHASE_ADMIN` → `purchase:write` + `read`，`READ_ONLY` → `read`）。无权限时**静默重定向到工作台**：当前未实现独立的 403 页面、无权限提示或按钮级全局拦截（页面内部按需用 `auth.can()` 隐藏入口，如 `layouts/AppLayout.vue` 的入库/出库菜单项、系统管理分组）。`meta.keepAlive` 只在 3 个列表路由上声明，守卫不读取该字段，`AppLayout.vue` 用它控制 `<keep-alive>`。
+
+| 项 | 实现 | 位置 |
+| --- | --- | --- |
+| 是否已登录 | `isAuthenticated` = `token && user` 同时存在 | `stores/auth.ts` |
+| 权限点 | `can(permission)` 查 `rolePermissions`：`SUPER_ADMIN` 全部 4 项；`WAREHOUSE_ADMIN` `warehouse:write`+`read`；`PURCHASE_ADMIN` `purchase:write`+`read`；`READ_ONLY` 仅 `read` | `types/navigation.ts` |
+| 无权限时 | 静默重定向到工作台；无独立 403 页、无全局拦截，页面内用 `auth.can()` 自行隐藏入口 | `router/index.ts`、`layouts/AppLayout.vue` |
+| keep-alive | `meta.keepAlive` 只在 3 个列表路由声明，由 `<keep-alive>` 使用，路由守卫不读该字段 | 同上 |
 ### 状态管理
 `web/src/stores/` 下只有 2 个 store，均为 setup 语法（`defineStore(id, () => {...})`）。
 
@@ -102,11 +109,22 @@ web/src/
 ### API 客户端与契约生成
 #### `web/src/api/client.ts`
 - 实例：`axios.create({ baseURL: apiBaseUrl, timeout: 15_000, paramsSerializer: { indexes: null } })`（数组参数序列化为重复 key，不带 `[]`）。
-- `baseURL` 来自 `web/src/config/env.ts` 的 `apiBaseUrl`：`resolveApiBaseUrl(import.meta.env.VITE_API_BASE_URL)`，未配置时回退 `/api/v1`；只填域名（纯 origin）时自动补 `/api/v1`。同文件还导出 `imageBaseUrl`（`VITE_IMAGE_BASE_URL`，缺省 = `apiBaseUrl/files/images`）、`buildTime`（构建期注入的 `__BUILD_TIME__`）、`resolveMcpUrl(apiBaseUrl, token)`（拼 `mcp/?token=`）。
+| 导出 | 来源 | 缺省行为 |
+| --- | --- | --- |
+| `apiBaseUrl` | `VITE_API_BASE_URL` | 回退 `/api/v1`；只填域名（纯 origin）时自动补 `/api/v1` |
+| `imageBaseUrl` | `VITE_IMAGE_BASE_URL` | 缺省 = `apiBaseUrl/files/images` |
+| `buildTime` | 构建期注入的 `__BUILD_TIME__` | — |
+| `resolveMcpUrl(apiBaseUrl, token)` | — | 拼出 `mcp/?token=` 地址 |
+
+位置：`web/src/config/env.ts`。
 - 请求拦截器：`localStorage` 有 `access_token` 时注入 `Authorization: Bearer <token>`；每个请求生成 `config.headers['X-Request-ID'] = crypto.randomUUID()`。
-- 版本头：客户端不做统一注入，只由业务模块按需传 `If-Match` —— `procurement.deleteMaterial`、`procurement.restoreRecordToPlan`、`purchasePlanTemplates.deleteTemplate`、`inventory.deleteMaterial`、`dictionaries.deleteMiniProgramUser`（值均为 `String(version)`）。
+- 版本头：客户端**不统一注入**，由业务模块按需传 `If-Match`（值均为 `String(version)`）：
+  `procurement.deleteMaterial`、`procurement.restoreRecordToPlan`、`purchasePlanTemplates.deleteTemplate`、
+  `inventory.deleteMaterial`、`dictionaries.deleteMiniProgramUser`。
 - `X-API-Token`：**前端当前未实现**（代码中无该请求头，接口令牌仅在「管理端用户」页展示/复制与 MCP 链接里使用）。
-- 401 处理：仅当 `status === 401 && data.code === 'INVALID_TOKEN' && 未重试过 && localStorage 有 refresh_token` 时，调用 `renewAccessToken()`（`POST /auth/refresh`，`timeout: 15_000`，自带 `X-Request-ID`）并重放原请求；并发请求共用模块级 `refreshRequest` promise 避免刷新风暴。刷新失败或其余 401 场景执行 `clearSession()`（删除三个 localStorage key，直接操作 localStorage，不经 store）并在 `location.pathname !== '/login'` 时 `location.assign('/login')` 整页跳转。
+- 401 处理：仅当 `status === 401 && data.code === 'INVALID_TOKEN' && 未重试过 && localStorage 有 refresh_token`
+  时，调用 `renewAccessToken()`（`POST /auth/refresh`，`timeout: 15_000`）并重放原请求；并发请求共用模块级
+  `refreshRequest` promise，避免刷新风暴。刷新失败或其余 401：`clearSession()` 后跳登录页。
 - 错误归一化：响应体带 `code` 时抛 `AppError`（保留 `code` / `message` / `details` / `request_id`）；否则按有无 `response` 构造 `SERVER_ERROR`（`服务请求失败（HTTP <status>），请稍后重试`）或 `NETWORK_ERROR`（`无法连接服务器，请检查网络后重试`），`request_id` 取自本次请求的 `X-Request-ID`。
 - 未消费响应头：**前端当前不读取任何响应头**（无 `X-Response-Time` / 服务端 `X-Request-ID` 的读取逻辑）。
 - 超时覆盖：默认 15s；`systemSettings.imageAcceleration`、`systemSettings.miniProgramFeatures` 为 3000ms；`aiSearch.testSettings` 为 35s；`procurement.importMaterialCodes`、`secondaryWarehouse.import`、`huaXingInventory.import` 为 120s。
@@ -212,8 +230,17 @@ web/src/
 | `web/src/mocks/browser.ts` | `setupWorker(...handlers)` 导出 `worker` |
 | `web/src/mocks/handlers.ts` | 83 个 `http.*` 处理器、65 个唯一路径，全部以 `${apiBaseUrl}` 拼接（另含 1 个 `${imageBaseUrl}/:id` 返回 SVG 占位图），带 `page()`/`error()`/`actor(request)` 等辅助函数 |
 | `web/src/mocks/data.ts` | 内存种子数据：`users`、`miniProgramUsers`、`stockMaterials`、`operations`、`purchaseMaterials`、`purchaseRequests`、`purchasePlanTemplates`、`huaXingInventory`、`nextIds`、`mockFileId` |
-启用条件在 `web/src/main.ts`：`import.meta.env.VITE_USE_MOCK === 'true' || (import.meta.env.VITE_USE_MOCK !== 'false' && import.meta.env.DEV)`——显式 `true` 强制启用，显式 `false` 关闭，未设置时**开发环境默认启用、生产构建默认关闭**。启动参数 `{ onUnhandledRequest: 'bypass', serviceWorker: { url: '/mockServiceWorker.js' } }`，worker 文件在 `web/public/mockServiceWorker.js`。
-已覆盖接口域：`/auth/*`、`/dashboard/summary`、`/system-settings/*`、`/ai-search/*`、`/users*`、`/mini-program-users*`、`/stock-materials*`、`/inventory/*`、`/purchase-materials*`（含 `batch*`、`move-to-record`、`export-results`）、`/purchase-records*`（含 `batch`、`restore-to-plan`、`export-results`）、`/purchase-plan-templates*`、`/material-code-library/import*`、`/huaxing-inventory*`（不含 last-import）、`/excel-export-jobs/*`、`/shares*`、`/files/images*`、图片预览地址。未覆盖的接口在 `onUnhandledRequest: 'bypass'` 下透传到网络，因此这些页在纯 mock 模式下不可用：
+
+| 项 | 内容 |
+| --- | --- |
+| 启用条件 | `main.ts`：`VITE_USE_MOCK === 'true'` 强制启用；`'false'` 关闭；未设置时开发环境启用、生产构建关闭 |
+| 启动参数 | `{ onUnhandledRequest: 'bypass', serviceWorker: { url: '<BASE_URL>mockServiceWorker.js' } }` |
+| worker 文件 | `web/public/mockServiceWorker.js`（子路径部署时带 base 前缀） |
+
+| 覆盖情况 | 接口域 |
+| --- | --- |
+| 已覆盖（MSW 内返回） | `/auth/*`、`/dashboard/summary`、`/system-settings/*`、`/ai-search/*`、`/users*`、`/mini-program-users*`、`/stock-materials*`、`/inventory/*`、`/purchase-materials*`（含 `batch*`、`move-to-record`、`export-results`）、`/purchase-records*`（含 `batch`、`restore-to-plan`、`export-results`）、`/purchase-plan-templates*`、`/material-code-library/import*`、`/huaxing-inventory*`（不含 `last-import`）、`/excel-export-jobs/*`、`/shares*`、`/files/images*`、图片预览地址 |
+| 未覆盖 | 在 `onUnhandledRequest: 'bypass'` 下透传到网络，纯 mock 模式下这些页面不可用 |
 
 | 未覆盖接口 | 对应前端调用 |
 | --- | --- |
@@ -232,7 +259,11 @@ web/src/
 | 构建产物 | `build.assetsDir: 'yangrucheng-assets'`（静态资源目录名，与 `web/edgeone.json` 的缓存规则对应） |
 | dev server | `server.port: 5173` |
 | 代理 | **仅当 `VITE_USE_MOCK === 'false'` 时**启用 `{ '/api': env.VITE_API_PROXY \|\| 'http://localhost:8000' }`；未设置或设为 `true` 时不配置代理（走 MSW） |
-`web/vitest.config.ts`：独立于 `vite.config.ts`，`environment: 'jsdom'`、`setupFiles: ['./src/test/setup.ts']`、同样的 `@` alias 与 `__BUILD_TIME__`。`web/tsconfig.json`：空 `files`，只做 project references（`tsconfig.app.json`、`tsconfig.node.json`）。
+
+| 文件 | 说明 |
+| --- | --- |
+| `web/vitest.config.ts` | 独立于 `vite.config.ts`：`environment: 'jsdom'`、`setupFiles: ['./src/test/setup.ts']`、同样的 `@` alias 与 `__BUILD_TIME__` |
+| `web/tsconfig.json` | 空 `files`，只做 project references（`tsconfig.app.json`、`tsconfig.node.json`） |
 
 | 文件 | 关键项 |
 | --- | --- |

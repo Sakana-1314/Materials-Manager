@@ -1,6 +1,13 @@
 # 后端架构
-FastAPI + SQLAlchemy 2.x async（MySQL 8.0 / asyncmy）单进程应用，位于 `server/`，源码包名 `app`。对外三类入口：管理端 REST（`/api/v1/*`）、微信小程序（`/api/v1/mini-program/*`）、挂载在 `/api/v1/mcp` 的 MCP（Streamable HTTP）；同一进程内运行若干常驻后台 worker。运行方式：开发 `uvicorn app.main:app --reload`，容器内 CMD 为 `uvicorn app.main:app --host 0.0.0.0 --port 8000`（`server/Dockerfile`）。
-相关页面：[/dev-overview](/dev-overview)、[/dev-data-model](/dev-data-model)、[/dev-state-machines](/dev-state-machines)、[/dev-flows](/dev-flows)、[/dev-frontend](/dev-frontend)、[/dev-testing](/dev-testing)、[/api-error-conventions](/api-error-conventions)。
+FastAPI + SQLAlchemy 2.x async 单进程应用（MySQL 8.0 / asyncmy），源码在 `server/`，包名 `app`。
+
+| 入口 | 路径 |
+| --- | --- |
+| 管理端 REST | `/api/v1/*` |
+| 微信小程序 | `/api/v1/mini-program/*` |
+| MCP（Streamable HTTP） | `/api/v1/mcp` |
+
+运行：开发 `uvicorn app.main:app --reload`；容器 CMD `uvicorn app.main:app --host 0.0.0.0 --port 8000`（`server/Dockerfile`）。同一进程内还有若干常驻后台 worker。
 ## 分层架构
 分层调用方向为 `api → service → repository → models`，service 之间也可互相调用（如 `inventory_service` 调用 `webhook_service`）；`from app.repositories` 只在 `server/app/services/` 下命中，api 层不直接访问仓储层。
 
@@ -174,7 +181,14 @@ server/app/
 | 并发控制 | 锁定查询在仓储层构造 `with_for_update()`（如 `inventory_repository` 的余额/流水查询，`inventory_service` 在写路径内调用）；申购计划清理用 `with_for_update(skip_locked=True)` 逐批抢锁 |
 | 事务块 | 未使用 `async with session.begin()`（`session.begin` 仅命中 `material_service` 的 `session.begin_nested()` 保存点用法） |
 #### DB 计时实现（`server/app/core/db_timing.py`）
-`DatabaseTiming(total_ms, statement_count)` 通过 `contextvars.ContextVar` 传递；`request_context` 在请求开始 `begin_database_timing()`、响应前 `finish_database_timing()`。SQLAlchemy 的 `before_cursor_execute` / `after_cursor_execute` 事件分别入栈/出栈 `time.perf_counter()`，出栈时累加耗时并 `statement_count += 1`。只有存在请求上下文的 SQL 才被统计：启动清理与常驻 worker 的 SQL 不计入任何请求；并发请求互不干扰；请求内派生的后台任务会继承采集器（窗口极短）。
+| 阶段 | 行为 |
+| --- | --- |
+| 传递 | `contextvars.ContextVar` 携带 `DatabaseTiming(total_ms, statement_count)` |
+| 请求开始 | `request_context` 调 `begin_database_timing()` |
+| 响应前 | `finish_database_timing()` |
+| SQL 计时 | SQLAlchemy `before_cursor_execute` / `after_cursor_execute` 入栈出栈 `perf_counter()`，出栈累加耗时并 `statement_count += 1` |
+| 只统计请求内 SQL | 启动清理与常驻 worker 的 SQL 不计入；并发请求互不干扰 |
+| 边界情况 | 请求内派生的后台任务会继承采集器（窗口极短） |
 
 </TabsContent>
 
@@ -206,7 +220,13 @@ server/app/
 <TabsContent id="t4">
 
 ### 配置项清单
-`server/app/core/config.py` 的 `Settings`：`SettingsConfigDict(env_file=BACKEND_DIR/".env", env_prefix="APP_", extra="ignore")`，即环境文件 `server/.env`、前缀 `APP_`（字段名大写，如 `database_url` → `APP_DATABASE_URL`）。`settings = get_settings()` 是 `@lru_cache` 单例，导入时构造一次；代码层**没有必填字段**。
+| 项 | 值 |
+| --- | --- |
+| 配置类 | `core/config.py` 的 `Settings`，`SettingsConfigDict(env_file=BACKEND_DIR/".env", env_prefix="APP_", extra="ignore")` |
+| 环境文件 | `server/.env` |
+| 变量前缀 | `APP_`（字段名大写：`database_url` → `APP_DATABASE_URL`） |
+| 单例 | `settings = get_settings()`（`@lru_cache`），导入时构造一次 |
+| 必填字段 | 代码层没有必填字段（部署时由 compose 要求 `APP_DATABASE_URL`、`APP_JWT_SECRET`） |
 
 | 字段 | 环境变量 | 类型 | 默认值 | 校验/说明 |
 | --- | --- | --- | --- | --- |
@@ -244,7 +264,16 @@ server/app/
 | `APP_WECHAT_MINI_PROGRAM_APP_ID` / `APP_WECHAT_MINI_PROGRAM_APP_SECRET` | 多个小程序按相同顺序逗号分隔 |
 | `APP_LOG_DIR` / `APP_LOG_BACKUP_COUNT` | `./data/logs` / `90` |
 模板未列出但代码支持的变量：`APP_FERNET_KEY`、`APP_CORS_ORIGINS`、`APP_UPLOAD_DIR`、`APP_TEMPLATE_DIR`、`APP_MAX_IMAGE_BYTES`、`APP_PURCHASE_PLAN_CLEANUP_ENABLED`、`APP_APP_NAME`、`APP_JWT_ALGORITHM`、`APP_BUILD_TIME`、`APP_GIT_SHA`。
-容器部署（`docker-compose.yml`）实际注入：`APP_ENVIRONMENT=production`、`APP_DATABASE_URL`（必填，指向外部 MySQL）、`APP_JWT_SECRET`（必填）、`APP_ACCESS_TOKEN_MINUTES`（默认 `480`）、`APP_WECHAT_MINI_PROGRAM_APP_ID`/`APP_WECHAT_MINI_PROGRAM_APP_SECRET`（默认空）、`APP_UPLOAD_DIR=/app/data/uploads`、`APP_LOG_DIR=/app/data/logs`；主机侧 `BACKEND_PORT` 默认 `8000`、`FRONTEND_PORT` 默认 `8080`。
+| 变量 | 值 |
+| --- | --- |
+| `APP_ENVIRONMENT` | `production` |
+| `APP_DATABASE_URL` | 必填，指向外部 MySQL |
+| `APP_JWT_SECRET` | 必填 |
+| `APP_ACCESS_TOKEN_MINUTES` | 默认 `480` |
+| `APP_WECHAT_MINI_PROGRAM_APP_ID` / `APP_WECHAT_MINI_PROGRAM_APP_SECRET` | 默认空 |
+| `APP_UPLOAD_DIR` | `/app/data/uploads` |
+| `APP_LOG_DIR` | `/app/data/logs` |
+| `BACKEND_PORT` / `FRONTEND_PORT`（主机侧） | `8000` / `8080` |
 
 </TabsContent>
 
@@ -268,7 +297,12 @@ server/app/
 | `purchase-plan-cleanup-worker` | `purchase_plan_cleanup_service.run_cleanup_worker(stop_event)` | 睡到下一个北京时间 02:00（`_CLEANUP_HOUR=2`，`SHANGHAI` 时区）后循环清理直到无候选 | 仅当 `settings.purchase_plan_cleanup_enabled` 为真时创建；批次 `_BATCH_SIZE=50`；先解绑 `purchase_request_line.purchase_material_id` 再物理删除计划；`with_for_update(skip_locked=True)` |
 | `excel-export-cleanup-worker` | `excel_export_job_service.run_cleanup_worker(stop_event)` | 启动后立即清理一次，随后每 24 小时一次 | 终态任务保留 3 天；顺带清理 `upload_dir/exports` 下超过 24 小时的 `.tmp` 孤儿文件 |
 | `share-link-cleanup-worker` | `share_link_service.run_cleanup_worker(stop_event)` | 启动后立即清理一次，随后每 24 小时一次 | 删除 `expires_at < utcnow()` 的行 |
-worker 均在退出时由 `finally` 置 `stop_event` 并 `await`，随后关闭 `httpx` 客户端（`webhook_service.close_client()`、`ai_search_service.close_client()`）；`lifespan` 全程包在 `async with mcp.session_manager.run():` 内。另有两类请求内派生任务：`import_job_service.enqueue_import` 与 `excel_export_job_service` 发起 `asyncio.create_task(_run_job(...), name=f"import-job-{id}"/f"export-job-{id}")`，引用保存在模块级 `_running_tasks` 集合防止被 GC（单进程有效）。
+
+| 任务 | 生命周期 |
+| --- | --- |
+| 常驻 worker | 退出时 `finally` 置 `stop_event` 并 `await`，随后关闭 `httpx` 客户端（`webhook_service.close_client()`、`ai_search_service.close_client()`） |
+| MCP | `lifespan` 全程包在 `async with mcp.session_manager.run():` 内 |
+| 请求内派生任务 | `import_job_service.enqueue_import` 与 `excel_export_job_service` 用 `asyncio.create_task(...)` 起 `import-job-{id}` / `export-job-{id}`，引用存模块级 `_running_tasks` 防 GC（单进程有效） |
 ### 其它
 #### MCP 服务（`server/app/mcp_server.py`）
 | 项 | 内容 |
