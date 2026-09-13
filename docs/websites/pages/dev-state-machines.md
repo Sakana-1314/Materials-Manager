@@ -10,8 +10,7 @@
    （错误码 `INVALID_STATUS_TRANSITION`、HTTP 409、`details={current_status, action}`），但 `grep`
    全仓库只有它的定义、**没有任何调用点**：当前所有状态字段要么由「只进不退」的同步规则约束，
    要么可被有写权限的用户自由赋值。逐条见下文。
-2. 下文的 Mermaid 图需要站点安装 Mermaid 渲染插件才会出图（`docs/websites/package.json` 当前只有
-   `vitepress`），未渲染时按代码块显示源码，不影响构建。
+2. 下文的 Mermaid 图由站点渲染成图（`vitepress-plugin-mermaid`，配置见 `.vitepress/config.ts`）。
 
 按主题分组，点上方标签切换。
 

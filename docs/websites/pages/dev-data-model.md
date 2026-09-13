@@ -541,7 +541,6 @@ erDiagram
     }
 ```
 
-> 当前未实现：站点未引入 Mermaid 渲染插件（`docs/websites/package.json` 只声明了 `vitepress`），未启用插件时上面的代码块按源码展示，不会绘制成图。
 
 | 关系 | 基数 | 业务含义 |
 | --- | --- | --- |

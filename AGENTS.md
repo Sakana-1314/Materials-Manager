@@ -50,6 +50,9 @@
 
   这些是站内 Vue 组件，**在 GitHub 上浏览 markdown 时会显示成标签文本**，因此 README 与其它给 GitHub 看的
   文档不要用它们（README 只用普通 markdown 表格）。
+- **图用 Mermaid 写**（```` ```mermaid ```` 代码块）：站点已接入 `vitepress-plugin-mermaid`
+  （见 `.vitepress/config.ts` 的 `withMermaid`），状态机用 `stateDiagram-v2`、调用链用 `sequenceDiagram`、
+  表关系用 `erDiagram`；不要贴图片，图片会随代码变化而过期。
 - 文档页面之间互相引用用站点绝对路径（如 `/dev-data-model`、`/api-error-codes`），不要用相对路径 `../`；
   VitePress 构建会检查死链，写错会在 CI 里失败。
 - 站点文档不要写项目演进史或「以后会覆盖什么业务」，只描述当前实现与当前功能。
