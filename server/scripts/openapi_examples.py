@@ -539,7 +539,7 @@ _IMAGE_SERVER = "https://img.hxni-electrical.com"
 _FEISHU_HOOK = "https://open.feishu.cn/open-apis/bot/v2/hook/8f0c2b74-5d19-4a63-9c81-2e7b4a0d5f13"
 _DINGTALK_HOOK = "https://oapi.dingtalk.com/robot/send?access_token=9c1d4f7a2b6e8c0d3f5a7b9c1e2d4f60"
 # 分享链接 token 与文件 uuid 也都是库里的真实形态（v7 时间序 UUID）
-_SHARE_TOKEN = "0198f3a72c000000-0000-7000-8000-000000000001"
+_SHARE_TOKEN = "0198f3a7-2c00-7000-8000-000000000001"
 _ACCESS_TOKEN = (
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
     ".eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0"
