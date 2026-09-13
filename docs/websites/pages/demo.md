@@ -46,7 +46,14 @@
 各模式的参数见 `web/.env.demo`、`web/.env.demo-offline`；发布由 `.github/workflows/website.yml`
 在站点构建后依次构建并复制到站点输出的 `demo/` 下，与站点同域，可直接 iframe 引用。
 
-## 限制
+## 深链刷新
 
-演示用 history 路由，静态托管没有 SPA fallback：**直接刷新深层路由**（如
-`/demo/offline/warehouse/stock`）会 404，需从 `/demo/offline/` 重新进入。
+演示使用 history 路由，静态托管本身没有 SPA fallback。这里加了一层回退，**深层路由可以直接刷新**：
+
+| 步骤 | 行为 |
+| --- | --- |
+| 1 | 刷新 `/demo/offline/warehouse/stock` 时静态托管找不到文件，落到站点 404 页 |
+| 2 | 站点 404 页认出这是演示路径，带原路径跳回演示入口（`?path=…`） |
+| 3 | 演示入口自带的引导脚本在路由挂载前还原真实路径，页面正常渲染 |
+
+只影响演示产物与站点 404 页：业务构建不带该标记，行为不变；路由配置未改，正常访问时 URL 也不变。
