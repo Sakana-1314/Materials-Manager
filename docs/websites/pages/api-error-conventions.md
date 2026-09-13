@@ -61,7 +61,6 @@
 | 业务错误全局处理 | `server/app/main.py`（`handle_app_error`） |
 | 框架级 404 重映射 | `server/app/main.py`（`handle_http_exception`） |
 | 校验错误（422） | `server/app/core/exception_handlers.py`（`handle_validation_error`） |
-| 前端 mock 映射 | `web/src/mocks/handlers.ts`（`DEFAULT_STATUS_BY_CODE`） |
 | 文档一致性测试 | `server/tests/test_error_code_docs.py` |
 
 ## 新增错误码
@@ -74,4 +73,4 @@
 
 - 前端不按 HTTP 状态码分支，统一读响应体 `code`：`web/src/api/client.ts` 的响应拦截器把错误体转成 `AppError`（含 `code` / `message` / `details` / `request_id`）。
 - 业务分支判断写 `error.code === 'NOT_FOUND'`，而不是 `status === 404`。
-- MSW mock（`web/src/mocks/handlers.ts`）按同一张 `DEFAULT_STATUS_BY_CODE` 生成状态码，保证联调与真实后端一致。
+- Apifox Mock 的错误响应示例取自 `server/scripts/openapi_examples.py` 的 `ApiError`（code 与 message 成对出现，不会是「code 与文案打架」的假数据）。

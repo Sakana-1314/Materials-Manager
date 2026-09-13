@@ -68,7 +68,7 @@ mysql -h <数据库地址> -u <用户名> -p <数据库名> < ../docs/references
 
 ```bash
 npm install
-npm run dev          # 默认启用 MSW 契约模拟数据；接入真实后端见 web/README.md
+npm run dev          # 默认代理到 http://localhost:8000；接 Apifox Mock 见 web/README.md
 ```
 
 接口文档在 `http://localhost:8000/api/docs`。提交前按 `AGENTS.md` 的验证命令执行 `npx vue-tsc -b`、`npm run lint`、`npm run test`、`npm run build` 与 `pytest`。

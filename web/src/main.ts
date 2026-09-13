@@ -8,17 +8,6 @@ import { configureImageBaseUrl } from './utils/image'
 import './styles.css'
 
 async function bootstrap() {
-  if (
-    import.meta.env.VITE_USE_MOCK === 'true' ||
-    (import.meta.env.VITE_USE_MOCK !== 'false' && import.meta.env.DEV)
-  ) {
-    const { worker } = await import('./mocks/browser')
-    await worker.start({
-      onUnhandledRequest: 'bypass',
-      // 子路径部署时 worker 也在该前缀下，不能写死根路径
-      serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
-    })
-  }
   try {
     const imageSettings = await systemSettingsApi.imageAcceleration()
     configureImageBaseUrl(imageSettings.image_acceleration_server_url)

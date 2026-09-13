@@ -1,6 +1,6 @@
 # HXNI 电气无忧 网页端
 
-按 [开发资料](../docs/websites/pages/dev-overview.md) 中的前端架构实现 Vue 3 + TypeScript 前端。默认启用 MSW 契约模拟数据，可在后端尚未启动时演示完整业务。
+按 [开发资料](../docs/websites/pages/dev-overview.md) 中的前端架构实现 Vue 3 + TypeScript 前端。本地开发把 `/api` 代理到本机后端，也可直接指向 [Apifox Mock](https://Sakana-1314.github.io/Electrical-Manager/api) 联调。
 
 ## 启动
 
@@ -13,12 +13,17 @@ npm run dev
 
 ## 接入后端
 
-复制 `../docs/env/frontend.env.example` 为 `.env.local`。本地联调可将 `VITE_API_BASE_URL` 设置为 `http://localhost:8000/api/v1`；使用 Vite 同源代理时则设置为 `/api/v1`，并通过 `VITE_API_PROXY` 指定后端。
+复制 `../docs/env/frontend.env.example` 为 `.env.local`。
+
+| 场景 | `VITE_API_BASE_URL` | 说明 |
+| --- | --- | --- |
+| 本地后端（缺省） | `/api/v1` | `npm run dev` 由 Vite 代理到 `VITE_API_PROXY`（缺省 `http://localhost:8000`） |
+| Apifox Mock | Mock 环境的完整地址（含 `/api/v1`） | 直连 Mock，不经过代理 |
+| 线上后端 | `https://api.example.com` | 只填域名时自动补 `/api/v1` |
 
 生产环境由 CI/CD 在 `npm run build` 前注入：
 
 ```dotenv
-VITE_USE_MOCK=false
 VITE_API_BASE_URL=https://api.example.com
 VITE_IMAGE_BASE_URL=https://img.example.com
 ```

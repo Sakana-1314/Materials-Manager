@@ -36,7 +36,7 @@
 | 在线演示 | `vite build --mode demo` | `/Electrical-Manager/demo/` | 本站在 `/demo/` |
 
 演示的构建参数在 `web/.env.demo`（子路径与 Mock 地址），后端由 `VITE_API_BASE_URL` 指向
-Apifox Mock，**不使用本地 service worker 转发**。发布由 `.github/workflows/website.yml`
+Apifox Mock（前端不内置 Mock 层）。发布由 `.github/workflows/website.yml`
 在站点构建完成后构建演示并复制到站点输出的 `demo/` 目录，因此与文档站同域，可直接 iframe 嵌入。
 
 ## 深链刷新

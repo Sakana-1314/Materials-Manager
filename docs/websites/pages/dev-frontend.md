@@ -5,7 +5,7 @@
 | --- | --- | --- |
 | 框架与运行时 | `vue`、`vue-router`、`pinia`、`naive-ui`、`axios`、`@vueuse/core`、`@vicons/ionicons5` | `^3.5.17`、`^4.5.1`、`^3.0.3`、`^2.42.0`、`^1.10.0`、`^13.5.0`、`^0.13.0` |
 | 构建与类型 | `vite`、`@vitejs/plugin-vue`、`unplugin-vue-components`、`typescript`、`vue-tsc` | `^7.0.4`、`^6.0.0`、`^28.8.0`、`~5.8.3`、`^3.0.3` |
-| 测试与契约 | `vitest`、`jsdom`、`@vue/test-utils`、`msw`、`openapi-typescript` | `^3.2.4`、`^26.1.0`、`^2.4.6`、`^2.10.4`、`^7.8.0` |
+| 测试与契约 | `vitest`、`jsdom`、`@vue/test-utils`、`openapi-typescript` | `^3.2.4`、`^26.1.0`、`^2.4.6`、`^7.8.0` |
 
 | 命令 | 作用 |
 | --- | --- |
@@ -20,14 +20,14 @@
 ```text
 web/src/
 ├── App.vue                 根组件：n-config-provider（中文 locale + themeOverrides）包 4 个 provider + router-view
-├── main.ts                 启动引导：按开关启动 MSW → 拉图片加速配置 → createApp + 加载 settings store → mount
+├── main.ts                 启动引导：拉图片加速配置 → createApp + 加载 settings store → mount
 ├── theme.ts / styles.css   Naive UI 全局主题覆盖；全局样式与 CSS 变量（--color-*、--radius-*）
 ├── env.d.ts                ImportMetaEnv 声明 + __BUILD_TIME__
 ├── api/client.ts           axios 实例、拦截器、AppError
 ├── layouts/AppLayout.vue   唯一布局：侧边菜单/移动端抽屉 + 顶栏用户菜单
 ├── router/index.ts         路由表 + beforeEach 守卫
 ├── test/setup.ts           vitest setup
-├── 其余目录与文件分见下文清单：api/（模块表）、components/、composables/、config/、constants/、mocks/、
+├── 其余目录与文件分见下文清单：api/（模块表）、components/、composables/、config/、constants/、
 │   stores/、types/、utils/、views/
 └── 页面文件清单见「路由表」的组件文件列
 ```
@@ -224,32 +224,19 @@ web/src/
 
 <TabsContent id="t4">
 
-### MSW Mock
-| 文件 | 作用 |
-| --- | --- |
-| `web/src/mocks/browser.ts` | `setupWorker(...handlers)` 导出 `worker` |
-| `web/src/mocks/handlers.ts` | 83 个 `http.*` 处理器、65 个唯一路径，全部以 `${apiBaseUrl}` 拼接（另含 1 个 `${imageBaseUrl}/:id` 返回 SVG 占位图），带 `page()`/`error()`/`actor(request)` 等辅助函数 |
-| `web/src/mocks/data.ts` | 内存种子数据：`users`、`miniProgramUsers`、`stockMaterials`、`operations`、`purchaseMaterials`、`purchaseRequests`、`purchasePlanTemplates`、`huaXingInventory`、`nextIds`、`mockFileId` |
+### 联调与 Mock
+前端不再内置模拟数据：`npm run dev` 默认打 `/api/v1`，由 Vite 代理（`VITE_API_PROXY`，缺省
+`http://localhost:8000`）转发到本地后端。要连 Mock 服务，把 `VITE_API_BASE_URL` 直接指向
+[Apifox Mock 环境](/api)（演示站的构建参数见 `web/.env.demo`），请求不再经过代理。
 
-| 项 | 内容 |
-| --- | --- |
-| 启用条件 | `main.ts`：`VITE_USE_MOCK === 'true'` 强制启用；`'false'` 关闭；未设置时开发环境启用、生产构建关闭 |
-| 启动参数 | `{ onUnhandledRequest: 'bypass', serviceWorker: { url: '<BASE_URL>mockServiceWorker.js' } }` |
-| worker 文件 | `web/public/mockServiceWorker.js`（子路径部署时带 base 前缀） |
+| 场景 | 配置 | 说明 |
+| --- | --- | --- |
+| 本地后端 | 不配（缺省）或 `VITE_API_PROXY=http://localhost:8000` | 走 Vite 同源代理 |
+| Apifox Mock | `VITE_API_BASE_URL=https://m1.apifoxmock.com/m1/•••/api/v1` | 直连 Mock，读写都作用于 Mock |
+| 线上后端 | `VITE_API_BASE_URL=https://api.example.com` | 只填域名时自动补 `/api/v1` |
 
-| 覆盖情况 | 接口域 |
-| --- | --- |
-| 已覆盖（MSW 内返回） | `/auth/*`、`/dashboard/summary`、`/system-settings/*`、`/ai-search/*`、`/users*`、`/mini-program-users*`、`/stock-materials*`、`/inventory/*`、`/purchase-materials*`（含 `batch*`、`move-to-record`、`export-results`）、`/purchase-records*`（含 `batch`、`restore-to-plan`、`export-results`）、`/purchase-plan-templates*`、`/material-code-library/import*`、`/huaxing-inventory*`（不含 `last-import`）、`/excel-export-jobs/*`、`/shares*`、`/files/images*`、图片预览地址 |
-| 未覆盖 | 在 `onUnhandledRequest: 'bypass'` 下透传到网络，纯 mock 模式下这些页面不可用 |
+Mock 数据由 `docs/openapi.yaml` 的 schema `examples` 决定（见 [/api](/api)），后端不参与。
 
-| 未覆盖接口 | 对应前端调用 |
-| --- | --- |
-| `/memos*`（列表/新建/更新/删除） | `api/memos.ts`（备忘录页） |
-| `/version` | `api/version.ts`（关于页） |
-| `/secondary-warehouse*`（list、import、import-jobs、last-import） | `api/secondaryWarehouse.ts` |
-| `/material-code-library`（列表）、`/material-code-library/exists`、`/material-code-library/last-import` | `api/procurement.ts` 对应方法 |
-| `/purchase-materials/export-purchase-application`、`/export-purchase-approval`、`/export-uncoded` | 三份同步（非任务式）导出 |
-| `/huaxing-inventory/last-import` | 华星导入页「上次导入」 |
 ### 构建与代理
 | 项 | 值（`web/vite.config.ts`） |
 | --- | --- |
@@ -258,7 +245,7 @@ web/src/
 | 全局常量 | `define: { __BUILD_TIME__: JSON.stringify(new Date().toISOString()) }` |
 | 构建产物 | `build.assetsDir: 'yangrucheng-assets'`（静态资源目录名，与 `web/edgeone.json` 的缓存规则对应） |
 | dev server | `server.port: 5173` |
-| 代理 | **仅当 `VITE_USE_MOCK === 'false'` 时**启用 `{ '/api': env.VITE_API_PROXY \|\| 'http://localhost:8000' }`；未设置或设为 `true` 时不配置代理（走 MSW） |
+| 代理 | `npm run dev` 始终启用 `{ '/api': env.VITE_API_PROXY \|\| 'http://localhost:8000' }`；`VITE_API_BASE_URL` 填完整地址时不经过代理 |
 
 | 文件 | 说明 |
 | --- | --- |
@@ -273,7 +260,6 @@ web/src/
 
 | 变量 | 说明 |
 | --- | --- |
-| `VITE_USE_MOCK` | `true` 强制启用 MSW；`false` 关闭并启用 Vite 代理；未设置时按 `import.meta.env.DEV` 决定 |
 | `VITE_API_BASE_URL` | 接口基础地址，缺省 `/api/v1`；只填域名时自动补 `/api/v1` |
 | `VITE_IMAGE_BASE_URL` | 图片读取前缀，缺省为 `VITE_API_BASE_URL/files/images` |
 | `VITE_API_PROXY` | **仅供 `npm run dev` 的 Vite 代理目标**，生产构建不读取 |
@@ -282,7 +268,7 @@ web/src/
 | 项 | 内容 |
 | --- | --- |
 | 构建变量与跨域/CDN | 见 [/frontend-separated-deployment](/frontend-separated-deployment) |
-| `web/Dockerfile` | 两阶段：`node:22-alpine` 执行 `npm ci` + `npm run build`（`ARG VITE_USE_MOCK=false`、`ARG VITE_API_BASE_URL=/api/v1` 经 `ENV` 注入），再用 `nginx:1.27-alpine` 托管 `/app/dist`；`EXPOSE 80`，健康检查 `wget -q --spider http://127.0.0.1/` |
+| `web/Dockerfile` | 两阶段：`node:22-alpine` 执行 `npm ci` + `npm run build`（`ARG VITE_API_BASE_URL=/api/v1` 经 `ENV` 注入），再用 `nginx:1.27-alpine` 托管 `/app/dist`；`EXPOSE 80`，健康检查 `wget -q --spider http://127.0.0.1/` |
 | `web/nginx.conf` | `location /api/` 反代到 `http://backend:8000`（带 `X-Real-IP`/`X-Forwarded-*`，`proxy_read_timeout 60s`）；`location /` 用 `try_files $uri $uri/ /index.html` 支持 history 路由；静态资源（js/css/图片/字体）7 天 `immutable` 缓存；`client_max_body_size 50m` |
 | `web/edgeone.json` | 静态托管的输出目录 `dist` 与 `/yangrucheng-assets/*`、`*.png`、`*.jpg` 的 14 天缓存头 |
 

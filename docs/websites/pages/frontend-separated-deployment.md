@@ -9,7 +9,6 @@
 | --- | --- | --- | --- |
 | `VITE_API_BASE_URL` | 分离部署时必填 | `https://api.example.com` | 后端地址；只填域名会自动补 `/api/v1`，也可填完整 API 根地址 |
 | `VITE_IMAGE_BASE_URL` | 否 | `https://img.example.com` | 图床/CDN；只填域名会自动补 `/api/v1/files/images`，留空则从后端读 |
-| `VITE_USE_MOCK` | 建议 | `false` | 生产应为 `false` |
 | `VITE_API_PROXY` | 否 | `http://localhost:8000` | 仅 `npm run dev` 的本地代理 |
 | `VITE_BASE_PATH` | 否 | `/Electrical-Manager/demo/` | 部署到子路径时用，默认 `/` |
 
@@ -19,8 +18,8 @@
 
 | 平台 | 命令 |
 | --- | --- |
-| Linux | `cd web && npm ci && VITE_USE_MOCK=false VITE_API_BASE_URL=https://api.example.com VITE_IMAGE_BASE_URL=https://img.example.com npm run build` |
-| PowerShell | `Set-Location web; npm ci; $env:VITE_USE_MOCK='false'; $env:VITE_API_BASE_URL='https://api.example.com'; $env:VITE_IMAGE_BASE_URL='https://img.example.com'; npm run build` |
+| Linux | `cd web && npm ci && VITE_API_BASE_URL=https://api.example.com VITE_IMAGE_BASE_URL=https://img.example.com npm run build` |
+| PowerShell | `Set-Location web; npm ci; $env:VITE_API_BASE_URL='https://api.example.com'; $env:VITE_IMAGE_BASE_URL='https://img.example.com'; npm run build` |
 
 产物在 `web/dist/`，CD 阶段把它发布到静态站点、对象存储或 CDN 即可。
 
