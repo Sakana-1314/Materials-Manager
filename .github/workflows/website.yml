@@ -65,13 +65,28 @@ jobs:
         working-directory: web
         run: npx vite build --mode demo
 
-      - name: 把演示放进站点输出的 demo/ 子目录
+      - name: 把演示（Apifox Mock）放进站点输出的 demo/
         run: |
           set -e
           rm -rf "$SITE_OUT_DIR/demo"
           cp -a web/dist "$SITE_OUT_DIR/demo"
           test -f "$SITE_OUT_DIR/demo/index.html"
-          echo "演示已就位：$(find "$SITE_OUT_DIR/demo" -type f | wc -l) 个文件"
+          echo "demo/：$(find "$SITE_OUT_DIR/demo" -type f | wc -l) 个文件"
+
+      # 第二份演示：同一份代码换成前端自带的 MSW 契约模拟（web/src/mocks/），
+      # 数据是真实感的固定数据、断网可用，适合做文档里的交互演示。
+      - name: 构建离线演示（MSW，不连外部后端）
+        working-directory: web
+        run: npx vite build --mode demo-offline
+
+      - name: 把离线演示放进站点输出的 demo/offline/
+        run: |
+          set -e
+          rm -rf "$SITE_OUT_DIR/demo/offline"
+          cp -a web/dist "$SITE_OUT_DIR/demo/offline"
+          test -f "$SITE_OUT_DIR/demo/offline/index.html"
+          test -f "$SITE_OUT_DIR/demo/offline/mockServiceWorker.js"
+          echo "demo/offline/：$(find "$SITE_OUT_DIR/demo/offline" -type f | wc -l) 个文件"
 
       - name: 发布到 gh-pages 分支
         if: github.event_name != 'pull_request'

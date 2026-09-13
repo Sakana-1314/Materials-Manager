@@ -15,7 +15,8 @@ async function bootstrap() {
     const { worker } = await import('./mocks/browser')
     await worker.start({
       onUnhandledRequest: 'bypass',
-      serviceWorker: { url: '/mockServiceWorker.js' },
+      // 子路径部署时 worker 也在该前缀下，不能写死根路径
+      serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
     })
   }
   try {
