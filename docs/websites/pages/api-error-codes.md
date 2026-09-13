@@ -42,6 +42,7 @@
 | `BALANCE_MISSING` | 409 | 库存余额记录不存在 | `inventory_service` |
 | `INSUFFICIENT_QUANTITY` | 409 | 冲销数量超过剩余可冲数量 | `inventory_service` |
 | `INVALID_REVERSAL_LINE` | 400 | 冲销行不在原流水内 | `inventory_service` |
+| `REVERSAL_NOT_ALLOWED` | 409 | 冲销记录不能再被冲销 | `inventory_service` |
 | `CANNOT_DELETE_CURRENT_USER` | 409 | 不能删除当前登录用户 | `dictionary_service` |
 | `IMPORT_IN_PROGRESS` | 409 | 同类导入任务正在进行中 | `import_job_service` |
 | `FILE_IN_USE` | 409 | 图片已被业务引用，不能删除 | `file_service` |

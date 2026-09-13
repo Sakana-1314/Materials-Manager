@@ -50,6 +50,12 @@ def version_conflict(expected: int, actual: int) -> AppError:
 
 
 def invalid_transition(current: str, action: str) -> AppError:
+    """给「有状态机语义」的写接口用：当前状态不允许该动作。
+
+    目前唯一带状态语义的写接口是冲销（`inventory_service.reverse_operation`），它用的是更贴切的
+    `REVERSAL_NOT_ALLOWED`；申购计划状态是运营标记、请购状态由外部平台回写，两者都不做流转校验。
+    因此本函数暂无调用点，保留给后续真正引入状态机的模块，删除会让那个模块失去统一错误体。
+    """
     return AppError(
         "INVALID_STATUS_TRANSITION",
         "当前状态不允许执行此操作",

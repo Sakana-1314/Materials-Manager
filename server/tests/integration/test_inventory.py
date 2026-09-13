@@ -515,3 +515,54 @@ async def test_reverse_inbound_after_full_consume_marks_reversed(client: AsyncCl
     assert detail.json()["is_reversed"] is False
     balance = await client.get(f"/api/v1/inventory/balances/{material_id}", headers=headers)
     assert balance.json()["current_qty"] == "0"
+
+
+async def test_reversal_record_cannot_be_reversed_again(client: AsyncClient) -> None:
+    """冲销记录本身不能再冲销：前端隐藏按钮，接口也必须拒绝（防绕过页面直接调接口）。"""
+    headers = await auth_headers(client, "warehouse")
+    material_id = await create_stock(client, headers, "二次冲销防护测试")
+    inbound = await client.post(
+        "/api/v1/inventory/inbounds",
+        headers=headers,
+        json=operation_payload("rev-guard-in", material_id, "10", "2026-07-26T12:00:00+08:00"),
+    )
+    assert inbound.status_code == 201, inbound.text
+    original = inbound.json()
+
+    reversed_once = await client.post(
+        f"/api/v1/inventory/operations/{original['id']}/reverse",
+        headers=headers,
+        json=reverse_payload("rev-guard-1", material_id, "4"),
+    )
+    assert reversed_once.status_code == 200, reversed_once.text
+    reversal_id = reversed_once.json()["id"]
+
+    # 1) 对「冲销记录」再冲销 → 409 + REVERSAL_NOT_ALLOWED
+    second = await client.post(
+        f"/api/v1/inventory/operations/{reversal_id}/reverse",
+        headers=headers,
+        json=reverse_payload("rev-guard-2", material_id, "4"),
+    )
+    assert second.status_code == 409, second.text
+    assert second.json()["code"] == "REVERSAL_NOT_ALLOWED"
+
+    # 2) 原流水仍可继续冲销剩余数量（未被上面的拒绝影响）
+    rest = await client.post(
+        f"/api/v1/inventory/operations/{original['id']}/reverse",
+        headers=headers,
+        json=reverse_payload("rev-guard-3", material_id, "6"),
+    )
+    assert rest.status_code == 200, rest.text
+    detail = await client.get(f"/api/v1/inventory/operations/{original['id']}", headers=headers)
+    assert detail.json()["lines"][0]["remaining_qty"] == "0"
+    balance = await client.get(f"/api/v1/inventory/balances/{material_id}", headers=headers)
+    assert balance.json()["current_qty"] == "0"
+
+    # 3) 幂等重放同一 client_request_id 仍返回既有冲销流水，不受新校验影响
+    replay = await client.post(
+        f"/api/v1/inventory/operations/{original['id']}/reverse",
+        headers=headers,
+        json=reverse_payload("rev-guard-1", material_id, "4"),
+    )
+    assert replay.status_code == 200, replay.text
+    assert replay.json()["id"] == reversal_id

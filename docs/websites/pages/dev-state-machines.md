@@ -71,9 +71,12 @@ stateDiagram-v2
 | 已转入申购记录 | `DELETE /purchase-materials/{id}` | 删除失败 | `409 PURCHASE_PLAN_IN_USE` |
 | 未编码（`material_code IS NULL`） | `POST .../move-to-record` | 拒绝 | `409 MATERIAL_CODE_REQUIRED`，`details.material_ids` |
 
+**设计目标**：申购计划的三个状态是运营标记而非流程阶段 —— 用户可自由标注，后端不做流转校验
+（PATCH 仅受乐观锁 `If-Match` 限制），因此不存在「暂不申购不能直接改成已归档」这类限制。
 非超管角色的列表查询会被强制限定为 `status=[正常]`（`server/app/api/v1/purchase_materials.py` 的
-`list_materials`、`filter_options`、`export_material_results` 三处），因此「暂不申购」与「已归档」
-对普通角色不可见——这是**查询层过滤**，不是状态机限制。
+`list_materials`、`filter_options`、`export_material_results` 三处），即「暂不申购」与「已归档」
+对普通角色不可见——归档的约束**有意**只做在查询层（加 `status=已归档` 过滤 + 非超管 403），
+不引入状态机。
 
 #### 2.2 「是否已转入申购记录」不是字段
 
@@ -208,6 +211,11 @@ stateDiagram-v2
 `reversal_of_id IS NULL` 的新流水才 `enqueue_event`）。
 
 `StockOperationRead.is_reversed` 的真实语义是「这条记录本身是冲销记录」
+
+冲销记录**不能再被冲销**：前端隐藏按钮，后端在 `reverse_operation` 里也校验并返回
+`409 REVERSAL_NOT_ALLOWED`（见 `server/tests/integration/test_inventory.py` 的
+`test_reversal_record_cannot_be_reversed_again`）。原流水仍可分多次冲销剩余数量，
+上限由冲销行的 `remaining_qty` 控制。
 （`reversal_of_id is not None`），不是「已被冲销」；是否还能冲销要看明细行的 `remaining_qty`。
 
 #### 4.4 已确认流水修改（重放而非状态流转）

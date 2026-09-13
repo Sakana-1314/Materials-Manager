@@ -423,6 +423,14 @@ async def reverse_operation(
     )
     if existing:
         return existing
+    # 冲销流水本身不可再冲销：否则等于用一笔反向业务抵消冲销，历史轨迹会失去意义。
+    # 前端会隐藏按钮，但接口必须自己兜住（幂等重放已在上面返回既有流水，不受影响）。
+    if original.reversal_of_id is not None:
+        raise AppError(
+            "REVERSAL_NOT_ALLOWED",
+            "冲销记录不能再次冲销；如需恢复请修改原流水或做反向出/入库",
+            status_code=409,
+        )
     reverse_at = max(
         datetime.now(UTC),
         original.occurred_at.replace(tzinfo=UTC) + timedelta(microseconds=1),
