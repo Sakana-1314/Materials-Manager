@@ -46,6 +46,11 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "ASYNC"]
 
+[tool.ruff.lint.per-file-ignores]
+# scripts/openapi_examples.py 里的业务台账本质是「数据表」：一行一条记录、字段竖向对齐，
+# 为了 100 列去拆行反而更难核对（生成逻辑本身不受影响）。
+"scripts/openapi_examples.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.12"
 plugins = ["pydantic.mypy"]

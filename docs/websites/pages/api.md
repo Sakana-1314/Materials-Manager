@@ -31,7 +31,7 @@
 
 <Tabs :tabs="[
   { id: 't0', title: '鉴权令牌' },
-  { id: 't1', title: '前端 Mock' },
+  { id: 't1', title: '前端联调' },
   { id: 't2', title: '漂移校验' }
 ]">
 <TabsContent id="t0">
@@ -44,16 +44,32 @@
 `baseUrl`（前置 URL）与 `api_token`，接口统一引用 `{{api_token}}`。Mock 环境不需要令牌。
 </TabsContent>
 <TabsContent id="t1">
-`web/src/mocks/` 用 MSW 按同一份契约造响应，`npm run dev` 默认启用：
+前端不内置模拟数据，联调按下表接后端；演示站的 Mock 数据全部来自契约里的**响应示例**。
 
-| 文件 | 作用 |
-| --- | --- |
-| `web/src/mocks/handlers.ts` | 83 个接口的 handler 与 `DEFAULT_STATUS_BY_CODE`（与后端错误码一致） |
-| `web/src/mocks/data.ts` | 演示数据（四类角色、物资、流水、申购等） |
-| `public/mockServiceWorker.js` | MSW worker（子路径部署时按 `BASE_URL` 注册） |
+| 场景 | 配置（`docs/env/frontend.env.example`） | 说明 |
+| --- | --- | --- |
+| 本地后端 | 缺省，或 `VITE_API_PROXY=http://localhost:8000` | `npm run dev` 由 Vite 把 `/api` 代理到后端 |
+| Apifox Mock | `VITE_API_BASE_URL=https://m1.apifoxmock.com/m1/•••/api/v1` | 直连 Mock 环境，读写都作用于 Mock |
+| 线上后端 | `VITE_API_BASE_URL=https://api.example.com` | 只填域名时自动补 `/api/v1` |
 
-演示账号：`admin` / `warehouse` / `purchase` / `readonly`，密码均为 `123456`。
-接真实后端时设 `VITE_USE_MOCK=false` 并配 `VITE_API_BASE_URL`。
+**Apifox 的 Mock 取值优先级与仓库的关系**（Apifox 官方规则：高级 Mock 期望 > 响应示例 > 智能 Mock）：
+
+| 情况 | Apifox 返回什么 | 仓库要做什么 |
+| --- | --- | --- |
+| 默认「智能 Mock 优先」 | 按字段名用内置规则自己编（会出现 `"name":"没问连住道"` 这类乱码数据） | 无 |
+| 切成「响应示例优先」 | 契约里的响应示例，即本文档演示站的业务台账 | 一次性设置：Apifox「项目设置 → 功能设置 → Mock 设置 → 响应示例优先」 |
+
+响应示例写在 `docs/openapi.yaml` 的 `paths.*.*.responses.*.content.application/json.example`，
+由 `server/scripts/openapi_examples.py` 从一套华星镍业电气自动化车间的业务台账生成（二级库物资、
+出入库流水、申购计划与记录、华星库存、编码库、小程序与系统设置），数量、状态、筛选与统计互相
+自洽；错误响应用的是错误码总表里的真实 code 与文案。同一份台账也写入各 schema 的 `examples`，
+供 Apifox 数据模型、文档与前端类型注释使用。
+
+`server/tests/test_openapi_examples.py` 守住这条线：不出现占位符、必填字段非空、枚举合法、
+分页自洽、流水前后库存平衡、每个 JSON 响应都有示例。
+
+演示账号：`admin` / `warehouse` / `purchase` / `readonly`，密码均为 `123456`。Mock 的登录响应
+是固定示例（示例用户为 `admin`），四个账号在 Mock 下都会以同一身份进入，角色差异请接真实后端验证。
 </TabsContent>
 <TabsContent id="t2">
 CI 的「契约一致性校验」工作流依次执行：

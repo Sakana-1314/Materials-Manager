@@ -18,10 +18,9 @@ export default defineConfig(({ mode }) => {
     build: { assetsDir: 'yangrucheng-assets' },
     server: {
       port: 5173,
-      proxy:
-        env.VITE_USE_MOCK === 'false'
-          ? { '/api': env.VITE_API_PROXY || 'http://localhost:8000' }
-          : undefined,
+      // 本地联调走后端：VITE_API_BASE_URL 用默认 /api/v1 时由 Vite 代理转发。
+      // 联调 Apifox Mock 时把 VITE_API_BASE_URL 填成 Mock 的完整地址，请求不再经过代理。
+      proxy: { '/api': env.VITE_API_PROXY || 'http://localhost:8000' },
     },
   }
 })
