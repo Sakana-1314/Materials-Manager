@@ -236,8 +236,8 @@ web/src/
 | 线上后端 | `VITE_API_BASE_URL=https://api.example.com` | 只填域名时自动补 `/api/v1` |
 
 Mock 数据由 `docs/openapi.yaml` 的响应示例（`responses.*.content.application/json.example`，
-由 `server/scripts/openapi_examples.py` 生成）决定，后端不参与；Apifox 项目需把 Mock 设置改为
-「响应示例优先」，否则会走智能 Mock 按字段名自己编数据（见 [/api](/api)）。
+由 `server/scripts/openapi_examples.py` 生成）决定，后端不参与；没有响应示例的接口会降级到
+Apifox 智能 Mock，按字段名自己编数据（见 [/api](/api)）。
 
 ### 构建与代理
 | 项 | 值（`web/vite.config.ts`） |
