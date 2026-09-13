@@ -11,7 +11,11 @@ from app.services import excel_export_job_service, excel_export_service
 router = APIRouter(prefix="/excel-export-jobs", tags=["导出任务"])
 
 
-@router.get("/{job_id}", response_model=ExcelExportJobRead)
+@router.get(
+    "/{job_id}",
+    response_model=ExcelExportJobRead,
+    summary="导出进度",
+)
 async def get_export_job(
     session: DbSession,
     user: CurrentUser,
@@ -20,7 +24,11 @@ async def get_export_job(
     return await excel_export_job_service.get_export_job(session, job_id=job_id, user=user)
 
 
-@router.get("/files/{file_uuid}", response_class=FileResponse)
+@router.get(
+    "/files/{file_uuid}",
+    response_class=FileResponse,
+    summary="下载导出文件",
+)
 async def download_export_file_by_uuid(session: DbSession, file_uuid: FileId) -> FileResponse:
     # 匿名读取是刻意设计：前端 <a href> 原生下载无法携带 Authorization 头。
     # 安全性依赖 file_uuid 为 UUIDv7（不可猜解）+ 文件只存在于 exports 目录（保留期后删除），

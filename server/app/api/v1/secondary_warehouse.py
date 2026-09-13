@@ -19,7 +19,11 @@ router = APIRouter(prefix="/secondary-warehouse", tags=["二级库"])
 JOB_TYPE = "LITE_INVENTORY"
 
 
-@router.get("", response_model=Page[LiteInventoryRead])
+@router.get(
+    "",
+    response_model=Page[LiteInventoryRead],
+    summary="精简库存列表",
+)
 async def list_lite_inventory(
     session: DbSession,
     user: CurrentUser,
@@ -39,7 +43,11 @@ async def list_lite_inventory(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/last-import", response_model=LastImportRead)
+@router.get(
+    "/last-import",
+    response_model=LastImportRead,
+    summary="上次导入",
+)
 async def last_import(
     session: DbSession,
     user: CurrentUser,
@@ -50,7 +58,12 @@ async def last_import(
     return LastImportRead(last_import_at=last_import_at)
 
 
-@router.post("/import", response_model=ExcelImportJobRead, status_code=202)
+@router.post(
+    "/import",
+    response_model=ExcelImportJobRead,
+    status_code=202,
+    summary="导入精简库存",
+)
 async def import_lite_inventory(
     file: Annotated[UploadFile, File(...)],
     user: WarehouseWriter,
@@ -78,7 +91,11 @@ async def import_lite_inventory(
         await file.close()
 
 
-@router.get("/import-jobs/{job_id}", response_model=ExcelImportJobRead)
+@router.get(
+    "/import-jobs/{job_id}",
+    response_model=ExcelImportJobRead,
+    summary="导入进度",
+)
 async def get_import_job(
     session: DbSession,
     user: CurrentUser,

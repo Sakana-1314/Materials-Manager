@@ -47,7 +47,11 @@ mini_router = APIRouter(prefix="/mini-program", tags=["小程序"])
 AcceptLanguage = Annotated[str | None, Header(alias="Accept-Language")]
 
 
-@management_router.get("", response_model=Page[MiniProgramUserRead])
+@management_router.get(
+    "",
+    response_model=Page[MiniProgramUserRead],
+    summary="小程序用户列表",
+)
 async def list_mini_program_users(
     session: DbSession,
     user: SuperAdmin,
@@ -64,7 +68,11 @@ async def list_mini_program_users(
     )
 
 
-@management_router.patch("/{user_id}", response_model=MiniProgramUserRead)
+@management_router.patch(
+    "/{user_id}",
+    response_model=MiniProgramUserRead,
+    summary="编辑小程序用户",
+)
 async def update_mini_program_user(
     user_id: int,
     data: MiniProgramUserUpdate,
@@ -76,7 +84,11 @@ async def update_mini_program_user(
     )
 
 
-@management_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@management_router.delete(
+    "/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除小程序用户",
+)
 async def delete_mini_program_user(
     user_id: int,
     session: DbSession,
@@ -86,7 +98,11 @@ async def delete_mini_program_user(
     await mini_program_service.delete_user(session, user_id, if_match)
 
 
-@management_router.post("/{target_user_id}/merge", response_model=MiniProgramUserRead)
+@management_router.post(
+    "/{target_user_id}/merge",
+    response_model=MiniProgramUserRead,
+    summary="合并小程序用户",
+)
 async def merge_mini_program_users(
     target_user_id: int,
     data: MiniProgramUserMergeRequest,
@@ -98,7 +114,11 @@ async def merge_mini_program_users(
     )
 
 
-@mini_router.post("/auth/wx-login", response_model=MiniProgramLoginResponse)
+@mini_router.post(
+    "/auth/wx-login",
+    response_model=MiniProgramLoginResponse,
+    summary="微信登录",
+)
 async def mini_program_wechat_login(
     data: MiniProgramWechatLoginRequest, session: DbSession
 ) -> MiniProgramLoginResponse:
@@ -117,12 +137,20 @@ async def mini_program_wechat_login(
     )
 
 
-@mini_router.get("/me", response_model=MiniProgramUserRead)
+@mini_router.get(
+    "/me",
+    response_model=MiniProgramUserRead,
+    summary="我的信息",
+)
 async def mini_program_me(user: CurrentMiniProgramUser) -> MiniProgramUserRead:
     return MiniProgramUserRead.model_validate(user)
 
 
-@mini_router.post("/profile", response_model=MiniProgramLoginResponse)
+@mini_router.post(
+    "/profile",
+    response_model=MiniProgramLoginResponse,
+    summary="补充个人信息",
+)
 async def create_mini_program_profile(
     data: MiniProgramProfileUpdate,
     session: DbSession,
@@ -139,7 +167,11 @@ async def create_mini_program_profile(
     )
 
 
-@mini_router.get("/materials/{material_uuid}", response_model=MiniProgramMaterialRead)
+@mini_router.get(
+    "/materials/{material_uuid}",
+    response_model=MiniProgramMaterialRead,
+    summary="扫码查物资",
+)
 async def scan_material(
     material_uuid: UUID,
     session: DbSession,
@@ -151,7 +183,11 @@ async def scan_material(
     )
 
 
-@mini_router.get("/inventory", response_model=Page[MiniProgramInventoryItemRead])
+@mini_router.get(
+    "/inventory",
+    response_model=Page[MiniProgramInventoryItemRead],
+    summary="库存列表",
+)
 async def mini_program_inventory(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -169,16 +205,18 @@ async def mini_program_inventory(
         page_size=page_size,
     )
     return Page(
-        items=[
-            mini_program_service.inventory_item_read(item, accept_language) for item in items
-        ],
+        items=[mini_program_service.inventory_item_read(item, accept_language) for item in items],
         page=page,
         page_size=page_size,
         total=total,
     )
 
 
-@mini_router.get("/lite-inventory", response_model=Page[MiniProgramLiteInventoryItemRead])
+@mini_router.get(
+    "/lite-inventory",
+    response_model=Page[MiniProgramLiteInventoryItemRead],
+    summary="精简库存",
+)
 async def mini_program_lite_inventory(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -196,7 +234,11 @@ async def mini_program_lite_inventory(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@mini_router.get("/lite-inventory/last-import", response_model=LastImportRead)
+@mini_router.get(
+    "/lite-inventory/last-import",
+    response_model=LastImportRead,
+    summary="上次导入精简",
+)
 async def mini_program_lite_inventory_last_import(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -207,7 +249,11 @@ async def mini_program_lite_inventory_last_import(
     return LastImportRead(last_import_at=last_import_at)
 
 
-@mini_router.get("/purchase-plans", response_model=Page[MiniProgramPurchasePlanItemRead])
+@mini_router.get(
+    "/purchase-plans",
+    response_model=Page[MiniProgramPurchasePlanItemRead],
+    summary="申购计划",
+)
 async def mini_program_purchase_plans(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -234,22 +280,29 @@ async def mini_program_purchase_plans(
 
 
 @mini_router.get(
-    "/purchase-plans/filter-options", response_model=MiniProgramPurchasePlanFilterOptions
+    "/purchase-plans/filter-options",
+    response_model=MiniProgramPurchasePlanFilterOptions,
+    summary="申购计划筛选",
 )
 async def mini_program_purchase_plan_filter_options(
     session: DbSession,
     user: CurrentMiniProgramUser,
 ) -> MiniProgramPurchasePlanFilterOptions:
-    actual_demand_persons, subitem_nos = (
-        await mini_program_service.list_purchase_plan_filter_options(session)
-    )
+    (
+        actual_demand_persons,
+        subitem_nos,
+    ) = await mini_program_service.list_purchase_plan_filter_options(session)
     return MiniProgramPurchasePlanFilterOptions(
         actual_demand_persons=actual_demand_persons,
         subitem_nos=subitem_nos,
     )
 
 
-@mini_router.get("/purchase-records", response_model=Page[MiniProgramPurchaseRecordItemRead])
+@mini_router.get(
+    "/purchase-records",
+    response_model=Page[MiniProgramPurchaseRecordItemRead],
+    summary="申购记录",
+)
 async def mini_program_purchase_records(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -278,6 +331,7 @@ async def mini_program_purchase_records(
 @mini_router.get(
     "/purchase-records/filter-options",
     response_model=MiniProgramPurchaseRecordFilterOptions,
+    summary="申购记录筛选",
 )
 async def mini_program_purchase_record_filter_options(
     session: DbSession,
@@ -290,6 +344,7 @@ async def mini_program_purchase_record_filter_options(
 @mini_router.get(
     "/purchase-records/{line_id}",
     response_model=MiniProgramPurchaseRecordItemRead,
+    summary="申购记录详情",
 )
 async def mini_program_purchase_record_detail(
     line_id: int,
@@ -299,7 +354,11 @@ async def mini_program_purchase_record_detail(
     return await mini_program_service.purchase_record_detail(session, line_id)
 
 
-@mini_router.get("/material-codes", response_model=Page[MiniProgramMaterialCodeRead])
+@mini_router.get(
+    "/material-codes",
+    response_model=Page[MiniProgramMaterialCodeRead],
+    summary="物料编码",
+)
 async def mini_program_material_codes(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -313,7 +372,11 @@ async def mini_program_material_codes(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@mini_router.get("/huaxing-inventory", response_model=Page[MiniProgramHuaXingInventoryRead])
+@mini_router.get(
+    "/huaxing-inventory",
+    response_model=Page[MiniProgramHuaXingInventoryRead],
+    summary="华星库存",
+)
 async def mini_program_huaxing_inventory(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -327,7 +390,11 @@ async def mini_program_huaxing_inventory(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@mini_router.get("/material-codes/last-import", response_model=LastImportRead)
+@mini_router.get(
+    "/material-codes/last-import",
+    response_model=LastImportRead,
+    summary="上次导入编码",
+)
 async def mini_program_material_codes_last_import(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -338,7 +405,11 @@ async def mini_program_material_codes_last_import(
     return LastImportRead(last_import_at=last_import_at)
 
 
-@mini_router.get("/huaxing-inventory/last-import", response_model=LastImportRead)
+@mini_router.get(
+    "/huaxing-inventory/last-import",
+    response_model=LastImportRead,
+    summary="上次导入华星",
+)
 async def mini_program_huaxing_inventory_last_import(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -350,7 +421,9 @@ async def mini_program_huaxing_inventory_last_import(
 
 
 @mini_router.get(
-    "/purchase-plans/{material_id}", response_model=MiniProgramPurchasePlanDetailRead
+    "/purchase-plans/{material_id}",
+    response_model=MiniProgramPurchasePlanDetailRead,
+    summary="申购计划详情",
 )
 async def mini_program_purchase_plan_detail(
     material_id: int,
@@ -361,7 +434,10 @@ async def mini_program_purchase_plan_detail(
 
 
 @mini_router.post(
-    "/outbound", response_model=MiniProgramOutboundRead, status_code=status.HTTP_201_CREATED
+    "/outbound",
+    response_model=MiniProgramOutboundRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="扫码出库",
 )
 async def mini_program_outbound(
     data: MiniProgramOutboundCreate,
@@ -371,7 +447,11 @@ async def mini_program_outbound(
     return await mini_program_service.create_outbound(session, data, user)
 
 
-@mini_router.get("/outbound-reasons", response_model=MiniProgramOutboundReasonOptions)
+@mini_router.get(
+    "/outbound-reasons",
+    response_model=MiniProgramOutboundReasonOptions,
+    summary="出库用途选项",
+)
 async def mini_program_outbound_reasons(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -385,7 +465,11 @@ async def mini_program_outbound_reasons(
     )
 
 
-@mini_router.get("/operations", response_model=Page[MiniProgramOperationRead])
+@mini_router.get(
+    "/operations",
+    response_model=Page[MiniProgramOperationRead],
+    summary="操作记录",
+)
 async def mini_program_operations(
     session: DbSession,
     user: CurrentMiniProgramUser,
@@ -399,7 +483,11 @@ async def mini_program_operations(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@mini_router.get("/outbound/{operation_no}", response_model=MiniProgramOutboundRead)
+@mini_router.get(
+    "/outbound/{operation_no}",
+    response_model=MiniProgramOutboundRead,
+    summary="出库详情",
+)
 async def mini_program_outbound_by_no(
     operation_no: str,
     session: DbSession,

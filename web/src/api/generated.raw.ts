@@ -13,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Login */
+        /** 登录 */
         post: operations["login_api_v1_auth_login_post"];
         delete?: never;
         options?: never;
@@ -30,7 +30,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Refresh */
+        /** 刷新登录凭证 */
         post: operations["refresh_api_v1_auth_refresh_post"];
         delete?: never;
         options?: never;
@@ -45,7 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Me */
+        /** 当前用户信息 */
         get: operations["me_api_v1_auth_me_get"];
         put?: never;
         post?: never;
@@ -64,7 +64,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Expand */
+        /** 查询词扩展 */
         post: operations["expand_api_v1_ai_search_expand_post"];
         delete?: never;
         options?: never;
@@ -79,7 +79,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Status */
+        /** 服务状态 */
         get: operations["status_api_v1_ai_search_status_get"];
         put?: never;
         post?: never;
@@ -96,9 +96,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Settings */
+        /** 读取配置 */
         get: operations["get_settings_api_v1_ai_search_settings_get"];
-        /** Update Settings */
+        /** 保存配置 */
         put: operations["update_settings_api_v1_ai_search_settings_put"];
         post?: never;
         delete?: never;
@@ -116,7 +116,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Test Settings */
+        /** 测试连接 */
         post: operations["test_settings_api_v1_ai_search_settings_test_post"];
         delete?: never;
         options?: never;
@@ -131,7 +131,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Image Acceleration Settings */
+        /** 图片加速设置 */
         get: operations["image_acceleration_settings_api_v1_system_settings_image_acceleration_get"];
         put?: never;
         post?: never;
@@ -148,7 +148,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Features */
+        /** 小程序功能配置 */
         get: operations["mini_program_features_api_v1_system_settings_mini_program_features_get"];
         put?: never;
         post?: never;
@@ -165,7 +165,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Webhook Channels */
+        /** Webhook 配置 */
         get: operations["webhook_channels_api_v1_system_settings_webhooks_get"];
         put?: never;
         post?: never;
@@ -183,7 +183,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Update Webhook Channel */
+        /** 保存 Webhook 配置 */
         put: operations["update_webhook_channel_api_v1_system_settings_webhooks__platform__put"];
         post?: never;
         delete?: never;
@@ -201,7 +201,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Test Webhook Channel */
+        /** 测试 Webhook */
         post: operations["test_webhook_channel_api_v1_system_settings_webhooks__platform__test_post"];
         delete?: never;
         options?: never;
@@ -216,10 +216,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Materials */
+        /** 物资列表 */
         get: operations["list_materials_api_v1_stock_materials_get"];
         put?: never;
-        /** Create Material */
+        /** 新增物资 */
         post: operations["create_material_api_v1_stock_materials_post"];
         delete?: never;
         options?: never;
@@ -234,15 +234,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Material Detail */
+        /** 物资详情 */
         get: operations["material_detail_api_v1_stock_materials__material_id__get"];
         put?: never;
         post?: never;
-        /** Delete Material */
+        /** 删除物资 */
         delete: operations["delete_material_api_v1_stock_materials__material_id__delete"];
         options?: never;
         head?: never;
-        /** Update Material */
+        /** 编辑物资 */
         patch: operations["update_material_api_v1_stock_materials__material_id__patch"];
         trace?: never;
     };
@@ -253,7 +253,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Material Mini Program Code */
+        /** 生成小程序码 */
         get: operations["material_mini_program_code_api_v1_stock_materials_mini_program_codes__material_uuid__get"];
         put?: never;
         post?: never;
@@ -270,7 +270,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Material Mini Program Code Redirect */
+        /** 小程序码跳转 */
         get: operations["material_mini_program_code_redirect_api_v1_stock_materials__material_id__mini_program_code_get"];
         put?: never;
         post?: never;
@@ -288,7 +288,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Save Policy */
+        /** 保存补库策略 */
         put: operations["save_policy_api_v1_stock_materials__material_id__replenishment_policy_put"];
         post?: never;
         delete?: never;
@@ -304,7 +304,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Replenishment Defaults */
+        /** 补库默认值 */
         get: operations["replenishment_defaults_api_v1_inventory_replenishment_defaults_get"];
         put?: never;
         post?: never;
@@ -321,7 +321,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Balances */
+        /** 库存余额列表 */
         get: operations["balances_api_v1_inventory_balances_get"];
         put?: never;
         post?: never;
@@ -338,7 +338,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Low Stock */
+        /** 低库存列表 */
         get: operations["low_stock_api_v1_inventory_low_stock_get"];
         put?: never;
         post?: never;
@@ -355,7 +355,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Balance Detail */
+        /** 库存余额详情 */
         get: operations["balance_detail_api_v1_inventory_balances__material_id__get"];
         put?: never;
         post?: never;
@@ -374,7 +374,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Inbound */
+        /** 新增入库 */
         post: operations["inbound_api_v1_inventory_inbounds_post"];
         delete?: never;
         options?: never;
@@ -391,7 +391,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Outbound */
+        /** 新增出库 */
         post: operations["outbound_api_v1_inventory_outbounds_post"];
         delete?: never;
         options?: never;
@@ -406,7 +406,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Operations */
+        /** 流水列表 */
         get: operations["operations_api_v1_inventory_operations_get"];
         put?: never;
         post?: never;
@@ -423,14 +423,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Operation Detail */
+        /** 流水详情 */
         get: operations["operation_detail_api_v1_inventory_operations__operation_id__get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Edit Operation */
+        /** 修改流水 */
         patch: operations["edit_operation_api_v1_inventory_operations__operation_id__patch"];
         trace?: never;
     };
@@ -443,7 +443,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Reverse Operation */
+        /** 冲销流水 */
         post: operations["reverse_operation_api_v1_inventory_operations__operation_id__reverse_post"];
         delete?: never;
         options?: never;
@@ -460,7 +460,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Replenish */
+        /** 生成补库草稿 */
         post: operations["replenish_api_v1_inventory_low_stock__material_id__create_replenishment_draft_post"];
         delete?: never;
         options?: never;
@@ -475,7 +475,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Summary */
+        /** 工作台概览 */
         get: operations["summary_api_v1_dashboard_summary_get"];
         put?: never;
         post?: never;
@@ -492,7 +492,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Material Codes */
+        /** 物料编码列表 */
         get: operations["list_material_codes_api_v1_material_code_library_get"];
         put?: never;
         post?: never;
@@ -509,7 +509,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Last Import */
+        /** 上次导入 */
         get: operations["last_import_api_v1_material_code_library_last_import_get"];
         put?: never;
         post?: never;
@@ -527,7 +527,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Material Code Exists
+         * 编码是否存在
          * @description 软校验：编码是否已收录于物料编码库（不阻断业务，仅提示）。
          */
         get: operations["material_code_exists_api_v1_material_code_library_exists_get"];
@@ -548,7 +548,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Import Material Codes */
+        /** 导入物料编码 */
         post: operations["import_material_codes_api_v1_material_code_library_import_post"];
         delete?: never;
         options?: never;
@@ -563,7 +563,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Import Job */
+        /** 导入进度 */
         get: operations["get_import_job_api_v1_material_code_library_import_jobs__job_id__get"];
         put?: never;
         post?: never;
@@ -580,10 +580,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Memos */
+        /** 备忘录列表 */
         get: operations["list_memos_api_v1_memos_get"];
         put?: never;
-        /** Create Memo */
+        /** 新增备忘录 */
         post: operations["create_memo_api_v1_memos_post"];
         delete?: never;
         options?: never;
@@ -601,11 +601,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete Memo */
+        /** 删除备忘录 */
         delete: operations["delete_memo_api_v1_memos__memo_id__delete"];
         options?: never;
         head?: never;
-        /** Update Memo */
+        /** 编辑备忘录 */
         patch: operations["update_memo_api_v1_memos__memo_id__patch"];
         trace?: never;
     };
@@ -617,7 +617,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List Huaxing Inventory
+         * 华星库存列表
          * @description 华星总库存列表查询（文本字段内多关键词按 | 分隔做 OR；申购部门/申购人为精确多值筛选）。
          */
         get: operations["list_huaxing_inventory_api_v1_huaxing_inventory_get"];
@@ -637,7 +637,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Filter Options
+         * 筛选选项
          * @description 华星库存筛选下拉选项（申购部门/申购人 distinct 值）。
          */
         get: operations["filter_options_api_v1_huaxing_inventory_filter_options_get"];
@@ -656,7 +656,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Last Import */
+        /** 上次导入 */
         get: operations["last_import_api_v1_huaxing_inventory_last_import_get"];
         put?: never;
         post?: never;
@@ -675,7 +675,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Import Huaxing Inventory */
+        /** 导入华星库存 */
         post: operations["import_huaxing_inventory_api_v1_huaxing_inventory_import_post"];
         delete?: never;
         options?: never;
@@ -690,7 +690,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Import Job */
+        /** 导入进度 */
         get: operations["get_import_job_api_v1_huaxing_inventory_import_jobs__job_id__get"];
         put?: never;
         post?: never;
@@ -708,7 +708,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List Lite Inventory
+         * 精简库存列表
          * @description 精简二级库列表查询（物资名称/型号独立筛选，各字段内多关键词按 | 分隔做 OR 匹配）。
          */
         get: operations["list_lite_inventory_api_v1_secondary_warehouse_get"];
@@ -727,7 +727,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Last Import */
+        /** 上次导入 */
         get: operations["last_import_api_v1_secondary_warehouse_last_import_get"];
         put?: never;
         post?: never;
@@ -746,7 +746,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Import Lite Inventory */
+        /** 导入精简库存 */
         post: operations["import_lite_inventory_api_v1_secondary_warehouse_import_post"];
         delete?: never;
         options?: never;
@@ -761,7 +761,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Import Job */
+        /** 导入进度 */
         get: operations["get_import_job_api_v1_secondary_warehouse_import_jobs__job_id__get"];
         put?: never;
         post?: never;
@@ -778,7 +778,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Mini Program Users */
+        /** 小程序用户列表 */
         get: operations["list_mini_program_users_api_v1_mini_program_users_get"];
         put?: never;
         post?: never;
@@ -798,11 +798,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete Mini Program User */
+        /** 删除小程序用户 */
         delete: operations["delete_mini_program_user_api_v1_mini_program_users__user_id__delete"];
         options?: never;
         head?: never;
-        /** Update Mini Program User */
+        /** 编辑小程序用户 */
         patch: operations["update_mini_program_user_api_v1_mini_program_users__user_id__patch"];
         trace?: never;
     };
@@ -815,7 +815,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Merge Mini Program Users */
+        /** 合并小程序用户 */
         post: operations["merge_mini_program_users_api_v1_mini_program_users__target_user_id__merge_post"];
         delete?: never;
         options?: never;
@@ -832,7 +832,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Mini Program Wechat Login */
+        /** 微信登录 */
         post: operations["mini_program_wechat_login_api_v1_mini_program_auth_wx_login_post"];
         delete?: never;
         options?: never;
@@ -847,7 +847,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Me */
+        /** 我的信息 */
         get: operations["mini_program_me_api_v1_mini_program_me_get"];
         put?: never;
         post?: never;
@@ -866,7 +866,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create Mini Program Profile */
+        /** 补充个人信息 */
         post: operations["create_mini_program_profile_api_v1_mini_program_profile_post"];
         delete?: never;
         options?: never;
@@ -881,7 +881,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Scan Material */
+        /** 扫码查物资 */
         get: operations["scan_material_api_v1_mini_program_materials__material_uuid__get"];
         put?: never;
         post?: never;
@@ -898,7 +898,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Inventory */
+        /** 库存列表 */
         get: operations["mini_program_inventory_api_v1_mini_program_inventory_get"];
         put?: never;
         post?: never;
@@ -916,7 +916,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Mini Program Lite Inventory
+         * 精简库存
          * @description 精简二级库（仅查看）。小程序端按二级库模式调用本接口或 /inventory。
          */
         get: operations["mini_program_lite_inventory_api_v1_mini_program_lite_inventory_get"];
@@ -935,7 +935,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Lite Inventory Last Import */
+        /** 上次导入精简 */
         get: operations["mini_program_lite_inventory_last_import_api_v1_mini_program_lite_inventory_last_import_get"];
         put?: never;
         post?: never;
@@ -952,7 +952,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Plans */
+        /** 申购计划 */
         get: operations["mini_program_purchase_plans_api_v1_mini_program_purchase_plans_get"];
         put?: never;
         post?: never;
@@ -969,7 +969,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Plan Filter Options */
+        /** 申购计划筛选 */
         get: operations["mini_program_purchase_plan_filter_options_api_v1_mini_program_purchase_plans_filter_options_get"];
         put?: never;
         post?: never;
@@ -986,7 +986,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Records */
+        /** 申购记录 */
         get: operations["mini_program_purchase_records_api_v1_mini_program_purchase_records_get"];
         put?: never;
         post?: never;
@@ -1003,7 +1003,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Record Filter Options */
+        /** 申购记录筛选 */
         get: operations["mini_program_purchase_record_filter_options_api_v1_mini_program_purchase_records_filter_options_get"];
         put?: never;
         post?: never;
@@ -1020,7 +1020,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Record Detail */
+        /** 申购记录详情 */
         get: operations["mini_program_purchase_record_detail_api_v1_mini_program_purchase_records__line_id__get"];
         put?: never;
         post?: never;
@@ -1037,7 +1037,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Material Codes */
+        /** 物料编码 */
         get: operations["mini_program_material_codes_api_v1_mini_program_material_codes_get"];
         put?: never;
         post?: never;
@@ -1054,7 +1054,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Huaxing Inventory */
+        /** 华星库存 */
         get: operations["mini_program_huaxing_inventory_api_v1_mini_program_huaxing_inventory_get"];
         put?: never;
         post?: never;
@@ -1071,7 +1071,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Material Codes Last Import */
+        /** 上次导入编码 */
         get: operations["mini_program_material_codes_last_import_api_v1_mini_program_material_codes_last_import_get"];
         put?: never;
         post?: never;
@@ -1088,7 +1088,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Huaxing Inventory Last Import */
+        /** 上次导入华星 */
         get: operations["mini_program_huaxing_inventory_last_import_api_v1_mini_program_huaxing_inventory_last_import_get"];
         put?: never;
         post?: never;
@@ -1105,7 +1105,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Purchase Plan Detail */
+        /** 申购计划详情 */
         get: operations["mini_program_purchase_plan_detail_api_v1_mini_program_purchase_plans__material_id__get"];
         put?: never;
         post?: never;
@@ -1124,7 +1124,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Mini Program Outbound */
+        /** 扫码出库 */
         post: operations["mini_program_outbound_api_v1_mini_program_outbound_post"];
         delete?: never;
         options?: never;
@@ -1139,7 +1139,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Mini Program Outbound Reasons */
+        /** 出库用途选项 */
         get: operations["mini_program_outbound_reasons_api_v1_mini_program_outbound_reasons_get"];
         put?: never;
         post?: never;
@@ -1157,7 +1157,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Mini Program Operations
+         * 操作记录
          * @description 按当前用户姓名匹配查询出入库记录（含管理端操作）。
          */
         get: operations["mini_program_operations_api_v1_mini_program_operations_get"];
@@ -1177,7 +1177,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Mini Program Outbound By No
+         * 出库详情
          * @description 按流水号查询小程序出库明细（分享结果页恢复数据用）。
          */
         get: operations["mini_program_outbound_by_no_api_v1_mini_program_outbound__operation_no__get"];
@@ -1196,10 +1196,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Materials */
+        /** 申购计划列表 */
         get: operations["list_materials_api_v1_purchase_materials_get"];
         put?: never;
-        /** Create Material */
+        /** 新增申购计划 */
         post: operations["create_material_api_v1_purchase_materials_post"];
         delete?: never;
         options?: never;
@@ -1214,7 +1214,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Filter Options */
+        /** 筛选选项 */
         get: operations["filter_options_api_v1_purchase_materials_filter_options_get"];
         put?: never;
         post?: never;
@@ -1234,7 +1234,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Export Material Results
+         * 导出申购计划
          * @description 查询结果导出（含图片，耗时较长）：202 秒回任务，渲染在后台异步执行。
          */
         post: operations["export_material_results_api_v1_purchase_materials_export_results_post"];
@@ -1251,7 +1251,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Export Uncoded Materials */
+        /** 导出未编码物资 */
         get: operations["export_uncoded_materials_api_v1_purchase_materials_export_uncoded_get"];
         put?: never;
         post?: never;
@@ -1270,7 +1270,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Export Purchase Application */
+        /** 导出采购申请表 */
         post: operations["export_purchase_application_api_v1_purchase_materials_export_purchase_application_post"];
         delete?: never;
         options?: never;
@@ -1287,7 +1287,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Export Purchase Approval */
+        /** 导出申购审批表 */
         post: operations["export_purchase_approval_api_v1_purchase_materials_export_purchase_approval_post"];
         delete?: never;
         options?: never;
@@ -1304,7 +1304,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Batch Move To Record */
+        /** 批量转入申购记录 */
         post: operations["batch_move_to_record_api_v1_purchase_materials_batch_move_to_record_post"];
         delete?: never;
         options?: never;
@@ -1325,7 +1325,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Batch Update Materials */
+        /** 批量编辑申购计划 */
         patch: operations["batch_update_materials_api_v1_purchase_materials_batch_patch"];
         trace?: never;
     };
@@ -1336,15 +1336,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Material Detail */
+        /** 申购计划详情 */
         get: operations["material_detail_api_v1_purchase_materials__material_id__get"];
         put?: never;
         post?: never;
-        /** Delete Material */
+        /** 删除申购计划 */
         delete: operations["delete_material_api_v1_purchase_materials__material_id__delete"];
         options?: never;
         head?: never;
-        /** Update Material */
+        /** 编辑申购计划 */
         patch: operations["update_material_api_v1_purchase_materials__material_id__patch"];
         trace?: never;
     };
@@ -1357,7 +1357,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Link Stock Material */
+        /** 关联二级库物资 */
         post: operations["link_stock_material_api_v1_purchase_materials__material_id__link_stock_material_post"];
         delete?: never;
         options?: never;
@@ -1374,7 +1374,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Move To Record */
+        /** 转入申购记录 */
         post: operations["move_to_record_api_v1_purchase_materials__material_id__move_to_record_post"];
         delete?: never;
         options?: never;
@@ -1389,10 +1389,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Templates */
+        /** 模板列表 */
         get: operations["list_templates_api_v1_purchase_plan_templates_get"];
         put?: never;
-        /** Create Template */
+        /** 新增模板 */
         post: operations["create_template_api_v1_purchase_plan_templates_post"];
         delete?: never;
         options?: never;
@@ -1407,7 +1407,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Filter Options */
+        /** 筛选选项 */
         get: operations["filter_options_api_v1_purchase_plan_templates_filter_options_get"];
         put?: never;
         post?: never;
@@ -1424,15 +1424,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Template Detail */
+        /** 模板详情 */
         get: operations["template_detail_api_v1_purchase_plan_templates__template_id__get"];
         put?: never;
         post?: never;
-        /** Delete Template */
+        /** 删除模板 */
         delete: operations["delete_template_api_v1_purchase_plan_templates__template_id__delete"];
         options?: never;
         head?: never;
-        /** Update Template */
+        /** 编辑模板 */
         patch: operations["update_template_api_v1_purchase_plan_templates__template_id__patch"];
         trace?: never;
     };
@@ -1446,7 +1446,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Generate Purchase Plan
+         * 生成申购计划
          * @description 把模板完整复制为一条今天的申购计划（plan_date=生成当天），模板本身不删除。
          */
         post: operations["generate_purchase_plan_api_v1_purchase_plan_templates__template_id__generate_post"];
@@ -1463,7 +1463,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Sync Targets */
+        /** 同步目标 */
         get: operations["sync_targets_api_v1_purchase_record_sync_targets_get"];
         put?: never;
         post?: never;
@@ -1482,7 +1482,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Sync Trace */
+        /** 按追溯号同步 */
         post: operations["sync_trace_api_v1_purchase_record_sync_trace__trace_no__post"];
         delete?: never;
         options?: never;
@@ -1498,7 +1498,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Sync Order Targets
+         * 整单同步目标
          * @description 按申购单号列出待同步整单目标（整单一次平台查询、整单批量回写）。
          */
         get: operations["sync_order_targets_api_v1_purchase_record_sync_order_targets_get"];
@@ -1520,7 +1520,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Sync Order Apply
+         * 整单同步回写
          * @description 整单批量回写：把一个申购单下多个追溯号的结果一次写回。
          */
         post: operations["sync_order_apply_api_v1_purchase_record_sync_orders__purchase_order_no__apply_post"];
@@ -1537,7 +1537,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Purchase Records */
+        /** 申购记录列表 */
         get: operations["purchase_records_api_v1_purchase_records_get"];
         put?: never;
         post?: never;
@@ -1554,7 +1554,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Purchase Record Filter Options */
+        /** 筛选选项 */
         get: operations["purchase_record_filter_options_api_v1_purchase_records_filter_options_get"];
         put?: never;
         post?: never;
@@ -1574,7 +1574,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Export Purchase Record Results
+         * 导出申购记录
          * @description 查询结果导出（含图片，耗时较长）：202 秒回任务，渲染在后台异步执行。
          */
         post: operations["export_purchase_record_results_api_v1_purchase_records_export_results_post"];
@@ -1597,7 +1597,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Batch Edit Purchase Records */
+        /** 批量编辑申购记录 */
         patch: operations["batch_edit_purchase_records_api_v1_purchase_records_batch_patch"];
         trace?: never;
     };
@@ -1608,14 +1608,14 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Purchase Record */
+        /** 申购记录详情 */
         get: operations["purchase_record_api_v1_purchase_records__line_id__get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Edit Purchase Record */
+        /** 编辑申购记录 */
         patch: operations["edit_purchase_record_api_v1_purchase_records__line_id__patch"];
         trace?: never;
     };
@@ -1628,7 +1628,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Restore Purchase Record To Plan */
+        /** 退回申购计划 */
         post: operations["restore_purchase_record_to_plan_api_v1_purchase_records__line_id__restore_to_plan_post"];
         delete?: never;
         options?: never;
@@ -1644,13 +1644,13 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * List Shares
+         * 分享链接列表
          * @description 管理端「分享链接」列表：普通用户只看自己创建的，超管看全部。
          */
         get: operations["list_shares_api_v1_shares_get"];
         put?: never;
         /**
-         * Create Share
+         * 新增分享链接
          * @description 创建匿名分享链接：把勾选的申购计划/申购记录分享为无鉴权页面。
          *
          *     失效时间由前端在二次确认时选择（24小时/3天/7天/30天/永久）。
@@ -1670,19 +1670,19 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Share */
+        /** 分享链接详情 */
         get: operations["get_share_api_v1_shares__token__get"];
         put?: never;
         post?: never;
         /**
-         * Revoke Share
+         * 作废分享链接
          * @description 撤回分享：仅创建者本人或超级管理员可执行，撤回后匿名读取立即失效。
          */
         delete: operations["revoke_share_api_v1_shares__token__delete"];
         options?: never;
         head?: never;
         /**
-         * Update Share
+         * 编辑分享链接
          * @description 更新分享链接：展示列与到期时间；仅创建者本人或超级管理员可执行。
          */
         patch: operations["update_share_api_v1_shares__token__patch"];
@@ -1695,10 +1695,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Users */
+        /** 用户列表 */
         get: operations["users_api_v1_users_get"];
         put?: never;
-        /** Add User */
+        /** 新增用户 */
         post: operations["add_user_api_v1_users_post"];
         delete?: never;
         options?: never;
@@ -1716,11 +1716,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Remove User */
+        /** 删除用户 */
         delete: operations["remove_user_api_v1_users__item_id__delete"];
         options?: never;
         head?: never;
-        /** Edit User */
+        /** 编辑用户 */
         patch: operations["edit_user_api_v1_users__item_id__patch"];
         trace?: never;
     };
@@ -1733,7 +1733,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Regenerate User Api Token */
+        /** 重置接口令牌 */
         post: operations["regenerate_user_api_token_api_v1_users__item_id__api_token_regenerate_post"];
         delete?: never;
         options?: never;
@@ -1748,7 +1748,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Export Job */
+        /** 导出进度 */
         get: operations["get_export_job_api_v1_excel_export_jobs__job_id__get"];
         put?: never;
         post?: never;
@@ -1765,7 +1765,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Download Export File By Uuid */
+        /** 下载导出文件 */
         get: operations["download_export_file_by_uuid_api_v1_excel_export_jobs_files__file_uuid__get"];
         put?: never;
         post?: never;
@@ -1784,7 +1784,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upload */
+        /** 上传图片 */
         post: operations["upload_api_v1_files_images_post"];
         delete?: never;
         options?: never;
@@ -1799,11 +1799,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Orphan Report */
+        /** 悬空图片报告 */
         get: operations["orphan_report_api_v1_files_images_orphans_get"];
         put?: never;
         post?: never;
-        /** Remove Orphans */
+        /** 清理悬空图片 */
         delete: operations["remove_orphans_api_v1_files_images_orphans_delete"];
         options?: never;
         head?: never;
@@ -1817,11 +1817,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Read Image */
+        /** 读取图片 */
         get: operations["read_image_api_v1_files_images__file_id__get"];
         put?: never;
         post?: never;
-        /** Remove */
+        /** 删除图片 */
         delete: operations["remove_api_v1_files_images__file_id__delete"];
         options?: never;
         head?: never;

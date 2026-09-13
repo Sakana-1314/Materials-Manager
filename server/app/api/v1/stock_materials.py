@@ -35,7 +35,11 @@ async def _stock_read(session: DbSession, material_id: int) -> StockMaterialRead
     )
 
 
-@router.get("", response_model=Page[StockMaterialRead])
+@router.get(
+    "",
+    response_model=Page[StockMaterialRead],
+    summary="物资列表",
+)
 async def list_materials(
     session: DbSession,
     user: CurrentUser,
@@ -62,7 +66,12 @@ async def list_materials(
     )
 
 
-@router.post("", response_model=StockMaterialRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=StockMaterialRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增物资",
+)
 async def create_material(
     data: StockMaterialCreate,
     session: DbSession,
@@ -73,7 +82,11 @@ async def create_material(
     return material_service.stock_read(item)
 
 
-@router.get("/{material_id}", response_model=StockMaterialRead)
+@router.get(
+    "/{material_id}",
+    response_model=StockMaterialRead,
+    summary="物资详情",
+)
 async def material_detail(
     material_id: int, session: DbSession, user: CurrentUser
 ) -> StockMaterialRead:
@@ -85,6 +98,7 @@ async def material_detail(
     responses={200: {"content": {"image/png": {}}}},
     response_class=Response,
     name="material_mini_program_code",
+    summary="生成小程序码",
 )
 async def material_mini_program_code(
     material_uuid: UUID,
@@ -94,9 +108,7 @@ async def material_mini_program_code(
     user: CurrentUser,
 ) -> Response:
     item = await material_service.get_stock_material_by_uuid(session, material_uuid)
-    code = await mini_program_service.generate_unlimited_material_code(
-        material_uuid, env, appid
-    )
+    code = await mini_program_service.generate_unlimited_material_code(material_uuid, env, appid)
     return Response(
         content=code,
         media_type="image/png",
@@ -113,6 +125,7 @@ async def material_mini_program_code(
     "/{material_id}/mini-program-code",
     response_class=RedirectResponse,
     status_code=status.HTTP_307_TEMPORARY_REDIRECT,
+    summary="小程序码跳转",
 )
 async def material_mini_program_code_redirect(
     material_id: int,
@@ -131,7 +144,11 @@ async def material_mini_program_code_redirect(
     )
 
 
-@router.patch("/{material_id}", response_model=StockMaterialRead)
+@router.patch(
+    "/{material_id}",
+    response_model=StockMaterialRead,
+    summary="编辑物资",
+)
 async def update_material(
     material_id: int,
     data: StockMaterialUpdate,
@@ -144,7 +161,11 @@ async def update_material(
     return await _stock_read(session, material_id)
 
 
-@router.delete("/{material_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{material_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除物资",
+)
 async def delete_material(
     material_id: int,
     session: DbSession,
@@ -156,7 +177,11 @@ async def delete_material(
     await material_service.delete_stock_material(session, item, if_match)
 
 
-@router.put("/{material_id}/replenishment-policy", response_model=StockMaterialRead)
+@router.put(
+    "/{material_id}/replenishment-policy",
+    response_model=StockMaterialRead,
+    summary="保存补库策略",
+)
 async def save_policy(
     material_id: int,
     data: ReplenishmentPolicyWrite,

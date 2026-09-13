@@ -25,7 +25,11 @@ router = APIRouter(prefix="/huaxing-inventory", tags=["华星库存"])
 JOB_TYPE = "HUAXING_INVENTORY"
 
 
-@router.get("", response_model=Page[HuaXingInventoryRead])
+@router.get(
+    "",
+    response_model=Page[HuaXingInventoryRead],
+    summary="华星库存列表",
+)
 async def list_huaxing_inventory(
     session: DbSession,
     user: CurrentUser,
@@ -51,7 +55,11 @@ async def list_huaxing_inventory(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/filter-options", response_model=HuaXingFilterOptions)
+@router.get(
+    "/filter-options",
+    response_model=HuaXingFilterOptions,
+    summary="筛选选项",
+)
 async def filter_options(
     session: DbSession,
     user: CurrentUser,
@@ -66,7 +74,11 @@ async def filter_options(
     )
 
 
-@router.get("/last-import", response_model=LastImportRead)
+@router.get(
+    "/last-import",
+    response_model=LastImportRead,
+    summary="上次导入",
+)
 async def last_import(
     session: DbSession,
     user: CurrentUser,
@@ -77,7 +89,12 @@ async def last_import(
     return LastImportRead(last_import_at=last_import_at)
 
 
-@router.post("/import", response_model=ExcelImportJobRead, status_code=202)
+@router.post(
+    "/import",
+    response_model=ExcelImportJobRead,
+    status_code=202,
+    summary="导入华星库存",
+)
 async def import_huaxing_inventory(
     file: Annotated[UploadFile, File(...)],
     user: WarehouseWriter,
@@ -105,7 +122,11 @@ async def import_huaxing_inventory(
         await file.close()
 
 
-@router.get("/import-jobs/{job_id}", response_model=ExcelImportJobRead)
+@router.get(
+    "/import-jobs/{job_id}",
+    response_model=ExcelImportJobRead,
+    summary="导入进度",
+)
 async def get_import_job(
     session: DbSession,
     user: CurrentUser,
