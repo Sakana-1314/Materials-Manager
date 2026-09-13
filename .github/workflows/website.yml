@@ -90,6 +90,17 @@ jobs:
 
       # 站点与两份演示都是「index.html 引用带 hash 的资源」，hash 不匹配时页面会白屏而
       # 构建仍然成功（曾因此误判过线上状态）。这里在发布前把每个 HTML 引用的本地资源逐个校验。
+      # 站点的二级 tab 是自定义组件，只认 <Tabs>/<TabsContent>；写成 VitePress 的 ::: tabs 容器语法
+      # 不会报错，但会把内容当普通文本渲染出来（曾线上出现过）。这里做一次静态检查。
+      - name: "校验文档没有用不支持的 ::: tabs 语法"
+        run: |
+          set -e
+          if grep -rn --include='*.md' -E '^::: *tabs' docs/websites/pages/; then
+            echo '❌ 请改用 Tabs 组件形式：<Tabs :tabs=[...]><TabsContent id=...></TabsContent></Tabs>' >&2
+            exit 1
+          fi
+          echo "✅ 文档未使用 ::: tabs 语法"
+
       - name: 校验页面引用的资源都存在
         run: |
           set -e

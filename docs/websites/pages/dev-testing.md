@@ -1,6 +1,5 @@
 # 测试与质量
-
-本章描述当前仓库中的测试资产与质量门禁：后端 `server/tests/` 的 pytest 套件（单元 / 集成 / 契约校验三类）、前端 `web/src/**/*.spec.ts` 的 Vitest 套件、`.github/workflows/` 下的 8 条 CI 流水线，以及本地提交前需要执行的验证命令。质量策略可概括为四层：
+后端 `server/tests/` 的 pytest 套件（单元 / 集成 / 契约校验三类）、前端 `web/src/**/*.spec.ts` 的 Vitest 套件、`.github/workflows/` 下的 8 条 CI 流水线，以及本地提交前需要执行的验证命令。
 
 | 层次 | 位置 | 运行环境 | 作用 |
 | --- | --- | --- | --- |
@@ -8,56 +7,9 @@
 | 后端集成测试 | `server/tests/integration/` | 内存 SQLite（`sqlite+aiosqlite:///:memory:`）+ `httpx.ASGITransport` | 真实路由、鉴权、权限、并发、状态流转 |
 | Schema 与文档契约 | `server/tests/test_init_sql.py`、`server/tests/test_error_code_docs.py` | 直接读文件 | 保证 `docs/references/database/init.sql`、错误码文档与代码不漂移 |
 | 前端单测 | `web/src/**/*.spec.ts`（27 个文件） | Vitest + jsdom | 组件、composable、工具函数、store、类型权限矩阵 |
-
 接口契约另有独立门禁：CI 会重新导出 `docs/openapi.yaml` 与 `web/src/api/generated.raw.ts` 并校验无 diff，详见 [CI 工作流](#ci-工作流)。
-
-## 后端测试目录
-
+## 后端测试套件
 `server/tests/` 共 38 个 `test_*.py` 文件：根目录 14 个、`unit/` 3 个、`integration/` 21 个；根目录另有 `conftest.py` 与 `__init__.py`（`unit/`、`integration/` 目录下无 `__init__.py`）。
-
-| 文件路径 | 层次 | 测什么（一句话） |
-| --- | --- | --- |
-| `server/tests/conftest.py` | 夹具 | 共享 `AsyncClient`、四个角色账号、鉴权头与库存/导出辅助函数 |
-| `server/tests/test_cors.py` | 根（集成） | CORS 预检与响应头：Referer 优先、Origin 回退、白名单拒绝、404 也带头 |
-| `server/tests/test_database_errors.py` | 根（单元） | SQLAlchemy 异常到 `AppError` 的映射（超时/连接/未知列/编程错误） |
-| `server/tests/test_db_timing.py` | 根（集成） | `X-DB-Time` / `X-DB-Queries` 响应头的采集范围与并发隔离 |
-| `server/tests/test_error_code_docs.py` | 根（契约） | `docs/websites/pages/api-error-codes.md` 与代码中 `AppError("CODE")` 双向一致 |
-| `server/tests/test_excel_export_service.py` | 根（单元） | Excel 模板目录、JSON 模板加载与采购申请/结果导出渲染 |
-| `server/tests/test_file_service.py` | 根（单元） | 上传写库失败时回滚并删除已落盘文件 |
-| `server/tests/test_identifiers.py` | 根（单元） | UUIDv7 字符串合法、唯一且单调有序 |
-| `server/tests/test_init_sql.py` | 根（契约） | `init.sql` 与 ORM 模型逐表逐列一致 + 种子账号 + 模板清单 |
-| `server/tests/test_logging.py` | 根（单元） | 月度日志轮转、备份数、健康检查过滤、控制台彩色开关 |
-| `server/tests/test_middleware.py` | 根（集成） | 真实 IP 头优先级与 `X-Response-Time` 中间件 |
-| `server/tests/test_mini_program_service.py` | 根（单元） | 小程序 `access_token` 按 app_id 缓存隔离、按 app_id 选凭据、物料编码生成 |
-| `server/tests/test_purchase_plan_cleanup.py` | 根（单元+集成） | 申购计划清理任务（幂等、批处理、快照跳过）与凌晨 2 点调度时刻 |
-| `server/tests/test_schemas.py` | 根（单元） | Pydantic 请求模型的图片去重、时区必填、状态 Literal 校验 |
-| `server/tests/test_search.py` | 根（单元） | `split_or_search_terms` 对 `\|`／`｜`／空项的归一化 |
-| `server/tests/unit/test_fernet.py` | 单元 | Fernet 加解密往返与从 JWT 密钥派生回退 |
-| `server/tests/unit/test_material_service.py` | 单元 | 申购计划编号冲突时重试生成 |
-| `server/tests/unit/test_mcp_server.py` | 单元 | MCP 工具目录只暴露管理类接口、路径参数精确匹配、不进入业务 OpenAPI |
-| `server/tests/integration/test_ai_search.py` | 集成 | AI 搜索配置加密回显、扩展应用到计划/记录、超时与 JSON 输出模式 |
-| `server/tests/integration/test_auth.py` | 集成 | 刷新令牌换发、access/refresh 不可混用、永久 API Token 认证 |
-| `server/tests/integration/test_excel_export_job.py` | 集成 | 异步导出任务状态机、过期清理、下载守卫、导出上限 |
-| `server/tests/integration/test_files.py` | 集成 | 图片上传重编码为 PNG、孤图识别与清理、鉴权 |
-| `server/tests/integration/test_health.py` | 集成 | `/health` 数据库探活、代理真实 IP 日志、故障上报 |
-| `server/tests/integration/test_huaxing_inventory.py` | 集成 | 华星库存导入（xlsx/csv/xls）、去重、表头别名、筛选 |
-| `server/tests/integration/test_import_job.py` | 集成 | 导入任务后台流程（中断标记、清理、并发拒绝、异常落库） |
-| `server/tests/integration/test_inventory.py` | 集成 | 入出库、幂等、负库存、历史流水重算、反向冲销、低库存补库 |
-| `server/tests/integration/test_lite_inventory.py` | 集成 | 精简二级库导入与筛选（含数量、名称校验失败） |
-| `server/tests/integration/test_material_code_library.py` | 集成 | 物料编码库导入/替换/查询、软校验、大文件 |
-| `server/tests/integration/test_mcp.py` | 集成 | MCP 流式 HTTP 端点鉴权与工具列表 |
-| `server/tests/integration/test_memos.py` | 集成 | 备忘录 CRUD、归属隔离、版本冲突、长度校验 |
-| `server/tests/integration/test_mini_program.py` | 集成 | 小程序登录/资料/扫码出库/库存与申购查询/账号合并/高级开关 |
-| `server/tests/integration/test_procurement.py` | 集成 | 申购计划与记录全流程：筛选、排序、转入、批量、导出、删除与恢复 |
-| `server/tests/integration/test_purchase_plan_template.py` | 集成 | 申购计划模板 CRUD、权限、版本冲突与按模板生成计划 |
-| `server/tests/integration/test_purchase_record_sync.py` | 集成 | 外部系统回写申购记录（按追溯号 / 按申购单）、字段白名单与写入权限 |
-| `server/tests/integration/test_secondary_warehouse_mode.py` | 集成 | 二级库模式开关对小程序与后台写入/工作台统计的约束 |
-| `server/tests/integration/test_share.py` | 集成 | 分享链接创建/查看/改列/改期/撤回、匿名访问与归属隔离 |
-| `server/tests/integration/test_users.py` | 集成 | 用户改名、删除约束、API Token 唯一性、密文回显与历史哈希回填 |
-| `server/tests/integration/test_version.py` | 集成 | `/api/v1/version` 冒烟（公开、无需鉴权） |
-| `server/tests/integration/test_webhooks.py` | 集成 | Webhook 设置权限与校验、消息格式、事件去重双平台投递 |
-
-按主题分组，点上方标签切换。
 
 <Tabs :tabs="[
   { id: 't0', title: '夹具与 init.sql 校验' },
@@ -69,8 +21,7 @@
 <TabsContent id="t0">
 
 ### `server/tests/conftest.py`
-
-该文件只有 1 个 pytest 夹具与 3 个模块级辅助函数，全部真实存在：
+该文件只有 1 个 pytest 夹具与 3 个模块级辅助函数：
 
 | 名称 | 类型 | 作用与关键实现 |
 | --- | --- | --- |
@@ -78,27 +29,25 @@
 | `auth_headers` | 辅助函数 | POST `/api/v1/auth/login`（密码 `123456`），返回 `{"Authorization": "Bearer <access_token>"}` |
 | `await_export_job` | 辅助函数 | 轮询 `GET /api/v1/excel-export-jobs/{job_id}` 直到 `SUCCEEDED`／`FAILED`（默认 2 秒超时，间隔 0.05 秒） |
 | `create_stock` | 辅助函数 | POST `/api/v1/stock-materials` 建二级库物资并返回其 `id`（默认名称「交流接触器」） |
+关键实现细节：
 
-关键实现细节（均来自 `server/tests/conftest.py`）：
-
-- **环境变量在导入 app 之前注入**：`APP_DATABASE_URL` 取 `TEST_DATABASE_URL`，默认 `sqlite+aiosqlite:///:memory:`；`APP_JWT_SECRET` 为固定测试串；`APP_WECHAT_MINI_PROGRAM_APP_ID` / `..._APP_SECRET` 为逗号分隔的双小程序凭据。
-- **无事务回滚式隔离**：不使用嵌套事务回滚，而是每用例 `Base.metadata.create_all` → 插入四个账号 → 跑用例 → `Base.metadata.drop_all`（`engine.begin()` + `run_sync`）。
-- **种子账号**：`admin`（SUPER_ADMIN）、`warehouse`（WAREHOUSE_ADMIN）、`purchase`（PURCHASE_ADMIN）、`readonly`（READ_ONLY），密码均为 `123456`，`enabled=True`。
-- **路径重定向**：`settings.template_dir` 指向 `server/app/templates`，`settings.upload_dir` 指向 pytest 的 `tmp_path / "uploads"`，避免污染仓库。
-- **事件循环**：由 `server/pyproject.toml` 的 `asyncio_mode = "auto"`、`asyncio_default_test_loop_scope = "session"`、`asyncio_default_fixture_loop_scope = "session"` 固定为单会话事件循环。
-
+| 项 | 实现 |
+| --- | --- |
+| 环境变量注入 | 在导入 app 之前注入：`APP_DATABASE_URL` 取 `TEST_DATABASE_URL`（默认 `sqlite+aiosqlite:///:memory:`）；`APP_JWT_SECRET` 为固定测试串；`APP_WECHAT_MINI_PROGRAM_APP_ID` / `..._APP_SECRET` 为逗号分隔的双小程序凭据 |
+| 隔离方式 | **无事务回滚式隔离**：每用例 `Base.metadata.create_all` → 插入四个账号 → 跑用例 → `Base.metadata.drop_all`（`engine.begin()` + `run_sync`） |
+| 种子账号 | `admin`（SUPER_ADMIN）、`warehouse`（WAREHOUSE_ADMIN）、`purchase`（PURCHASE_ADMIN）、`readonly`（READ_ONLY），密码均 `123456`，`enabled=True` |
+| 路径重定向 | `settings.template_dir` 指向 `server/app/templates`，`settings.upload_dir` 指向 pytest 的 `tmp_path / "uploads"`，避免污染仓库 |
+| 事件循环 | 由 `server/pyproject.toml` 的 `asyncio_mode = "auto"`、`asyncio_default_test_loop_scope = "session"`、`asyncio_default_fixture_loop_scope = "session"` 固定为单会话事件循环 |
 ### 重点：`server/tests/test_init_sql.py`
+该文件是「ORM 与数据库初始化脚本一致」的唯一守门人，共 4 个测试函数、115 行，无外部辅助模块，解析逻辑全部内联。
 
-该文件是「ORM 与数据库初始化脚本一致」的唯一守门人，共 4 个测试函数、115 行，无外部辅助模块，解析逻辑全部内联在文件里。
-
-#### 读取对象与解析方式
-
-- 模型来源：`import app.models`（导入副作用注册全部模型）+ `from app.core.database import Base`，比对对象是 `Base.metadata.sorted_tables`。**不使用 `__table_args__`**。
-- 目标文件：`INIT_SQL = Path(__file__).parents[2] / "docs" / "references" / "database" / "init.sql"`。
-- SQL 解析：模块级正则 `CREATE_TABLE = re.compile(r"CREATE TABLE IF NOT EXISTS \`([^\`]+)\` \((.*?)\) ENGINE=", re.DOTALL)`，由 `_table_blocks()` 返回 `{表名: 建表块文本}`；列定义由 `_column_definition(block, column)` 用逐列正则 `^  \`列名\` (.*?)(?=,\n  (?:\`|CONSTRAINT|INDEX)|\Z)` 截取。属于「正则 + 简易 DDL 文本解析」，不是完整 SQL 解析器。
-- ORM 侧 DDL：`str(CreateTable(table).compile(dialect=mysql.dialect()))`（`sqlalchemy.schema.CreateTable` + `sqlalchemy.dialects.mysql`），用于提取 ORM 的约束名。
-
-#### 逐表逐列比对项（`test_init_sql_matches_current_model_schema`）
+| 项 | 实现 |
+| --- | --- |
+| 模型来源 | `import app.models`（导入副作用注册全部模型）+ `from app.core.database import Base`，比对 `Base.metadata.sorted_tables`，**不使用 `__table_args__`** |
+| 目标文件 | `INIT_SQL = Path(__file__).parents[2] / "docs" / "references" / "database" / "init.sql"` |
+| SQL 解析 | 模块级正则 `CREATE_TABLE = re.compile(r"CREATE TABLE IF NOT EXISTS \`([^\`]+)\` \((.*?)\) ENGINE=", re.DOTALL)`，`_table_blocks()` 返回 `{表名: 建表块文本}`；列定义由 `_column_definition(block, column)` 用逐列正则 `^  \`列名\` (.*?)(?=,\n  (?:\`\|CONSTRAINT\|INDEX)\|\Z)` 截取（正则 + 简易 DDL 文本解析，不是完整 SQL 解析器） |
+| ORM 侧 DDL | `str(CreateTable(table).compile(dialect=mysql.dialect()))`（`sqlalchemy.schema.CreateTable` + `sqlalchemy.dialects.mysql`），用于提取 ORM 的约束名 |
+逐表逐列比对项（`test_init_sql_matches_current_model_schema`）：
 
 | 比对项 | SQL 侧取法 | ORM 侧取法 |
 | --- | --- | --- |
@@ -109,27 +58,9 @@
 | NULL 约束 | `_column_definition(...)` 中是否含 `NOT NULL` | `not column.nullable` |
 | ENUM 取值 | 列定义中 `ENUM\((.*?)\)` 内的 `'([^']+)'` 列表 | `list(column.type.enums)`（`isinstance(column.type, Enum)` 时，顺序敏感） |
 | 外键 | 正则 `FOREIGN KEY \(\`列\`\) REFERENCES \`表\` \(\`列\`\)(?: ON DELETE ([A-Z]+(?: [A-Z]+)?))?` | `(fk.parent.name, fk.column.table.name, fk.column.name, (fk.ondelete or "").upper() or None)` 四元组集合 |
-
-**未直接比对**：列类型映射（VARCHAR/INT 等具体类型的逐字比对）与列默认值未做断言；默认值与类型只在「约束名集合 / 列名 / NULL」层面被间接约束。当前未实现「逐列类型与 DEFAULT 值比对」。
-
-#### 断言失败信息形式
-
-断言消息统一为中文短句，便于定位：
-
-- `f"init.sql 中缺少列定义：{column}"`（`_column_definition` 内）
-- `f"{table_name} 的列与 ORM 不一致"`
-- `f"{table_name} 的约束与 ORM 不一致"` / `f"{table_name} 的索引与 ORM 不一致"` / `f"{table_name} 的外键与 ORM 不一致"`
-- `f"{table_name}.{column.name} 的 NULL 约束与 ORM 不一致"`
-- `f"{table_name}.{column.name} 的 ENUM 值与 ORM 不一致"`
-
-#### 允许的例外 / 白名单
-
-该文件没有显式白名单或列名规范化映射；「例外」以独立断言的形式表达：
-
-- 种子账号断言只允许 `('admin', '$argon2id$` 形式与 `@{username}_api_token` 同时出现，并要求脚本含 `RANDOM_BYTES`（说明口令/令牌由 `init.sql` 随机生成），同时断言 `"measurement_unit" not in sql`（已删除的旧表不得复活）。
-- 文件标识符列在 `file_object.id`、`stock_material_image.file_id`、`purchase_material_image.file_id` 三处必须以 `VARCHAR(36) NOT NULL` 开头。
-
-#### 测试函数清单
+**未直接比对**：列类型映射（VARCHAR/INT 等逐字比对）与列默认值未做断言，默认值与类型只在「约束名集合 / 列名 / NULL」层面被间接约束。
+断言失败信息为中文短句，便于定位：`f"init.sql 中缺少列定义：{column}"`（`_column_definition` 内）、`f"{table_name} 的列与 ORM 不一致"`、`f"{table_name} 的约束与 ORM 不一致"` / `f"{table_name} 的索引与 ORM 不一致"` / `f"{table_name} 的外键与 ORM 不一致"`、`f"{table_name}.{column.name} 的 NULL 约束与 ORM 不一致"`、`f"{table_name}.{column.name} 的 ENUM 值与 ORM 不一致"`。
+该文件没有显式白名单或列名规范化映射，「例外」以独立断言的形式表达：种子账号断言只允许 `('admin', '$argon2id$` 形式与 `@{username}_api_token` 同时出现，并要求脚本含 `RANDOM_BYTES`，同时断言 `"measurement_unit" not in sql`（已删除的旧表不得复活）；文件标识符列在 `file_object.id`、`stock_material_image.file_id`、`purchase_material_image.file_id` 三处必须以 `VARCHAR(36) NOT NULL` 开头。
 
 | 函数名（`server/tests/test_init_sql.py`） | 断言目标 |
 | --- | --- |
@@ -143,120 +74,61 @@
 <TabsContent id="t1">
 
 ### 单元测试清单
-
-以下为 `server/tests/unit/` 与 `server/tests/` 根目录下每个测试文件内的真实测试函数。
-
-#### `server/tests/unit/`
-
-| 文件 | 测试函数 | 验证什么 |
-| --- | --- | --- |
-| `server/tests/unit/test_fernet.py` | `test_fernet_roundtrip_within_session` | 密文不等于明文且可解回原值 |
-| | `test_fernet_falls_back_to_jwt_derived_key` | 未显式提供密钥时由 JWT 密钥派生 |
-| `server/tests/unit/test_material_service.py` | `test_create_purchase_material_retries_plan_no_on_collision` | 计划编号冲突时不失败，重试生成新编号 |
-| `server/tests/unit/test_mcp_server.py` | `test_operation_catalog_exposes_management_apis_only` | MCP 工具目录只含管理类接口 |
-| | `test_operation_list_and_describe_use_openapi_contract` | `list`/`describe` 输出源自 OpenAPI 契约 |
-| | `test_build_path_requires_exact_parameters` | 路径参数必须精确匹配，缺参即报错 |
-| | `test_mcp_mount_is_not_part_of_business_openapi` | `/mcp` 挂载点不进入业务 OpenAPI |
-
-#### `server/tests/` 根目录
-
-| 文件 | 测试函数 | 验证什么 |
-| --- | --- | --- |
-| `test_cors.py` | `test_cors_preflight_prefers_referer` | 预检优先使用 Referer 判定来源 |
-| | `test_cors_preflight_falls_back_to_origin` | 无 Referer 时回退 Origin |
-| | `test_cors_headers_are_added_to_not_found_response` | 404 响应同样带 CORS 头 |
-| | `test_cors_ignores_malformed_referer_and_uses_origin` | 非法 Referer 被忽略 |
-| | `test_response_without_referer_or_origin_has_no_cors_headers` | 无来源时不下发 CORS 头 |
-| | `test_cors_whitelist_rejects_unknown_origin` | 白名单外来源被拒绝 |
-| `test_database_errors.py` | `test_programming_error_is_not_reported_as_database_unavailable` | 编程错误不得误报为「数据库不可用」 |
-| | `test_database_timeout_is_reported_as_unavailable` | 超时映射为不可用错误 |
-| | `test_mysql_unknown_column_operational_error_is_reported_as_query_error` | MySQL 未知列映射为查询错误 |
-| | `test_mysql_connection_operational_error_is_reported_as_unavailable` | 连接类 OperationalError 映射为不可用 |
-| | `test_other_sqlalchemy_errors_are_internal_database_errors` | 其余 SQLAlchemy 异常归为内部错误 |
-| `test_db_timing.py` | `test_response_reports_server_side_duration_breakdown` | 响应头给出耗时分解 |
-| | `test_business_request_reports_database_queries` | 业务请求上报数据库查询次数 |
-| | `test_concurrent_requests_report_their_own_database_work` | 并发请求各自统计，不串数据 |
-| | `test_database_timing_only_collects_inside_request_scope` | 只在请求作用域内采集 |
-| `test_error_code_docs.py` | `test_every_runtime_code_is_documented` | 代码中每个错误码都登记在文档 |
-| | `test_documented_status_codes_match_code` | 文档状态码与默认映射/调用点一致 |
-| `test_excel_export_service.py` | `test_default_template_directory_is_inside_backend_code` | 默认模板目录位于后端代码内 |
-| | `test_load_spec_reads_configured_runtime_template` | 按运行时配置读取模板 |
-| | `test_missing_template_raises_readable_service_error` | 模板缺失时报可读错误 |
-| | `test_invalid_template_raises_readable_business_error` | 模板非法时报业务错误 |
-| | `test_purchase_approval_template_renders_fifteen_columns` | 采购审批导出渲染 15 列 |
-| | `test_result_excel_uses_visible_columns_and_readable_layout` | 结果导出按可见列与易读布局 |
-| | `test_result_excel_embeds_images_and_skips_missing_files` | 内嵌图片并跳过缺失文件 |
-| | `test_result_excel_handles_empty_image_list` | 空图片列表可正常导出 |
-| `test_file_service.py` | `test_upload_removes_disk_file_when_database_commit_fails` | 写库失败时删除已保存文件 |
-| `test_identifiers.py` | `test_uuid7_strings_are_valid_and_monotonically_ordered` | UUIDv7 合法、唯一、单调递增 |
-| `test_init_sql.py` | 见上文专节 | — |
-| `test_logging.py` | `test_daily_log_rotation_uses_month_directory` | 按月份目录轮转日志 |
-| | `test_monthly_archives_honor_backup_count` | 归档保留份数生效 |
-| | `test_health_check_filter_only_suppresses_health_requests` | 健康检查日志过滤只作用于 `/health` |
-| | `test_console_colors_are_enabled_by_default` | 默认开启控制台彩色 |
-| | `test_console_colors_can_be_disabled` | 可关闭彩色输出 |
-| `test_middleware.py` | `test_real_ip_header_priority` | 真实 IP 头优先级 |
-| | `test_real_ip_uses_first_forwarded_address` | 取 X-Forwarded-For 首个地址 |
-| | `test_real_ip_skips_invalid_headers_and_handles_missing_client` | 非法头跳过、无客户端不报错 |
-| | `test_real_ip_keeps_original_client_without_valid_proxy_header` | 无有效代理头时保留原 client |
-| | `test_request_context_adds_response_time_header` | 加 `X-Response-Time` 头 |
-| `test_mini_program_service.py` | `test_generate_unlimited_material_code_uses_compact_uuid_scene` | 不限编码场景生成紧凑 UUID 编码 |
-| | `test_access_token_cache_is_isolated_by_app_id` | access_token 缓存按 app_id 隔离 |
-| | `test_exchange_wechat_code_selects_credentials_by_app_id` | 按 app_id 选择微信凭据 |
-| `test_purchase_plan_cleanup.py` | `test_cleanup_removes_moved_plans_and_keeps_record` | 清理已转入计划但保留记录 |
-| | `test_cleanup_is_idempotent` | 重复清理幂等 |
-| | `test_cleanup_skips_unmigrated_snapshot` | 跳过未迁移快照 |
-| | `test_cleanup_batches_over_limit` | 超量时分批处理 |
-| | `test_seconds_until_two_am` | 距凌晨 2 点秒数计算 |
-| | `test_shanghai_constant` | 上海时区常量正确 |
-| `test_schemas.py` | `test_request_models_accept_valid_validator_values` | 合法值通过校验 |
-| | `test_request_models_reject_duplicate_images` | 重复图片被拒 |
-| | `test_operation_update_rejects_duplicate_materials` | 流水更新拒绝重复物资 |
-| | `test_operation_update_requires_timezone` | 流水更新必须带时区 |
-| | `test_purchase_material_rejects_unknown_status` | 申购状态非法值被拒 |
-| `test_search.py` | `test_split_or_search_terms_normalizes_delimiters_and_empty_items` | `\|`／`｜`／空项归一化 |
+| 文件 | 覆盖主题与用例（函数名 / 验证要点） |
+| --- | --- |
+| `server/tests/unit/test_fernet.py`（单元） | Fernet 加解密往返与从 JWT 密钥派生回退：`test_fernet_roundtrip_within_session`（密文不等于明文且可解回原值）、`test_fernet_falls_back_to_jwt_derived_key` |
+| `server/tests/unit/test_material_service.py`（单元） | 计划编号冲突时重试生成：`test_create_purchase_material_retries_plan_no_on_collision` |
+| `server/tests/unit/test_mcp_server.py`（单元） | MCP 工具目录只暴露管理类接口、路径参数精确匹配、不进入业务 OpenAPI：`test_operation_catalog_exposes_management_apis_only`、`test_operation_list_and_describe_use_openapi_contract`、`test_build_path_requires_exact_parameters`、`test_mcp_mount_is_not_part_of_business_openapi` |
+| `server/tests/test_cors.py`（根·集成） | CORS 预检与响应头：Referer 优先、Origin 回退、白名单拒绝、404 也带头——`test_cors_preflight_prefers_referer`、`test_cors_preflight_falls_back_to_origin`、`test_cors_headers_are_added_to_not_found_response`、`test_cors_ignores_malformed_referer_and_uses_origin`、`test_response_without_referer_or_origin_has_no_cors_headers`、`test_cors_whitelist_rejects_unknown_origin` |
+| `server/tests/test_database_errors.py`（根·单元） | SQLAlchemy 异常到 `AppError` 的映射（超时/连接/未知列/编程错误）：`test_programming_error_is_not_reported_as_database_unavailable`、`test_database_timeout_is_reported_as_unavailable`、`test_mysql_unknown_column_operational_error_is_reported_as_query_error`、`test_mysql_connection_operational_error_is_reported_as_unavailable`、`test_other_sqlalchemy_errors_are_internal_database_errors` |
+| `server/tests/test_db_timing.py`（根·集成） | `X-DB-Time` / `X-DB-Queries` 的采集范围与并发隔离：`test_response_reports_server_side_duration_breakdown`、`test_business_request_reports_database_queries`、`test_concurrent_requests_report_their_own_database_work`、`test_database_timing_only_collects_inside_request_scope` |
+| `server/tests/test_error_code_docs.py`（根·契约） | `docs/websites/pages/api-error-codes.md` 与代码中 `AppError("CODE")` 双向一致：`test_every_runtime_code_is_documented`、`test_documented_status_codes_match_code` |
+| `server/tests/test_excel_export_service.py`（根·单元） | 模板目录、JSON 模板加载与采购申请/结果导出渲染：`test_default_template_directory_is_inside_backend_code`、`test_load_spec_reads_configured_runtime_template`、`test_missing_template_raises_readable_service_error`、`test_invalid_template_raises_readable_business_error`、`test_purchase_approval_template_renders_fifteen_columns`（15 列）、`test_result_excel_uses_visible_columns_and_readable_layout`、`test_result_excel_embeds_images_and_skips_missing_files`、`test_result_excel_handles_empty_image_list` |
+| `server/tests/test_file_service.py`（根·单元） | 写库失败时删除已落盘文件：`test_upload_removes_disk_file_when_database_commit_fails` |
+| `server/tests/test_identifiers.py`（根·单元） | UUIDv7 合法、唯一、单调有序：`test_uuid7_strings_are_valid_and_monotonically_ordered` |
+| `server/tests/test_init_sql.py`（根·契约） | `init.sql` 与 ORM 逐表逐列一致 + 种子账号 + 模板清单：见「重点：`server/tests/test_init_sql.py`」专节（4 个用例） |
+| `server/tests/test_logging.py`（根·单元） | 月度日志轮转、备份数、健康检查过滤、控制台彩色开关：`test_daily_log_rotation_uses_month_directory`、`test_monthly_archives_honor_backup_count`、`test_health_check_filter_only_suppresses_health_requests`、`test_console_colors_are_enabled_by_default`、`test_console_colors_can_be_disabled` |
+| `server/tests/test_middleware.py`（根·集成） | 真实 IP 头优先级与 `X-Response-Time`：`test_real_ip_header_priority`、`test_real_ip_uses_first_forwarded_address`、`test_real_ip_skips_invalid_headers_and_handles_missing_client`、`test_real_ip_keeps_original_client_without_valid_proxy_header`、`test_request_context_adds_response_time_header` |
+| `server/tests/test_mini_program_service.py`（根·单元） | `access_token` 按 app_id 缓存隔离、按 app_id 选凭据、物料编码生成：`test_generate_unlimited_material_code_uses_compact_uuid_scene`、`test_access_token_cache_is_isolated_by_app_id`、`test_exchange_wechat_code_selects_credentials_by_app_id` |
+| `server/tests/test_purchase_plan_cleanup.py`（根·单元+集成） | 清理任务（幂等、批处理、快照跳过）与凌晨 2 点调度时刻：`test_cleanup_removes_moved_plans_and_keeps_record`、`test_cleanup_is_idempotent`、`test_cleanup_skips_unmigrated_snapshot`、`test_cleanup_batches_over_limit`、`test_seconds_until_two_am`、`test_shanghai_constant` |
+| `server/tests/test_schemas.py`（根·单元） | 图片去重、时区必填、状态 Literal 校验：`test_request_models_accept_valid_validator_values`、`test_request_models_reject_duplicate_images`、`test_operation_update_rejects_duplicate_materials`、`test_operation_update_requires_timezone`、`test_purchase_material_rejects_unknown_status` |
+| `server/tests/test_search.py`（根·单元） | `split_or_search_terms` 对 `\|`／`｜`／空项归一化：`test_split_or_search_terms_normalizes_delimiters_and_empty_items` |
 
 ### 集成测试清单
+集成测试通过 `httpx.ASGITransport` 直接打真实路由。
 
-集成测试通过 `httpx.ASGITransport` 直接打真实路由，下表列出各文件覆盖的接口路径与真实断言的关键场景。
-
-| 文件 | 覆盖接口路径 | 关键场景（以真实断言为准） |
+| 文件 | 覆盖接口路径 | 关键场景 |
 | --- | --- | --- |
-| `test_ai_search.py` | `/api/v1/ai-search/settings`、`/status`、`/test`、`/expand`、`/api/v1/system-settings/image-acceleration` | 超管配置密钥返回明文但库内密文；扩展应用到 `/purchase-materials`、`/purchase-records`；超时返回特定 400；GLM 关闭 thinking 并要求 JSON 输出；配置从事件日志迁移到系统设置表 |
-| `test_auth.py` | `/api/v1/auth/login`、`/refresh`、`/me`、`/api/v1/users`、`/users/{id}/api-token/regenerate` | 刷新换发新令牌对；access 不能当 refresh 用；永久 API Token 支持多请求头认证；非法令牌 401 |
-| `test_excel_export_job.py` | `/api/v1/excel-export-jobs/{id}`、`/files/{uuid}`、`/api/v1/purchase-materials/export-results`、`/purchase-records/export-results`、`/api/v1/files/images` | 中断任务标记失败并删文件；只清终态旧行；成功保留文件、失败删半成品；未就绪/过期下载被拒；任务行缺失仍可下载；超上限转为任务失败 |
-| `test_files.py` | `/api/v1/files/images`、`/files/images/{id}`、`/files/images/orphans` | 上传重编码为 PNG；申购行图片不被判为孤图；上传需鉴权；超管上报并清理孤图 |
-| `test_health.py` | `/health` | 探活检查数据库；日志使用代理真实 IP；数据库故障被上报 |
-| `test_huaxing_inventory.py` | `/api/v1/huaxing-inventory`、`/filter-options`、`/import`、`/import-jobs/{id}` | 导入替换旧数据、完全重复行去重、表头别名识别、缺表头任务失败、权限校验、拒绝不支持的扩展名、csv/xls、型号规格与跨字段筛选 |
-| `test_import_job.py` | 以 `/api/v1/material-code-library/import` 为入口 + `/import-jobs/{id}` | 中断任务标记失败并删文件；只删旧终态行；已有活跃任务时拒绝新导入；成功/业务错误/意外错误三种落库结果 |
-| `test_inventory.py` | `/api/v1/inventory/inbounds`、`/outbounds`、`/operations/{id}`、`/operations/{id}/reverse`、`/balances`、`/balances/{material_id}`、`/low-stock`、`/low-stock/{id}/create-replenishment-draft`、`/replenishment-defaults`、`/api/v1/stock-materials`、`/purchase-materials` | 入库原因可空、出库原因必填；幂等键、负库存与权限；编辑历史流水重放快照后续流水重算；并发出库允许负库存且无丢失更新；低库存建议量取近期消耗；删除物资需无流水；部分冲销多次与超量被拒；全量消耗后反向入库标记已冲销 |
-| `test_lite_inventory.py` | `/api/v1/secondary-warehouse`、`/import`、`/import-jobs/{id}`、`/last-import` | 精简模式导入替换与去重、缺表头/缺名称/非法数量导致任务失败、权限校验、拒绝不支持的扩展名、csv 与 xls、最近导入时间、名称 OR 与跨字段 AND 筛选 |
-| `test_material_code_library.py` | `/api/v1/material-code-library`、`/exists`、`/import`、`/import-jobs/{id}` | 导入替换后可查询；非法导入不删除既有编码；导入需申购权限；拒绝不支持的扩展名；损坏文件任务失败；大文件成功；编码存在性软校验；csv/xls 导入 |
-| `test_mcp.py` | `/api/v1/mcp/`、`/api/v1/auth/login`、`/api/v1/users` | 流式 HTTP 端点需 API Token；带用户令牌列出安全工具集 |
-| `test_memos.py` | `/api/v1/memos`、`/memos/{id}` | CRUD 全生命周期；未鉴权被拒；按用户隔离；更新版本冲突；未知 id；内容长度校验 |
-| `test_mini_program.py` | `/api/v1/mini-program/auth/wx-login`、`/profile`、`/inventory`、`/materials/{uuid}`、`/outbound`、`/outbound-reasons`、`/operations`、`/purchase-plans`、`/material-codes`、`/huaxing-inventory`、`/api/v1/mini-program-users`、`/{id}/merge`、`/api/v1/system-settings/mini-program-features` | 注册-扫码-出库全链路；跨小程序账号合并；库存搜索分页与详情；申购计划只展示有图正常项与下一项、排除已转记录；记录搜索分页；编码与华星库存查询分页；高级开关关闭新绑定与用户状态；小程序用户接口需超管 |
-| `test_procurement.py` | `/api/v1/purchase-materials`（含 `?coded=false`、`?moved=false`）、`/{id}`、`/{id}/move-to-record`、`/batch`、`/batch-move-to-record`、`/filter-options`、`/export-purchase-application`、`/export-purchase-approval`、`/export-results`、`/export-uncoded`、`/api/v1/purchase-records`、`/{line_id}`、`/batch`、`/export-results`、`/api/v1/excel-export-jobs/files/{uuid}` | 状态筛选与批量归档；空需求人占位符 `\`；子项号精确/空筛选；按列任意排序与白名单拒绝未知列；OR 搜索与 AND 筛选组合；编号按日期序列、记录保留计划日期；无编码计划必须先补码；多条计划转同一申购单；合同签订日期为行级且可批量改；批量更新原子性；分组申购行跟踪字段；入库不改变申购记录；导出模板字段必填校验与按筛选/可见列导出；结果导出内嵌原图；缺模板返回可读 400 |
-| `test_purchase_plan_template.py` | `/api/v1/purchase-plan-templates`、`/api/v1/files/images` | 模板 CRUD；权限；版本冲突 409；按模板生成完整计划且保留模板；同模板生成两次得到不同计划 |
-| `test_purchase_record_sync.py` | `/api/v1/purchase-record-sync/targets`、`/trace/{trace_no}`、`/order-targets`、`/orders/{purchase_order_no}/apply`、`/api/v1/purchase-records/{line_id}` | 只填空字段并推进状态；最小申购单号过滤；非法字段被拒；游标分页；写入需申购权限；追溯号不存在；按申购单整单写入与未知追溯号计数；合同签订日期行级且只填空 |
-| `test_secondary_warehouse_mode.py` | `/api/v1/system-settings/mini-program-features`、`/api/v1/dashboard/summary`、`/api/v1/inventory/inbounds`、`/api/v1/stock-materials`、`/api/v1/mini-program/lite-inventory`、`/outbound`、`/profile`、`/api/v1/secondary-warehouse/import` | features 端点暴露二级库模式；设置往返持久化；精简模式阻断小程序与后台完整出入库写入；小程序读取精简库存；工作台统计计入精简库存 |
-| `test_share.py` | `/api/v1/shares`、`/shares/{token}` | 计划/记录分享与匿名查看；永久分享无过期；过期与未知 token 被拒；创建需鉴权且缺条目被拒；撤回权限；只清过期行；按列过滤公开视图与身份；默认列；非法列被拒；改权限/列/有效期；列表按归属隔离 |
-| `test_users.py` | `/api/v1/users`、`/{id}`、`/{id}/api-token/regenerate`、`/api/v1/auth/login`、`/me`、`/api/v1/inventory/inbounds` | 改名不改隐藏 id；无关联用户可删；API Token 唯一可重生成；操作不引用认证用户；每次读取都回显令牌；历史仅哈希令牌在用后回填并回显 |
-| `test_version.py` | `/api/v1/version` | 公开返回应用名/版本/构建信息，无需鉴权 |
-| `test_webhooks.py` | `/api/v1/system-settings/webhooks`、`/{platform}`、`/{platform}/test`、`/api/v1/mini-program/profile`、`/api/v1/inventory/inbounds`、`/outbounds`、`/operations/{id}` | 设置权限与校验；通知消息格式（同步测试）；勾选事件只入队一次并投递到两个平台 |
+| `server/tests/integration/test_ai_search.py` | `/api/v1/ai-search/settings`、`/status`、`/test`、`/expand`、`/api/v1/system-settings/image-acceleration` | 超管配置密钥返回明文但库内密文；扩展应用到 `/purchase-materials`、`/purchase-records`；超时返回特定 400；GLM 关闭 thinking 并要求 JSON 输出；配置从事件日志迁移到系统设置表 |
+| `server/tests/integration/test_auth.py` | `/api/v1/auth/login`、`/refresh`、`/me`、`/api/v1/users`、`/users/{id}/api-token/regenerate` | 刷新换发新令牌对；access 不能当 refresh 用；永久 API Token 支持多请求头认证；非法令牌 401 |
+| `server/tests/integration/test_excel_export_job.py` | `/api/v1/excel-export-jobs/{id}`、`/files/{uuid}`、`/api/v1/purchase-materials/export-results`、`/purchase-records/export-results`、`/api/v1/files/images` | 中断任务标记失败并删文件；只清终态旧行；成功保留文件、失败删半成品；未就绪/过期下载被拒；任务行缺失仍可下载；超上限转为任务失败 |
+| `server/tests/integration/test_files.py` | `/api/v1/files/images`、`/files/images/{id}`、`/files/images/orphans` | 上传重编码为 PNG；申购行图片不被判为孤图；上传需鉴权；超管上报并清理孤图 |
+| `server/tests/integration/test_health.py` | `/health` | 探活检查数据库；日志使用代理真实 IP；数据库故障被上报 |
+| `server/tests/integration/test_huaxing_inventory.py` | `/api/v1/huaxing-inventory`、`/filter-options`、`/import`、`/import-jobs/{id}` | 导入替换旧数据、完全重复行去重、表头别名识别、缺表头任务失败、权限校验、拒绝不支持的扩展名、csv/xls、型号规格与跨字段筛选 |
+| `server/tests/integration/test_import_job.py` | 以 `/api/v1/material-code-library/import` 为入口 + `/import-jobs/{id}` | 中断任务标记失败并删文件；只删旧终态行；已有活跃任务时拒绝新导入；成功/业务错误/意外错误三种落库结果 |
+| `server/tests/integration/test_inventory.py` | `/api/v1/inventory/inbounds`、`/outbounds`、`/operations/{id}`、`/operations/{id}/reverse`、`/balances`、`/balances/{material_id}`、`/low-stock`、`/low-stock/{id}/create-replenishment-draft`、`/replenishment-defaults`、`/api/v1/stock-materials`、`/purchase-materials` | 入库原因可空、出库原因必填；幂等键、负库存与权限；编辑历史流水重放快照后续流水重算；并发出库允许负库存且无丢失更新；低库存建议量取近期消耗；删除物资需无流水；部分冲销多次与超量被拒；全量消耗后反向入库标记已冲销 |
+| `server/tests/integration/test_lite_inventory.py` | `/api/v1/secondary-warehouse`、`/import`、`/import-jobs/{id}`、`/last-import` | 精简模式导入替换与去重、缺表头/缺名称/非法数量导致任务失败、权限校验、拒绝不支持的扩展名、csv 与 xls、最近导入时间、名称 OR 与跨字段 AND 筛选 |
+| `server/tests/integration/test_material_code_library.py` | `/api/v1/material-code-library`、`/exists`、`/import`、`/import-jobs/{id}` | 导入替换后可查询；非法导入不删除既有编码；导入需申购权限；拒绝不支持的扩展名；损坏文件任务失败；大文件成功；编码存在性软校验；csv/xls 导入 |
+| `server/tests/integration/test_mcp.py` | `/api/v1/mcp/`、`/api/v1/auth/login`、`/api/v1/users` | 流式 HTTP 端点需 API Token；带用户令牌列出安全工具集 |
+| `server/tests/integration/test_memos.py` | `/api/v1/memos`、`/memos/{id}` | CRUD 全生命周期；未鉴权被拒；按用户隔离；更新版本冲突；未知 id；内容长度校验 |
+| `server/tests/integration/test_mini_program.py` | `/api/v1/mini-program/auth/wx-login`、`/profile`、`/inventory`、`/materials/{uuid}`、`/outbound`、`/outbound-reasons`、`/operations`、`/purchase-plans`、`/material-codes`、`/huaxing-inventory`、`/api/v1/mini-program-users`、`/{id}/merge`、`/api/v1/system-settings/mini-program-features` | 注册-扫码-出库全链路；跨小程序账号合并；库存搜索分页与详情；申购计划只展示有图正常项与下一项、排除已转记录；记录搜索分页；编码与华星库存查询分页；高级开关关闭新绑定与用户状态；小程序用户接口需超管 |
+| `server/tests/integration/test_procurement.py` | `/api/v1/purchase-materials`（含 `?coded=false`、`?moved=false`）、`/{id}`、`/{id}/move-to-record`、`/batch`、`/batch-move-to-record`、`/filter-options`、`/export-purchase-application`、`/export-purchase-approval`、`/export-results`、`/export-uncoded`、`/api/v1/purchase-records`、`/{line_id}`、`/batch`、`/export-results`、`/api/v1/excel-export-jobs/files/{uuid}` | 状态筛选与批量归档；空需求人占位符 `\`；子项号精确/空筛选；按列任意排序与白名单拒绝未知列；OR 搜索与 AND 筛选组合；编号按日期序列、记录保留计划日期；无编码计划必须先补码；多条计划转同一申购单；合同签订日期为行级且可批量改；批量更新原子性；分组申购行跟踪字段；入库不改变申购记录；导出模板字段必填校验与按筛选/可见列导出；结果导出内嵌原图；缺模板返回可读 400 |
+| `server/tests/integration/test_purchase_plan_template.py` | `/api/v1/purchase-plan-templates`、`/api/v1/files/images` | 模板 CRUD；权限；版本冲突 409；按模板生成完整计划且保留模板；同模板生成两次得到不同计划 |
+| `server/tests/integration/test_purchase_record_sync.py` | `/api/v1/purchase-record-sync/targets`、`/trace/{trace_no}`、`/order-targets`、`/orders/{purchase_order_no}/apply`、`/api/v1/purchase-records/{line_id}` | 只填空字段并推进状态；最小申购单号过滤；非法字段被拒；游标分页；写入需申购权限；追溯号不存在；按申购单整单写入与未知追溯号计数；合同签订日期行级且只填空 |
+| `server/tests/integration/test_secondary_warehouse_mode.py` | `/api/v1/system-settings/mini-program-features`、`/api/v1/dashboard/summary`、`/api/v1/inventory/inbounds`、`/api/v1/stock-materials`、`/api/v1/mini-program/lite-inventory`、`/outbound`、`/profile`、`/api/v1/secondary-warehouse/import` | features 端点暴露二级库模式；设置往返持久化；精简模式阻断小程序与后台完整出入库写入；小程序读取精简库存；工作台统计计入精简库存 |
+| `server/tests/integration/test_share.py` | `/api/v1/shares`、`/shares/{token}` | 计划/记录分享与匿名查看；永久分享无过期；过期与未知 token 被拒；创建需鉴权且缺条目被拒；撤回权限；只清过期行；按列过滤公开视图与身份；默认列；非法列被拒；改权限/列/有效期；列表按归属隔离 |
+| `server/tests/integration/test_users.py` | `/api/v1/users`、`/{id}`、`/{id}/api-token/regenerate`、`/api/v1/auth/login`、`/me`、`/api/v1/inventory/inbounds` | 改名不改隐藏 id；无关联用户可删；API Token 唯一可重生成；操作不引用认证用户；每次读取都回显令牌；历史仅哈希令牌在用后回填并回显 |
+| `server/tests/integration/test_version.py` | `/api/v1/version` | 公开返回应用名/版本/构建信息，无需鉴权 |
+| `server/tests/integration/test_webhooks.py` | `/api/v1/system-settings/webhooks`、`/{platform}`、`/{platform}/test`、`/api/v1/mini-program/profile`、`/api/v1/inventory/inbounds`、`/outbounds`、`/operations/{id}` | 设置权限与校验；通知消息格式（同步测试）；勾选事件只入队一次并投递到两个平台 |
 
 </TabsContent>
 
 <TabsContent id="t2">
 
 ### 前端测试
+运行器为 **Vitest 3**（`web/package.json` 中 `"test": "vitest run"`、`"test:watch": "vitest"`），断言环境 **jsdom**，全局 API 由 `web/tsconfig.app.json` 的 `"types": ["vitest/globals"]` 提供。配置在独立的 `web/vitest.config.ts`（**`web/vite.config.ts` 内没有 vitest 段**）：`plugins: [vue()]`、`resolve.alias['@'] → ./src`、`define.__BUILD_TIME__`、`test: { environment: 'jsdom', setupFiles: ['./src/test/setup.ts'] }`；`web/src/test/setup.ts` 只有一条全局规则 `afterEach(() => vi.restoreAllMocks())`；共 27 个 `*.spec.ts`。
 
-运行器为 **Vitest 3**（`web/package.json` 中 `"test": "vitest run"`、`"test:watch": "vitest"`），断言环境为 **jsdom**，全局 API 由 `web/tsconfig.app.json` 的 `"types": ["vitest/globals"]` 提供。
-
-- 配置在独立的 `web/vitest.config.ts`（**`web/vite.config.ts` 内没有 vitest 段**）：`plugins: [vue()]`、`resolve.alias['@'] → ./src`、`define.__BUILD_TIME__`、`test: { environment: 'jsdom', setupFiles: ['./src/test/setup.ts'] }`。
-- `web/src/test/setup.ts` 只有一条全局规则：`afterEach(() => vi.restoreAllMocks())`。
-- 共 27 个 `*.spec.ts` 文件。
-
-| 文件 | 被测对象 | 关键用例（概括） |
+| 文件 | 被测对象 | 关键用例 |
 | --- | --- | --- |
 | `web/src/components/ColumnVisibilityPicker.spec.ts` | 列可见性选择器 | 恢复合法列并忽略已删列、后续选择持久化、存储非法时回落默认 |
 | `web/src/components/ExportButton.spec.ts` | 导出按钮 | 单个选项与多选项均渲染为下拉、单选项禁用时不直接触发 |
@@ -285,10 +157,8 @@
 | `web/src/utils/tableRowNavigation.spec.ts` | 表格行点击保护 | 普通单击进详情、交互元素/拖动/选中文本时忽略跳转、其他区域选区不影响 |
 | `web/src/utils/time.spec.ts` | 日期工具 | 空日期返回 null 不回落今天、按东八区解析、时间戳与字符串双向一致、空日期占位符 |
 | `web/src/views/MemosView.spec.ts` | 备忘录视图 | 编辑不自动保存、在途请求不重复提交、切换后保留未保存标记、新建/删除均需弹窗确认 |
-
 ### CI 工作流
-
-`.github/workflows/` 下共 8 个文件（`.yml`）。
+`.github/workflows/` 下共 8 个 `.yml`：
 
 | 文件 | 名称 | 触发条件（`on:`） | 主要职责 | 依赖的 secrets |
 | --- | --- | --- | --- | --- |
@@ -306,7 +176,6 @@
 <TabsContent id="t3">
 
 ### 本地验证命令
-
 | 目录 | 命令 | 作用 |
 | --- | --- | --- |
 | `server/` | `pip install -e ".[dev]"` | 安装后端与测试依赖（含 pytest / pytest-asyncio / aiosqlite） |
@@ -317,31 +186,30 @@
 | `server/` | `python scripts/export_openapi.py` | 重新导出 `docs/openapi.yaml`，对应 contract-check / sync-contract |
 | `server/` | `python scripts/e2e_simulation.py` | 需真实 MySQL + 已启动后端 + `E2E_BASE_URL`，对应 e2e-simulation |
 | `web/` | `npm ci` | 按 lockfile 安装前端依赖 |
-| `web/` | `npx vue-tsc -b` | TypeScript 类型检查（`npm run build` 的第一段，CI 也在跑） |
+| `web/` | `npx vue-tsc -b` | TypeScript 类型检查（`npm run build` 第一段，CI 也在跑） |
 | `web/` | `npm run lint` | `eslint . --max-warnings 0`（**当前无对应 CI 步骤，需本地执行**） |
 | `web/` | `npm run test` | Vitest 单测（`vitest run`） |
 | `web/` | `npm run build` | `vue-tsc -b && vite build`，提交前最终校验 |
 | `web/` | `npm run generate:api` | `openapi-typescript ../docs/openapi.yaml -o src/api/generated.raw.ts`，改契约后必须重跑 |
 | `docs/websites/` | `npm ci && npm run build` | 构建 VitePress 站点（CI 用 `npx vitepress build --outDir <外部目录>`） |
 | `miniprogram/` | `npm ci && npm run check` | 小程序依赖安装与代码检查（CI 上传前执行） |
-
 ### 手工回归要点
+完整用例（AUTH / DASH / MAT / INV / PUR / EXP / REC / SET / SHARE 九组，含 P0/P1/P2 优先级与通过准则）见 [人工功能测试方案](/manual-functional-test-plan)。每次修复或发布至少执行其中 P0 链路：
 
-完整用例（AUTH / DASH / MAT / INV / PUR / EXP / REC / SET / SHARE 九组，含 P0/P1/P2 优先级与通过准则）见 [人工功能测试方案](/manual-functional-test-plan)。每次修复或发布至少执行其中 P0 链路，核心场景概括如下：
-
-1. 仓库管理员新建二级库物资、设置库存预警并完成初始入库（MAT-01、MAT-07、INV-01）。
-2. 出库至低库存，确认工作台与低库存列表出现预警，并发起补库计划（INV-03、DASH-01、PUR-01）。
-3. 申购管理员补全物料编码，导出采购申请表并转为申购记录（EXP-03、REC-01）。
-4. 仓库管理员分两次到货，确认库存、流水、「部分到货」与「已完成」状态正确（REC-06、REC-07）。
-5. 修改第一次到货流水数量后再冲销，确认库存与申购进度按流水重算（INV-09、INV-10、REC-10）。
-6. 分别用四种角色复查菜单、按钮与直接地址访问权限（AUTH-01、AUTH-04、AUTH-05）。
-7. 历史流水编辑后按时间顺序重算后续流水（如「入库 10、出库 3」改为「入库 5」后库存为 2，INV-08）。
-8. 负库存与超额到货被视为合法行为，不判缺陷（INV-04、REC-08）。
-9. 流水字段校验：出库必填领用人与业务原因，数量不得为空/0/负数/超 1 位小数；入库原因可空（INV-05）。
-10. 已归档申购计划只有超级管理员可查询；其他角色直接调用接口应返回 403（PUR-02A）。
-11. 分享链接「设置列」至少保留 1 列，改列后未选列数据不下发；非创建者改列/撤回返回 403（SHARE-02、SHARE-04、SHARE-06）。
-12. 停用当前登录用户后其会话请求被拒，且停用账号无法重新登录（SET-04）。
-
+| # | 场景（关联用例号） |
+| --- | --- |
+| 1 | 仓库管理员新建二级库物资、设置库存预警并完成初始入库（MAT-01、MAT-07、INV-01） |
+| 2 | 出库至低库存，确认工作台与低库存列表出现预警，并发起补库计划（INV-03、DASH-01、PUR-01） |
+| 3 | 申购管理员补全物料编码，导出采购申请表并转为申购记录（EXP-03、REC-01） |
+| 4 | 仓库管理员分两次到货，确认库存、流水、「部分到货」与「已完成」状态正确（REC-06、REC-07） |
+| 5 | 修改第一次到货流水数量后再冲销，确认库存与申购进度按流水重算（INV-09、INV-10、REC-10） |
+| 6 | 分别用四种角色复查菜单、按钮与直接地址访问权限（AUTH-01、AUTH-04、AUTH-05） |
+| 7 | 历史流水编辑后按时间顺序重算后续流水（如「入库 10、出库 3」改为「入库 5」后库存为 2，INV-08） |
+| 8 | 负库存与超额到货被视为合法行为，不判缺陷（INV-04、REC-08） |
+| 9 | 流水字段校验：出库必填领用人与业务原因，数量不得为空/0/负数/超 1 位小数；入库原因可空（INV-05） |
+| 10 | 已归档申购计划只有超级管理员可查询，其他角色直接调用接口返回 403（PUR-02A） |
+| 11 | 分享链接「设置列」至少保留 1 列，改列后未选列数据不下发；非创建者改列/撤回返回 403（SHARE-02、SHARE-04、SHARE-06） |
+| 12 | 停用当前登录用户后其会话请求被拒，且停用账号无法重新登录（SET-04） |
 相关页面：[后端接口约定](/api-error-conventions)（与后端测试、`test_error_code_docs.py` 中的错误码文档同源）。
 
 </TabsContent>
