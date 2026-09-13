@@ -88,6 +88,32 @@ jobs:
           test -f "$SITE_OUT_DIR/demo/offline/mockServiceWorker.js"
           echo "demo/offline/：$(find "$SITE_OUT_DIR/demo/offline" -type f | wc -l) 个文件"
 
+      # 站点与两份演示都是「index.html 引用带 hash 的资源」，hash 不匹配时页面会白屏而
+      # 构建仍然成功（曾因此误判过线上状态）。这里在发布前把每个 HTML 引用的本地资源逐个校验。
+      - name: 校验页面引用的资源都存在
+        run: |
+          set -e
+          python3 - "$SITE_OUT_DIR" <<'PYEOF'
+          import re, sys, pathlib
+          root = pathlib.Path(sys.argv[1])
+          missing = []
+          checked = 0
+          for html in root.rglob("*.html"):
+              text = html.read_text(encoding="utf-8", errors="ignore")
+              for ref in re.findall(r'(?:src|href)="(/Electrical-Manager/[^"]*)"', text):
+                  rel = ref[len("/Electrical-Manager/"):].split("?")[0].split("#")[0]
+                  if not rel or rel.startswith("http"):
+                      continue
+                  checked += 1
+                  if not (root / rel).exists():
+                      missing.append(f"{html.relative_to(root)} -> {ref}")
+          print(f"校验 {checked} 个资源引用，缺失 {len(missing)} 个")
+          for item in missing[:20]:
+              print("  缺失:", item)
+          if missing:
+              raise SystemExit(1)
+          PYEOF
+
       - name: 发布到 gh-pages 分支
         if: github.event_name != 'pull_request'
         env:
