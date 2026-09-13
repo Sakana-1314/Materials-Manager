@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="HXNI 电气无忧 · 电气车间业务管理系统" />
+    <meta property="og:image" content="/Electrical-Manager/demo/logo.png" />
+    <link rel="icon" type="image/png" href="/Electrical-Manager/demo/logo.png" />
+    <link rel="apple-touch-icon" href="/Electrical-Manager/demo/logo.png" />
+    <title>HXNI 电气无忧</title>
+    <script>
+      /*
+       * 单页应用在静态托管上的深链回退（只对演示产物生效）：
+       * 业务构建不带 data-demo-base，本段直接 return，行为与之前完全一致。
+       *
+       * 刷新 /demo/.../warehouse/stock 这类深层路由时，静态托管找不到文件，会落到站点 404 页；
+       * 404 页把原路径以 ?path= 回传到入口。本脚本在入口脚本执行前把它还原成真实路径，
+       * 于是 history 路由照常工作——不改路由配置，也不改变正常访问时的 URL。
+       */
+      ;(function () {
+        var base = document.documentElement.dataset.demoBase
+        if (!base) return
+        var url = new URL(window.location.href)
+        var deep = url.searchParams.get('path')
+        if (!deep) return
+        var normalizedBase = base.replace(/\/+$/, '')
+        if (deep.indexOf(normalizedBase) !== 0) return
+        var rest = deep.slice(normalizedBase.length).replace(/^\/+/, '')
+        url.searchParams.delete('path')
+        var search = url.searchParams.toString()
+        window.history.replaceState(
+          null,
+          '',
+          normalizedBase + '/' + rest + (search ? '?' + search : '') + url.hash,
+        )
+      })()
+    </script>
+    <script type="module" crossorigin src="/Electrical-Manager/demo/yangrucheng-assets/index-DwihmnM-.js"></script>
+    <link rel="stylesheet" crossorigin href="/Electrical-Manager/demo/yangrucheng-assets/index-DBuQT26I.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
