@@ -1,0 +1,75 @@
+name: 构建并发布项目站点
+
+# 在 main 上构建 docs/websites 的 VitePress 站点，推送到 gh-pages 分支，由 GitHub Pages 发布。
+# 站点地址：https://sakana-1314.github.io/Electrical-Manager/
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/website.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: 构建并发布到 gh-pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: docs/websites/package-lock.json
+
+      - name: 安装站点依赖
+        working-directory: docs/websites
+        run: npm ci
+
+      - name: 构建站点
+        working-directory: docs/websites
+        run: npm run build
+
+      - name: 发布到 gh-pages 分支
+        working-directory: docs/websites
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          # gh-pages 首次发布时远端还没有该分支，需要新建。
+          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
+            git fetch --depth=1 origin gh-pages
+            git checkout -B gh-pages FETCH_HEAD
+          else
+            git checkout --orphan gh-pages
+            git rm -rf --quiet .
+          fi
+
+          # 清空后写入新产物，保证已删除的页面不会残留在站点上。
+          find . -mindepth 1 -maxdepth 1 -not -name '.vitepress' -exec rm -rf {} +
+          cp -a .vitepress/dist/. .
+          touch .nojekyll
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "站点产物无变化，跳过提交"
+          else
+            git commit -m "docs: 发布站点（${GITHUB_SHA::7}）"
+            git push origin gh-pages
+            echo "已发布到 gh-pages"
+          fi

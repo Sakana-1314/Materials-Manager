@@ -1,4 +1,4 @@
-# 电气车间备件管理系统后端
+# HXNI 电气无忧 服务端
 
 ## AI Agent / MCP 服务
 
@@ -43,7 +43,7 @@ MCP 不接受 SQL、数据库表名或任意 URL，只能按 OpenAPI 中登记�
 仓库只保留 init.sql，不保存增量迁移脚本；已有数据库的结构调整由部署方自行完成（先备份，再参照
 init.sql 与 ORM 模型改库）。
 
-FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 `docs/development-plan.md` 实现。
+FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 [开发方案](../docs/websites/pages/development-plan.md) 实现。
 
 ## 接口性能响应头
 
@@ -68,7 +68,7 @@ FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 `docs/development-plan.md` 实�
 
 ## 跨域配置
 
-后端通过 `RefererCORSMiddleware` 处理跨域，优先从 `Referer` 解析前端站点，缺失或无效时回退到 `Origin`，并为预检和正常响应补齐 CORS Header。本项目不使用 HTTP 404 状态码：资源不存在返回 `400 + NOT_FOUND`，未匹配路径返回 `400 + ROUTE_NOT_FOUND`，详见 `../docs/api-error-conventions.md`。跨域完整说明见 `../docs/frontend-separated-deployment.md`。
+后端通过 `RefererCORSMiddleware` 处理跨域，优先从 `Referer` 解析前端站点，缺失或无效时回退到 `Origin`，并为预检和正常响应补齐 CORS Header。本项目不使用 HTTP 404 状态码：资源不存在返回 `400 + NOT_FOUND`，未匹配路径返回 `400 + ROUTE_NOT_FOUND`，详见 [API 错误与状态码约定](../docs/websites/pages/api-error-conventions.md)。跨域完整说明见 [前后端分离部署](../docs/websites/pages/frontend-separated-deployment.md)。
 
 ## 本地启动
 

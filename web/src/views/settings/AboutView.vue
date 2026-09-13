@@ -28,8 +28,8 @@ onMounted(async () => {
       <section class="product-overview">
         <div class="product-mark">HXNI</div>
         <div class="product-copy">
-          <h2>电气车间备件管理系统</h2>
-          <p>面向备件库存、申购计划和采购跟踪的一体化管理工具。</p>
+          <h2>HXNI 电气无忧</h2>
+          <p>电气车间业务管理系统：以库存、申购计划和采购跟踪起步，逐步扩展到其他电气业务。</p>
         </div>
         <n-tag :bordered="false" round type="success">内部使用</n-tag>
       </section>
@@ -70,17 +70,17 @@ onMounted(async () => {
           <p>
             项目仓库：
             <a
-              href="https://github.com/YangRucheng/Materials-Manager"
+              href="https://github.com/Sakana-1314/Electrical-Manager"
               target="_blank"
               rel="noopener noreferrer"
             >
-              github.com/YangRucheng/Materials-Manager
+              github.com/Sakana-1314/Electrical-Manager
             </a>
           </p>
           <p>
             版权归
-            <a href="https://github.com/YangRucheng" target="_blank" rel="noopener noreferrer">
-              github.com/YangRucheng
+            <a href="https://github.com/Sakana-1314" target="_blank" rel="noopener noreferrer">
+              github.com/Sakana-1314
             </a>
             所有。
           </p>

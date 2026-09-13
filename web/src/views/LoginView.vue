@@ -37,7 +37,7 @@ async function submit() {
       <div class="intro-content">
         <img class="login-logo" :src="LOGO_URL" alt="系统 Logo" />
         <span class="eyebrow">ELECTRICAL WORKSHOP</span>
-        <h1>电气车间<br />备件管理系统</h1>
+        <h1>HXNI<br />电气无忧</h1>
       </div>
     </section>
     <section class="login-panel">

@@ -199,7 +199,7 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const auth = useAuthStore()
-  document.title = `${to.meta.title || '系统'} - 电气车间备件管理系统`
+  document.title = `${to.meta.title || '系统'} - HXNI 电气无忧`
   if (!to.meta.public && !auth.isAuthenticated)
     return { name: 'login', query: { redirect: to.fullPath } }
   if (to.name === 'login' && auth.isAuthenticated) return { name: 'dashboard' }

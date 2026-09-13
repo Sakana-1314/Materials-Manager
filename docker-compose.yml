@@ -1,8 +1,8 @@
-name: materials-manager
+name: electrical-manager
 
 services:
   backend:
-    image: docker.io/yangrucheng/materials-manager:backend
+    image: docker.io/yangrucheng/electrical-manager:server
     restart: unless-stopped
     environment:
       APP_ENVIRONMENT: production
@@ -34,7 +34,7 @@ services:
       - 1panel-network
 
   frontend:
-    image: docker.io/yangrucheng/materials-manager:frontend
+    image: docker.io/yangrucheng/electrical-manager:web
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-8080}:80"

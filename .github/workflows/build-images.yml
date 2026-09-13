@@ -120,7 +120,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.DOCKERHUB_NAMESPACE }}/materials-manager
+          images: ${{ env.REGISTRY }}/${{ env.DOCKERHUB_NAMESPACE }}/electrical-manager
           tags: |
             type=raw,value=${{ matrix.component }},enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=${{ matrix.component }}-sha-
