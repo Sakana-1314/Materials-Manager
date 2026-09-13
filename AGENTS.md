@@ -15,7 +15,7 @@
 - 项目站点：VitePress，位于 `docs/websites/`，由 CI 构建后发布到 `gh-pages` 分支（GitHub Pages）。
 - 前后端契约统一维护在 `docs/openapi.yaml`，前端类型由它生成（`src/api/generated.raw.ts`、`src/api/generated.ts`），**禁止手改生成文件**。
 - 数据库只维护 `docs/references/database/init.sql`（结构与种子数据唯一来源，**不提交迁移脚本**，见下文「数据库结构约定」），env 模板位于 `docs/env/`。
-- 部署：Docker Compose 使用 `docker.io/yangrucheng/electrical-manager:server` 与 `:web` 两个镜像（CI 在合并后构建）；`web/.dockerignore` 与 `server/.dockerignore` 各自对应其构建上下文。
+- 部署：Docker Compose 使用 `ghcr.io/sakana-1314/electrical-manager:server` 与 `:web` 两个镜像，由 CI 在合并后推送到 GitHub Container Registry；`web/.dockerignore` 与 `server/.dockerignore` 各自对应其构建上下文。
 - 默认工作目录：仓库根目录 `/workspace/备件管理系统`。
 
 ## 必读先做

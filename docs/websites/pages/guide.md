@@ -1,7 +1,7 @@
 # 使用与部署指南
 
 > 仓库：[github.com/Sakana-1314/Electrical-Manager](https://github.com/Sakana-1314/Electrical-Manager) ·
-> 镜像：`docker.io/yangrucheng/electrical-manager:server` 与 `:web`
+> 镜像：`ghcr.io/sakana-1314/electrical-manager:server` 与 `:web`（GitHub Container Registry）
 
 ## 组成
 
@@ -26,8 +26,7 @@ docker compose pull
 docker compose up -d
 ```
 
-`docker-compose.yml` 使用 `docker.io/yangrucheng/electrical-manager:server` 与
-`electrical-manager:web` 两个镜像，端口由 `BACKEND_PORT`（默认 8000）和 `FRONTEND_PORT`
+`docker-compose.yml` 使用 `ghcr.io/sakana-1314/electrical-manager:server` 与 `:web` 两个镜像，端口由 `BACKEND_PORT`（默认 8000）和 `FRONTEND_PORT`
 （默认 8080）控制。
 
 ## 环境变量
