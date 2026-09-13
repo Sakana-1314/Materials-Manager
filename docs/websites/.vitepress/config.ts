@@ -36,6 +36,7 @@ export default withMermaid(
           items: [
             { text: '功能总览', link: '/' },
             { text: '使用与部署指南', link: '/guide' },
+          { text: '在线演示', link: '/demo' },
             { text: '接口文档与 Mock', link: '/api' },
           ],
         },

@@ -8,10 +8,12 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "web/**"
       - ".github/workflows/website.yml"
   pull_request:
     paths:
       - "docs/**"
+      - "web/**"
       - ".github/workflows/website.yml"
   workflow_dispatch:
 
@@ -40,7 +42,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: docs/websites/package-lock.json
+          cache-dependency-path: |
+            docs/websites/package-lock.json
+            web/package-lock.json
 
       - name: 安装站点依赖
         working-directory: docs/websites
@@ -49,6 +53,25 @@ jobs:
       - name: 构建站点
         working-directory: docs/websites
         run: npx vitepress build --outDir "$SITE_OUT_DIR"
+
+      # 演示：同一份网页端代码，用 --mode demo 产出 base=/Electrical-Manager/demo/、后端指向
+      # Apifox Mock 的产物，复制进站点输出目录的 demo/ 子目录，于是与站点同域、可被 iframe 内嵌。
+      # 业务部署（base=/）不受影响。
+      - name: 安装网页端依赖（演示构建用）
+        working-directory: web
+        run: npm ci
+
+      - name: 构建演示（Apifox Mock 后端）
+        working-directory: web
+        run: npx vite build --mode demo
+
+      - name: 把演示放进站点输出的 demo/ 子目录
+        run: |
+          set -e
+          rm -rf "$SITE_OUT_DIR/demo"
+          cp -a web/dist "$SITE_OUT_DIR/demo"
+          test -f "$SITE_OUT_DIR/demo/index.html"
+          echo "演示已就位：$(find "$SITE_OUT_DIR/demo" -type f | wc -l) 个文件"
 
       - name: 发布到 gh-pages 分支
         if: github.event_name != 'pull_request'

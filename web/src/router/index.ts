@@ -24,7 +24,9 @@ const FULL_WAREHOUSE_ROUTES = new Set([
 ])
 
 const router = createRouter({
-  history: createWebHistory(),
+  // import.meta.env.BASE_URL 即 vite 的 base（默认 '/'，子路径部署时为该前缀），
+  // 路由随之生成正确前缀，代码里无需硬编码部署路径。
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/login',
