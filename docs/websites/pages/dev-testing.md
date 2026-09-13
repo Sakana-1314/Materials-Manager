@@ -73,7 +73,7 @@
 
 <TabsContent id="t1">
 
-### 单元测试清单
+### 单元与契约测试清单（`unit/` 3 个 + 根目录 14 个）
 | 文件 | 覆盖主题与用例（函数名 / 验证要点） |
 | --- | --- |
 | `server/tests/unit/test_fernet.py`（单元） | Fernet 加解密往返与从 JWT 密钥派生回退：`test_fernet_roundtrip_within_session`（密文不等于明文且可解回原值）、`test_fernet_falls_back_to_jwt_derived_key` |
