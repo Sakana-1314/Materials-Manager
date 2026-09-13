@@ -50,7 +50,7 @@ Access-Control-Allow-Origin: https://spares.example.com
 Vary: Origin, Referer
 ```
 
-该逻辑覆盖 OPTIONS 预检和正常响应，并为所有响应（含结构化错误响应）补齐 CORS Header。预检会回显浏览器请求的 Header，并允许常用 HTTP 方法；响应同时暴露 `Content-Disposition`、`X-Request-ID` 以及接口性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries`（含义见 `../server/README.md` 的「接口性能响应头」），前端与浏览器开发者工具可直接读到服务端各阶段耗时。本项目不使用 HTTP 404 状态码，错误响应统一为结构化业务错误体，详见 `../docs/api-error-conventions.md`。
+该逻辑覆盖 OPTIONS 预检和正常响应，并为所有响应（含结构化错误响应）补齐 CORS Header。预检会回显浏览器请求的 Header，并允许常用 HTTP 方法；响应同时暴露 `Content-Disposition`、`X-Request-ID` 以及接口性能头 `X-Response-Time`、`X-DB-Time`、`X-Compute-Time`、`X-DB-Queries`（含义见 [server/README.md](https://github.com/Sakana-1314/Electrical-Manager/blob/main/server/README.md) 的「接口性能响应头」），前端与浏览器开发者工具可直接读到服务端各阶段耗时。本项目不使用 HTTP 404 状态码，错误响应统一为结构化业务错误体，详见 [API 错误与状态码约定](/api-error-conventions)。
 
 可配置项：
 

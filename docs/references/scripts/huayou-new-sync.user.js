@@ -4,8 +4,8 @@
 // @version      3.3.1
 // @description  从华友印尼数据平台“物料申购跟踪”同步采购人、状态、合同号、合同签订日期和船名：按申购单号整单查询、整单批量回写（平台每 10 秒至多查询 1 次）。
 // @match        http://43.154.152.157:8080/*
-// @updateURL    https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/docs/references/scripts/huayou-new-sync.user.js
-// @downloadURL  https://github.com/YangRucheng/Materials-Manager/raw/refs/heads/main/docs/references/scripts/huayou-new-sync.user.js
+// @updateURL    https://github.com/Sakana-1314/Electrical-Manager/raw/refs/heads/main/docs/references/scripts/huayou-new-sync.user.js
+// @downloadURL  https://github.com/Sakana-1314/Electrical-Manager/raw/refs/heads/main/docs/references/scripts/huayou-new-sync.user.js
 // @connect      materials-manager.qcloud.19890605.xyz
 // @connect      43.154.152.157
 // @grant        GM_xmlhttpRequest

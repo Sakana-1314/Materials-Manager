@@ -1,6 +1,6 @@
-# 电气车间备件管理系统前端
+# HXNI 电气无忧 网页端
 
-按 `docs/development-plan.md` 实现的 Vue 3 + TypeScript 前端。默认启用 MSW 契约模拟数据，可在后端尚未启动时演示完整业务。
+按 [开发方案](../docs/websites/pages/development-plan.md) 实现的 Vue 3 + TypeScript 前端。默认启用 MSW 契约模拟数据，可在后端尚未启动时演示完整业务。
 
 ## 启动
 
@@ -23,7 +23,7 @@ VITE_API_BASE_URL=https://api.example.com
 VITE_IMAGE_BASE_URL=https://img.example.com
 ```
 
-`VITE_API_BASE_URL` 和 `VITE_IMAGE_BASE_URL` 只填写服务器域名时会自动补全接口路径；`VITE_IMAGE_BASE_URL` 可省略，省略后图片从后端 API 读取。完整的前后端分离、跨域和 CDN 配置见 `../docs/frontend-separated-deployment.md`。
+`VITE_API_BASE_URL` 和 `VITE_IMAGE_BASE_URL` 只填写服务器域名时会自动补全接口路径；`VITE_IMAGE_BASE_URL` 可省略，省略后图片从后端 API 读取。完整的前后端分离、跨域和 CDN 配置见 [前后端分离部署](../docs/websites/pages/frontend-separated-deployment.md)。
 
 运行 `npm run generate:api` 可依据 `../docs/openapi.yaml` 更新 `src/api/generated.ts`；页面和组件没有另建 DTO。
 

@@ -271,7 +271,7 @@ onMounted(async () => {
       <header class="share-header">
         <div class="share-brand">
           <span class="brand-dot" aria-hidden="true" />
-          <span>电气车间备件管理系统</span>
+          <span>HXNI 电气无忧</span>
         </div>
         <div class="share-title-row">
           <h1 class="share-title">{{ title }} · 分享查看</h1>
@@ -321,7 +321,7 @@ onMounted(async () => {
       </section>
 
       <footer class="share-footer">
-        <span>电气车间备件管理系统 · 数据仅供参考，请以系统内为准</span>
+        <span>HXNI 电气无忧 · 数据仅供参考，请以系统内为准</span>
       </footer>
     </div>
   </div>

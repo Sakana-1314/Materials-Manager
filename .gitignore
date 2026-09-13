@@ -25,3 +25,8 @@ server/*.db
 # other
 outputs/
 *.log
+
+# 项目站点（VitePress）
+docs/websites/node_modules/
+docs/websites/.vitepress/cache/
+docs/websites/.vitepress/dist/
