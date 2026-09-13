@@ -2,7 +2,7 @@ name: electrical-manager
 
 services:
   backend:
-    image: docker.io/yangrucheng/electrical-manager:server
+    image: ghcr.io/sakana-1314/electrical-manager:server
     restart: unless-stopped
     environment:
       APP_ENVIRONMENT: production
@@ -34,7 +34,7 @@ services:
       - 1panel-network
 
   frontend:
-    image: docker.io/yangrucheng/electrical-manager:web
+    image: ghcr.io/sakana-1314/electrical-manager:web
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-8080}:80"
