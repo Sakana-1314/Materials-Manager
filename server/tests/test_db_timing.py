@@ -22,6 +22,10 @@ def _duration_ms(value: str) -> float:
     return float(value)
 
 
+# 三个响应头各自按 2 位小数格式化（见 core.middleware），最多引入 3 × 0.005 ms 的舍入偏差。
+_HEADER_ROUNDING_TOLERANCE_MS = 0.02
+
+
 async def test_response_reports_server_side_duration_breakdown(client: AsyncClient) -> None:
     """/health 自身会执行一条 SELECT 1：三个耗时头应互相自洽，且条数 >= 1。"""
     response = await client.get("/health")
@@ -34,7 +38,7 @@ async def test_response_reports_server_side_duration_breakdown(client: AsyncClie
     # 总耗时 = 数据库耗时 + 计算耗时，均以毫秒计且都在服务端计量（不含网络）。
     assert db_time <= total_time
     assert compute_time >= 0
-    assert abs(total_time - db_time - compute_time) < 0.01
+    assert abs(total_time - db_time - compute_time) < _HEADER_ROUNDING_TOLERANCE_MS
 
 
 async def test_business_request_reports_database_queries(client: AsyncClient) -> None:

@@ -9,7 +9,7 @@
 - 后端（服务端）：FastAPI + SQLAlchemy 异步，位于 `server/`。
 - 小程序：微信小程序，位于 `miniprogram/`。
 - 前后端契约统一维护在 `docs/openapi.yaml`，前端类型由它生成（`src/api/generated.raw.ts`、`src/api/generated.ts`），**禁止手改生成文件**。
-- 数据库初始化与迁移 SQL 位于 `docs/references/database/`，env 模板位于 `docs/env/`。
+- 数据库只维护 `docs/references/database/init.sql`（结构与种子数据唯一来源，**不提交迁移脚本**，见下文「数据库结构约定」），env 模板位于 `docs/env/`。
 - 部署：Docker Compose（后端 + nginx 托管前端静态产物）。前后端镜像由 CI 在合并后构建；`web/.dockerignore` 与 `server/.dockerignore` 各自对应其构建上下文。
 - 默认工作目录：仓库根目录 `/workspace/备件管理系统`。
 
@@ -42,6 +42,13 @@ npm run build             # 类型检查 + 生产构建
 - **分功能点提交**：一个逻辑改动（一个功能/一个修复）对应一个 commit；不要把无关改动混进同一 commit。
 - **分支命名**：`<type>/<kebab-case-描述>`，如 `fix/export-total-display`、`feat/share-link-columns`。
 - **模板 vs JS 中 ref 的差异**：`<script setup>` 里从 composable 解构出的 `ref` 只在模板中自动解包；在 computed / 普通 JS / 模板字符串中必须写 `.value`（否则显示 `[object Object]`）。
+
+## 数据库结构约定（必须遵守）
+
+- **只保留 `docs/references/database/init.sql`**：它是数据库结构与种子数据的唯一来源，`server/tests/test_init_sql.py` 会校验它与 ORM 模型完全一致（表、列、NULL 约束、ENUM、索引、外键）。改模型必须同步改 `init.sql`，否则测试失败。
+- **禁止再往仓库提交任何增量迁移脚本**：包括 `migrations/` 目录、`upgrade-*.sql`、按日期命名的 `*.sql`，以及任何"已有库升级步骤"脚本。历史迁移脚本已全部删除，今后**不要再新增**，也不要恢复已删除的文件。
+- **需要帮部署方升级已有库时**：在 PR 描述、issue 或对话里给出一次性 SQL 文本，或让部署方自行按各自流程改库；仓库只维护 init.sql。
+- **不在仓库文档里罗列升级脚本清单**：README 只说明「新库用 init.sql 初始化 + 已有库由部署方自行改库」，不逐条列迁移历史。
 
 ## 接口令牌 / 密钥的回显约定（必须遵守）
 
