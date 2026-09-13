@@ -1,9 +1,6 @@
 # 错误码总表
 
-> 本表覆盖后端当前会返回的**全部业务错误码**，由 `server/app/core/errors.py` 的默认状态码映射与
-> 各 `AppError(...)` 调用点整理而来，`server/tests/test_error_code_docs.py` 会校验本页与代码一致。
->
-> 「HTTP」列是该 code 实际返回的状态码；带括号的多个值表示不同调用点显式指定了不同状态码。
+> 后端当前会返回的全部业务错误码，按分类列出；「HTTP」列是该 code 实际返回的状态码。
 
 ## 认证与权限
 
@@ -162,19 +159,13 @@
 | `DATABASE_QUERY_ERROR` | 500 | 数据库查询执行失败 | `core/exception_handlers.py` |
 | `DATABASE_UNAVAILABLE` | 503 | 数据库暂时不可用 | `core/exception_handlers.py`、`main.py` |
 
-## 特殊：不属于 HTTP 错误码的码
+## 不在上表的码
 
-- 异步任务（Excel 导入/导出）记录里的 `error_code` 字段会写入业务错误码，
-  另有一个内部标记 SERVER_RESTARTED（服务重启导致任务中断）。它们出现在任务详情响应里，
-  不是 HTTP 错误响应的 `code`，因此不列入上表。
-
-## 特殊：状态码不固定的码
-
-- `HTTP_ERROR`：其余 Starlette HTTP 异常（如 405 Method Not Allowed）**按原始状态码透传**，
-  message 为框架的 `detail`。它没有固定 HTTP 状态码，因此不列入上表。
+- `HTTP_ERROR`：其余 Starlette HTTP 异常（如 405 Method Not Allowed）**按原始状态码透传**，message 为框架 `detail`，没有固定 HTTP 状态码。
+- SERVER_RESTARTED：异步任务（Excel 导入/导出）记录的 `error_code` 字段内部标记（服务重启导致任务中断），不是 HTTP 错误响应的 `code`。
 
 ## 新增错误码时的要求
 
 1. 在 `server/app/core/errors.py` 的 `_DEFAULT_STATUS_BY_CODE` 里登记默认状态码（除非所有调用点都显式传 `status_code`）。
 2. 在本页对应分类下补一行：code、HTTP 状态码、含义、来源文件。
-3. 运行 `cd server && pytest tests/test_error_code_docs.py`，它会校验本页与代码一致（漏登记会失败）。
+3. 运行 `cd server && pytest tests/test_error_code_docs.py`。

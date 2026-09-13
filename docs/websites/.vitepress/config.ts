@@ -14,6 +14,9 @@ export default withMermaid(
     srcDir: 'pages',
     lang: 'zh-CN',
     title: 'HXNI 电气无忧',
+    // 导航左侧已显示站点名，页面标题不必再带一遍：「页面名 | 站点名」是冗余。
+    // 首页在 index.md 的 frontmatter 里单独指定完整标题。
+    titleTemplate: ':title',
     description: '华星镍业电气车间业务管理系统：库存、申购、请购与到货、采购跟踪一体化，配套扫码出库小程序与 AI 接口。',
     cleanUrls: true,
     head: [
@@ -25,7 +28,7 @@ export default withMermaid(
       siteTitle: 'HXNI 电气无忧',
       outline: { level: [2, 3], label: '本页目录' },
       nav: [
-        { text: '功能', link: '/#功能' },
+        { text: '功能', link: '/features' },
         { text: '文档', link: '/guide' },
         { text: 'API', link: '/api' },
         { text: '开发', link: '/dev-overview' },
@@ -34,7 +37,8 @@ export default withMermaid(
         {
           text: '入门',
           items: [
-            { text: '功能总览', link: '/' },
+            { text: '首页', link: '/' },
+          { text: '功能总览', link: '/features' },
             { text: '使用与部署指南', link: '/guide' },
           { text: '在线演示', link: '/demo' },
             { text: '接口文档与 Mock', link: '/api' },
