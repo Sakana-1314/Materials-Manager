@@ -34,8 +34,22 @@ sequenceDiagram
 | 表 | `user` |
 | 事务 | 请求级事务（只读） |
 | 并发 | 无锁；失败分支统一 `401 INVALID_CREDENTIALS`（用户不存在、已停用、密码错误同一提示） |
-令牌规则（`server/app/core/security.py`）：JWT HS256，`access_token` 默认 30 分钟（`APP_ACCESS_TOKEN_MINUTES`，compose 生产注入 480），`refresh_token` 默认 7 天，payload 含 `sub`（用户 id）、`token_type`、`iat`、`exp`、`jti`；`refresh_token` 额外带 `version`，续期时校验 `user.version == token.version`，否则 `401 INVALID_REFRESH_TOKEN`。`token_type` 共 4 种：`management_access`、`management_refresh`、`mini_program`、`mini_program_registration`。
-前端 `web/src/api/client.ts`：请求拦截器注入 `Authorization: Bearer <access_token>` 与 `X-Request-ID`（`crypto.randomUUID()`）；响应 401 且 `code=INVALID_TOKEN` 时用模块级 `refreshRequest` 单例去重刷新并重放原请求，失败则清理 `localStorage` 三个键（`access_token`/`refresh_token`/`auth_user`）后跳登录。
+
+| 项 | 规则 |
+| --- | --- |
+| 算法 | JWT HS256（`server/app/core/security.py`） |
+| access_token | 默认 30 分钟（`APP_ACCESS_TOKEN_MINUTES`；compose 生产注入 480） |
+| refresh_token | 默认 7 天，额外带 `version`；续期校验 `user.version == token.version`，不符则 `401 INVALID_REFRESH_TOKEN` |
+| payload | `sub`（用户 id）、`token_type`、`iat`、`exp`、`jti` |
+| token_type 取值 | `management_access`、`management_refresh`、`mini_program`、`mini_program_registration` |
+
+| 时机 | 行为 |
+| --- | --- |
+| 请求前 | 注入 `Authorization: Bearer <access_token>` 与 `X-Request-ID`（`crypto.randomUUID()`） |
+| 响应 401 且 `code=INVALID_TOKEN` | 用模块级 `refreshRequest` 单例去重刷新，成功后重放原请求 |
+| 刷新失败 | 清理 `localStorage` 的 `access_token`/`refresh_token`/`auth_user`，跳登录页 |
+
+位置：`web/src/api/client.ts`。
 #### 1.2 接口令牌（`X-API-Token`）
 ```mermaid
 sequenceDiagram
@@ -58,7 +72,12 @@ sequenceDiagram
 | 事务 | 懒迁移的 `api_token_enc` 回写用 `flush()`，随本次请求事务一起提交 |
 | 并发 | `api_token_hash` 唯一索引保证查找唯一；回写是幂等的同值写入 |
 | 失败 | 无效 `401 INVALID_TOKEN`；用户停用 `401 USER_DISABLED` |
-MCP（`server/app/mcp_server.py`）复用同一条认证路径：HTTP 请求的令牌放进 `ContextVar`，`system_whoami` / `operations_list` / `operation_describe` / `operation_call` 四个工具最终以该用户身份调用内部业务接口，因此权限与网页端完全一致。
+
+| 项 | 说明 |
+| --- | --- |
+| 复用同一条认证路径 | HTTP 请求的令牌放进 `ContextVar`，MCP 工具以该用户身份调用内部业务接口 |
+| 工具 | `system_whoami`、`operations_list`、`operation_describe`、`operation_call` |
+| 结果 | 权限与网页端完全一致（同样经过角色校验、乐观锁、事务与审计） |
 #### 1.3 微信小程序登录与建档
 ```mermaid
 sequenceDiagram
@@ -123,7 +142,18 @@ sequenceDiagram
 | 并发 | ① 余额与物资按 `stock_material_id` **升序** `FOR UPDATE`（固定加锁顺序避免死锁）；② `client_request_id` 唯一索引 + 二次 `FOR UPDATE` 复查实现幂等；③ 修改流水时对「旧明细 + 新明细」的全部物资一起加锁后整体重放 |
 | 一致性 | `stock_balance.quantity` 是「重放结果」而非增量维护：`replay_materials` 从零按 `occurred_at, operation_id, line_id` 累加（入库 `+quantity`、出库 `-quantity`），并回写每行 `before_qty`/`after_qty`，因此修改历史流水后当前余额与后续快照必然自洽 |
 | 精度与边界 | 数量最多 1 位小数（`400 INVALID_QUANTITY_PRECISION`），DB 列为 `DECIMAL(18,1)`；`operation_type` 决定 `operation_no` 前缀 `IN`/`OUT`；同一 `client_request_id` 用于不同物资的小程序出库 → `409 CLIENT_REQUEST_ID_CONFLICT`；出库不校验余额是否充足，`stock_balance.quantity` 可为负 |
-冲销（`inventory_service.reverse_operation`）在同一事务内：读取原流水（`FOR UPDATE`）→ 校验每行 `quantity <= remaining_qty`（否则 `409 INSUFFICIENT_QUANTITY`；行不在原流水内 `400 INVALID_REVERSAL_LINE`）→ 以相反 `operation_type` 新建流水（`reversal_of_id`、`source_type=REVERSAL`、`occurred_at = max(now, 原发生时间+1µs)`）→ 扣减原行 `remaining_qty` → `replay_materials` 重算余额 → 记 `business_event_log(action=REVERSED)`。冲销**不投递 Webhook**；对 `reversal_of_id` 非空的流水再冲销返回 `409 REVERSAL_NOT_ALLOWED`。
+同一个事务内的步骤（`inventory_service.reverse_operation`）：
+
+| 步骤 | 校验 / 结果 |
+| --- | --- |
+| 读取原流水 | `SELECT ... FOR UPDATE` |
+| 逐行校验数量 | `quantity <= remaining_qty`，否则 `409 INSUFFICIENT_QUANTITY`；行不在原流水内 `400 INVALID_REVERSAL_LINE` |
+| 新建冲销流水 | 相反 `operation_type`，带 `reversal_of_id`、`source_type=REVERSAL`、`occurred_at = max(now, 原发生时间+1µs)` |
+| 回写原行 | 扣减 `remaining_qty` |
+| 重算余额 | `replay_materials` |
+| 审计 | `business_event_log(action=REVERSED)` |
+
+冲销**不投递 Webhook**；对 `reversal_of_id` 非空的流水再冲销返回 `409 REVERSAL_NOT_ALLOWED`。
 ### 3. 低库存与补库计算
 ```mermaid
 flowchart TD
@@ -244,7 +274,12 @@ sequenceDiagram
 | 并发 | 导出只读，允许并发；`_running_tasks` 防 GC；单次导出行数上限 10000（超出 `400 EXPORT_RESULT_LIMIT_EXCEEDED`） |
 | 可见性 | 状态查询仅创建者本人或超管（否则 `400 NOT_FOUND`）；**文件下载不鉴权**，安全性依赖 uuid7 不可猜解 + 文件仅存在于 `exports/` 目录 |
 | 清理 | `run_cleanup_worker` 每 24 小时删除 3 天前的终态任务行及其文件，并顺带删除超过 24 小时的 `.tmp` 孤儿文件；启动时 `mark_stale_exports_failed` 处理重启残留 |
-同步导出（不走任务队列）：`GET /purchase-materials/export-uncoded`（物料编码申请表）、`POST /purchase-materials/export-purchase-application`、`POST /export-purchase-approval`，由 `excel_export_service.render_excel` 读取 `server/app/templates/*.json` 布局模板在内存生成工作簿后直接返回；模板缺失或非法报 `EXPORT_TEMPLATE_MISSING` / `EXPORT_TEMPLATE_INVALID`。
+
+| 项 | 内容 |
+| --- | --- |
+| 接口 | `GET /purchase-materials/export-uncoded`（物料编码申请表）、`POST /purchase-materials/export-purchase-application`、`POST /purchase-materials/export-purchase-approval` |
+| 特点 | 不走任务队列，由 `excel_export_service.render_excel` 读 `server/app/templates/*.json` 在内存生成工作簿后直接返回 |
+| 错误 | 模板缺失 `EXPORT_TEMPLATE_MISSING`、模板非法 `EXPORT_TEMPLATE_INVALID` |
 ### 7. 图片上传与读取（含悬空文件清理）
 ```mermaid
 sequenceDiagram

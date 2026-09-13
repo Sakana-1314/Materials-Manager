@@ -2,7 +2,11 @@
 
 MySQL 8.0 / InnoDB / `utf8mb4_0900_ai_ci`，共 **28 张表**，结构出自 `docs/references/database/init.sql`（结构与种子数据的唯一来源，仓库不提交增量迁移脚本）。
 
-数量字段以 `DECIMAL(18,1)` 为主（`stock_operation_line.quantity/remaining_qty/before_qty/after_qty`、`stock_balance.quantity`、`planned_qty`、`purchase_qty`、`minimum_qty`），仅外部导入的 `huaxing_inventory.quantity` 与 `lite_inventory.quantity` 为 `DECIMAL(18,2)`；时间为 UTC 语义 `DATETIME(6)`，默认 `CURRENT_TIMESTAMP(6)`，写入侧由 `server/app/models/__init__.py` 的 `_utcnow()` 提供。
+| 类型 | 字段 | 说明 |
+| --- | --- | --- |
+| `DECIMAL(18,1)` | `stock_operation_line.quantity/remaining_qty/before_qty/after_qty`、`stock_balance.quantity`、`planned_qty`、`purchase_qty`、`minimum_qty` | 业务数量统一 1 位小数 |
+| `DECIMAL(18,2)` | `huaxing_inventory.quantity`、`lite_inventory.quantity` | 外部导入，保留原始精度 |
+| `DATETIME(6)` | 所有时间字段 | UTC 语义，默认 `CURRENT_TIMESTAMP(6)`，写入侧由 `models/__init__.py` 的 `_utcnow()` 提供 |
 
 `server/tests/test_init_sql.py` 比对 `init.sql` 与 ORM（`server/app/models/__init__.py`）的表集合、列集合、约束名、索引名、NULL 约束、ENUM 取值、外键及 `ON DELETE` 行为，两边必须完全一致。
 
@@ -33,7 +37,12 @@ MySQL 8.0 / InnoDB / `utf8mb4_0900_ai_ci`，共 **28 张表**，结构出自 `do
 | 无 `id`、无审计列，主键 = 父级列 + `file_id` | `stock_material_image`、`purchase_material_image`、`purchase_plan_template_image`、`purchase_request_line_image` |
 | 只有 `id` + 业务时间 `occurred_at` | `business_event_log` |
 
-`created_by`（`BIGINT UNSIGNED`，外键指向 `user.id`）只出现在 `excel_import_job`、`excel_export_job`、`share_link`（三者可为 NULL）与 `memo`（`NOT NULL`，随用户删除级联）上；**全库不存在 `updated_by` 列**，也没有软删除列（如 `deleted_at` / `is_deleted`），删除均为物理删除；`stock_balance`、`stock_replenishment_policy` 与图片关联表随主表 `ON DELETE CASCADE`。
+| 审计列 | 出现范围 | 说明 |
+| --- | --- | --- |
+| `created_by` | `excel_import_job`、`excel_export_job`、`share_link`（可 NULL）、`memo`（NOT NULL，随用户删除级联） | 外键指向 `user.id` |
+| `updated_by` | — | **全库没有该列** |
+| 软删除列（`deleted_at` / `is_deleted`） | — | 不存在，删除均为物理删除 |
+| 级联删除 | `stock_balance`、`stock_replenishment_policy`、图片关联表 | 随主表 `ON DELETE CASCADE` |
 
 ### 表清单（含 ORM 类名）
 
@@ -437,7 +446,17 @@ erDiagram
 
 四个接口令牌由 `RANDOM_BYTES` 生成的 UUID v4 形式字符串经 `SHA2(..., 256)` 计算后写入 `api_token_hash`；`api_token_enc` 未在种子语句中赋值，取默认空串，首次用令牌通过认证后被加密回写（`server/app/core/permissions.py`）。其余 27 张表当前不含种子数据，由运行期接口或导入任务写入。
 
-`__table_args__` 与 `init.sql` 的对应：约束名由 `server/app/core/database.py` 的 `NAMING_CONVENTION` 统一生成（`pk_%(table_name)s`、`uq_%(table_name)s_%(column_0_name)s`、`ck_%(table_name)s_%(constraint_name)s`、`fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s`、`ix_%(column_0_label)s`），因此 ORM 只写 `UniqueConstraint("operation_id", "stock_material_id")`、`CheckConstraint("minimum_qty >= 0", name="minimum_nonnegative")` 即对应 `uq_stock_operation_line_operation_id`、`ck_stock_replenishment_policy_minimum_nonnegative`；显式 `Index(...)` 与 `mapped_column(..., index=True)` 对应 `init.sql` 的 `INDEX` 行且名字一致；外键用 `ForeignKey("stock_material.id", ondelete="CASCADE")` 声明，未写 `ondelete` 的表在 `init.sql` 中同样不带 `ON DELETE` 子句。所有列均按表逐列声明，`test_init_sql.py` 的 `test_init_sql_matches_current_model_schema` 逐表比对上述内容。
+命名与约束由 `server/app/core/database.py` 的 `NAMING_CONVENTION` 统一下发，ORM 不必手写名字：
+
+| ORM 写法 | 生成的约束名 | 对应 `init.sql` |
+| --- | --- | --- |
+| 主键 | `pk_%(table_name)s` | `PRIMARY KEY` |
+| `UniqueConstraint(...)` | `uq_%(table_name)s_%(column_0_name)s` | `UNIQUE KEY`，如 `uq_stock_operation_line_operation_id` |
+| `CheckConstraint(..., name="minimum_nonnegative")` | `ck_%(table_name)s_%(constraint_name)s` | `CHECK`，如 `ck_stock_replenishment_policy_minimum_nonnegative` |
+| `Index(...)` / `mapped_column(..., index=True)` | `ix_%(column_0_label)s` | `INDEX` 行，名字一致 |
+| `ForeignKey(..., ondelete="CASCADE")` | `fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s` | 对应 `ON DELETE`；未写 `ondelete` 则 `init.sql` 中同样没有该子句 |
+
+`server/tests/test_init_sql.py::test_init_sql_matches_current_model_schema` 逐表比对上述内容。
 
 相关页面：[/dev-overview](/dev-overview)、[/dev-state-machines](/dev-state-machines)、[/dev-flows](/dev-flows)、[/dev-backend](/dev-backend)、[/api-error-conventions](/api-error-conventions)
 

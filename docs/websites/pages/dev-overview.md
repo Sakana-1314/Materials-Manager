@@ -1,7 +1,5 @@
 # 系统概述
 
-业务范围、术语、角色权限、技术栈与仓库结构。表结构见 [/dev-data-model](/dev-data-model)，状态流转见 [/dev-state-machines](/dev-state-machines)，数据流见 [/dev-flows](/dev-flows)，后端 [/dev-backend](/dev-backend)、前端 [/dev-frontend](/dev-frontend)、测试 [/dev-testing](/dev-testing)。
-
 ## 1. 目标与业务范围
 
 ### 1.1 系统目标
@@ -139,7 +137,13 @@
 | `/ai-search`、`/system-settings/webhooks` | `SuperAdmin` | `SuperAdmin` |
 | `/mini-program*` | 小程序 token | — |
 
-越权行为：写接口 `403 FORBIDDEN`（`require_roles`）、查询已归档计划 `403 ARCHIVED_PURCHASE_PLAN_FORBIDDEN`、精简模式下调用完整模式写接口 `403 SECONDARY_WAREHOUSE_LITE_MODE`（`server/app/api/deps._require_full_secondary_warehouse`）。前端按 `auth.can(permission)` 隐藏入口（`web/src/layouts/AppLayout.vue`、`web/src/router/index.ts` 的 `meta.permission`），**权限的最终判定在后端**。
+| 越权场景 | 结果 | 实现 |
+| --- | --- | --- |
+| 写接口权限不足 | `403 FORBIDDEN` | `core.permissions.require_roles` |
+| 查询已归档申购计划 | `403 ARCHIVED_PURCHASE_PLAN_FORBIDDEN` | `api/v1/purchase_materials.py` |
+| 精简模式下调用完整模式写接口 | `403 SECONDARY_WAREHOUSE_LITE_MODE` | `api/deps._require_full_secondary_warehouse` |
+
+前端按 `auth.can(permission)` 隐藏入口（`layouts/AppLayout.vue`、`router/index.ts` 的 `meta.permission`），**权限的最终判定在后端**。
 
 </TabsContent>
 

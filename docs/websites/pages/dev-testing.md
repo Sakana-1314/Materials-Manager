@@ -59,8 +59,22 @@
 | ENUM 取值 | 列定义中 `ENUM\((.*?)\)` 内的 `'([^']+)'` 列表 | `list(column.type.enums)`（`isinstance(column.type, Enum)` 时，顺序敏感） |
 | 外键 | 正则 `FOREIGN KEY \(\`列\`\) REFERENCES \`表\` \(\`列\`\)(?: ON DELETE ([A-Z]+(?: [A-Z]+)?))?` | `(fk.parent.name, fk.column.table.name, fk.column.name, (fk.ondelete or "").upper() or None)` 四元组集合 |
 **未直接比对**：列类型映射（VARCHAR/INT 等逐字比对）与列默认值未做断言，默认值与类型只在「约束名集合 / 列名 / NULL」层面被间接约束。
-断言失败信息为中文短句，便于定位：`f"init.sql 中缺少列定义：{column}"`（`_column_definition` 内）、`f"{table_name} 的列与 ORM 不一致"`、`f"{table_name} 的约束与 ORM 不一致"` / `f"{table_name} 的索引与 ORM 不一致"` / `f"{table_name} 的外键与 ORM 不一致"`、`f"{table_name}.{column.name} 的 NULL 约束与 ORM 不一致"`、`f"{table_name}.{column.name} 的 ENUM 值与 ORM 不一致"`。
-该文件没有显式白名单或列名规范化映射，「例外」以独立断言的形式表达：种子账号断言只允许 `('admin', '$argon2id$` 形式与 `@{username}_api_token` 同时出现，并要求脚本含 `RANDOM_BYTES`，同时断言 `"measurement_unit" not in sql`（已删除的旧表不得复活）；文件标识符列在 `file_object.id`、`stock_material_image.file_id`、`purchase_material_image.file_id` 三处必须以 `VARCHAR(36) NOT NULL` 开头。
+| 断言 | 失败信息 |
+| --- | --- |
+| 缺少列定义（`_column_definition`） | `init.sql 中缺少列定义：{column}` |
+| 列不一致 | `{table_name} 的列与 ORM 不一致` |
+| 约束不一致 | `{table_name} 的约束与 ORM 不一致` |
+| 索引不一致 | `{table_name} 的索引与 ORM 不一致` |
+| 外键不一致 | `{table_name} 的外键与 ORM 不一致` |
+| NULL 约束不一致 | `{table_name}.{column.name} 的 NULL 约束与 ORM 不一致` |
+| ENUM 取值不一致 | `{table_name}.{column.name} 的 ENUM 值与 ORM 不一致` |
+该文件没有显式白名单或列名规范化映射，「例外」以独立断言表达：
+
+| 断言 | 内容 |
+| --- | --- |
+| 种子账号 | 只允许 `('admin', '$argon2id$` 形式与 `@{username}_api_token` 同时出现，要求脚本含 `RANDOM_BYTES` |
+| 旧表不得复活 | `"measurement_unit" not in sql` |
+| 文件标识符 | `file_object.id`、`stock_material_image.file_id`、`purchase_material_image.file_id` 三处必须以 `VARCHAR(36) NOT NULL` 开头 |
 
 | 函数名（`server/tests/test_init_sql.py`） | 断言目标 |
 | --- | --- |
@@ -126,7 +140,13 @@
 <TabsContent id="t2">
 
 ### 前端测试
-运行器为 **Vitest 3**（`web/package.json` 中 `"test": "vitest run"`、`"test:watch": "vitest"`），断言环境 **jsdom**，全局 API 由 `web/tsconfig.app.json` 的 `"types": ["vitest/globals"]` 提供。配置在独立的 `web/vitest.config.ts`（**`web/vite.config.ts` 内没有 vitest 段**）：`plugins: [vue()]`、`resolve.alias['@'] → ./src`、`define.__BUILD_TIME__`、`test: { environment: 'jsdom', setupFiles: ['./src/test/setup.ts'] }`；`web/src/test/setup.ts` 只有一条全局规则 `afterEach(() => vi.restoreAllMocks())`；共 27 个 `*.spec.ts`。
+| 项 | 配置 |
+| --- | --- |
+| 运行器 | Vitest 3（`web/package.json` 的 `test` / `test:watch`） |
+| 环境 | jsdom，全局 API 由 `web/tsconfig.app.json` 的 `types: ["vitest/globals"]` 提供 |
+| 配置文件 | `web/vitest.config.ts`（`vite.config.ts` 内没有 vitest 段）：`plugins: [vue()]`、`alias['@'] → ./src`、`define.__BUILD_TIME__`、`test.environment = 'jsdom'`、`test.setupFiles = ['./src/test/setup.ts']` |
+| setup | `web/src/test/setup.ts` 仅一条：`afterEach(() => vi.restoreAllMocks())` |
+| 用例数 | 27 个 `*.spec.ts` |
 
 | 文件 | 被测对象 | 关键用例 |
 | --- | --- | --- |
