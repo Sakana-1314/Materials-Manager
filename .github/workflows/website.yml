@@ -96,8 +96,24 @@ jobs:
           python3 - "$SITE_OUT_DIR" <<'PYEOF'
           import re, sys, pathlib
           root = pathlib.Path(sys.argv[1])
-          missing = []
-          checked = 0
+
+          def resolves(rel: str) -> bool:
+              """按静态托管的解析顺序判断引用是否存在。
+
+              - 直接命中文件（带 hash 的资源、图片等）
+              - `foo` -> `foo.html`（站点开了 cleanUrls，链接不带 .html）
+              - `foo/` -> `foo/index.html`
+              """
+              target = root / rel
+              if target.is_file():
+                  return True
+              if not rel.endswith("/") and (root / f"{rel}.html").is_file():
+                  return True
+              if (target / "index.html").is_file():
+                  return True
+              return False
+
+          missing, checked = [], 0
           for html in root.rglob("*.html"):
               text = html.read_text(encoding="utf-8", errors="ignore")
               for ref in re.findall(r'(?:src|href)="(/Electrical-Manager/[^"]*)"', text):
@@ -105,10 +121,10 @@ jobs:
                   if not rel or rel.startswith("http"):
                       continue
                   checked += 1
-                  if not (root / rel).exists():
+                  if not resolves(rel):
                       missing.append(f"{html.relative_to(root)} -> {ref}")
-          print(f"校验 {checked} 个资源引用，缺失 {len(missing)} 个")
-          for item in missing[:20]:
+          print(f"校验 {checked} 个站内引用，缺失 {len(missing)} 个")
+          for item in sorted(set(missing))[:20]:
               print("  缺失:", item)
           if missing:
               raise SystemExit(1)
