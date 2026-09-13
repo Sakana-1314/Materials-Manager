@@ -5997,7 +5997,7 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *           "token": "0198f3a7-2c00-7000-8000-000000000001",
          *           "share_type": "purchase_plan",
          *           "item_count": 2,
          *           "expires_at": "2026-10-13T10:30:00+08:00",
@@ -8426,7 +8426,7 @@ export interface components {
          * ShareListRead
          * @description 管理端「分享链接」列表项。
          * @example {
-         *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *       "token": "0198f3a7-2c00-7000-8000-000000000001",
          *       "share_type": "purchase_plan",
          *       "item_count": 2,
          *       "expires_at": "2026-10-13T10:30:00+08:00",
@@ -8525,7 +8525,7 @@ export interface components {
         /**
          * ShareRead
          * @example {
-         *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *       "token": "0198f3a7-2c00-7000-8000-000000000001",
          *       "share_type": "purchase_plan",
          *       "item_count": 2,
          *       "expires_at": "2026-10-13T10:30:00+08:00",
@@ -26142,7 +26142,7 @@ export interface operations {
                      * @example {
                      *       "items": [
                      *         {
-                     *           "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+                     *           "token": "0198f3a7-2c00-7000-8000-000000000001",
                      *           "share_type": "purchase_plan",
                      *           "item_count": 2,
                      *           "expires_at": "2026-10-13T10:30:00+08:00",
@@ -26275,7 +26275,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+                     *       "token": "0198f3a7-2c00-7000-8000-000000000001",
                      *       "share_type": "purchase_plan",
                      *       "item_count": 2,
                      *       "expires_at": "2026-10-13T10:30:00+08:00",
@@ -26651,7 +26651,7 @@ export interface operations {
                 content: {
                     /**
                      * @example {
-                     *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+                     *       "token": "0198f3a7-2c00-7000-8000-000000000001",
                      *       "share_type": "purchase_plan",
                      *       "item_count": 2,
                      *       "expires_at": "2026-10-13T10:30:00+08:00",

@@ -16,6 +16,7 @@
 
 from __future__ import annotations
 
+import re
 from decimal import Decimal
 from typing import Any
 
@@ -28,6 +29,10 @@ from scripts.openapi_examples import (
 )
 
 PLACEHOLDER_SUFFIX = "-示例"
+# 库里这些字段都是 UUID（v7 时间序或 v4），示例写成别的形态会误导调用方
+UUID_FIELDS = ("uuid", "token", "file_uuid", "source_user_id", "target_user_id")
+UUID_PATTERN = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+UUID_LIKE = re.compile(r"^[0-9a-f-]{20,}$")
 OPERATION_TYPES = {"INBOUND": Decimal(1), "OUTBOUND": Decimal(-1)}
 OPERATION_METHODS = ("get", "post", "put", "patch", "delete")
 
@@ -212,4 +217,29 @@ def test_error_response_examples_use_real_error_codes() -> None:
         example = media["example"]
         if (example.get("code"), example.get("message")) != expected:
             offenders.append(f"{method} {path} {status}: {example.get('code')}")
+    assert offenders == []
+
+
+def test_uuid_fields_use_a_valid_uuid() -> None:
+    """`uuid` / `token` 这类字段的示例必须是合法 UUID（16 位首段这类笔误要拦下来）。"""
+    document = _document()
+    offenders: list[str] = []
+
+    def walk(node: Any, path: str) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if (
+                    isinstance(value, str)
+                    and any(key == field or key.endswith(field) for field in UUID_FIELDS)
+                    and UUID_LIKE.match(value)
+                    and not UUID_PATTERN.match(value)
+                ):
+                    offenders.append(f"{path}.{key} = {value}")
+                walk(value, f"{path}.{key}")
+        elif isinstance(node, list):
+            for index, item in enumerate(node):
+                walk(item, f"{path}[{index}]")
+
+    walk(document["components"]["schemas"], "schemas")
+    walk(document["paths"], "paths")
     assert offenders == []

@@ -13696,7 +13696,7 @@ paths:
                 $ref: '#/components/schemas/Page_ShareListRead_'
               example:
                 items:
-                - token: 0198f3a72c000000-0000-7000-8000-000000000001
+                - token: 0198f3a7-2c00-7000-8000-000000000001
                   share_type: purchase_plan
                   item_count: 2
                   expires_at: '2026-10-13T10:30:00+08:00'
@@ -13796,7 +13796,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ShareRead'
               example:
-                token: 0198f3a72c000000-0000-7000-8000-000000000001
+                token: 0198f3a7-2c00-7000-8000-000000000001
                 share_type: purchase_plan
                 item_count: 2
                 expires_at: '2026-10-13T10:30:00+08:00'
@@ -13997,7 +13997,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ShareRead'
               example:
-                token: 0198f3a72c000000-0000-7000-8000-000000000001
+                token: 0198f3a7-2c00-7000-8000-000000000001
                 share_type: purchase_plan
                 item_count: 2
                 expires_at: '2026-10-13T10:30:00+08:00'
@@ -20139,7 +20139,7 @@ components:
       title: Page[ShareListRead]
       examples:
       - items:
-        - token: 0198f3a72c000000-0000-7000-8000-000000000001
+        - token: 0198f3a7-2c00-7000-8000-000000000001
           share_type: purchase_plan
           item_count: 2
           expires_at: '2026-10-13T10:30:00+08:00'
@@ -23361,7 +23361,7 @@ components:
       title: ShareListRead
       description: 管理端「分享链接」列表项。
       examples:
-      - token: 0198f3a72c000000-0000-7000-8000-000000000001
+      - token: 0198f3a7-2c00-7000-8000-000000000001
         share_type: purchase_plan
         item_count: 2
         expires_at: '2026-10-13T10:30:00+08:00'
@@ -23480,7 +23480,7 @@ components:
       - created_at
       title: ShareRead
       examples:
-      - token: 0198f3a72c000000-0000-7000-8000-000000000001
+      - token: 0198f3a7-2c00-7000-8000-000000000001
         share_type: purchase_plan
         item_count: 2
         expires_at: '2026-10-13T10:30:00+08:00'
