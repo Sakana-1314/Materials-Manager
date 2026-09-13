@@ -17,6 +17,10 @@ concurrency:
   group: website-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # 构建到工作区目录之外，再以全新历史提交，避免把源码树带进 gh-pages。
+  SITE_OUT_DIR: ${{ github.workspace }}/.site-dist
+
 jobs:
   deploy:
     name: 构建并发布到 gh-pages
@@ -39,37 +43,21 @@ jobs:
 
       - name: 构建站点
         working-directory: docs/websites
-        run: npm run build
+        run: npx vitepress build --outDir "$SITE_OUT_DIR"
 
       - name: 发布到 gh-pages 分支
-        working-directory: docs/websites
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-          # gh-pages 首次发布时远端还没有该分支，需要新建。
-          if git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
-            git fetch --depth=1 origin gh-pages
-            git checkout -B gh-pages FETCH_HEAD
-          else
-            git checkout --orphan gh-pages
-            git rm -rf --quiet .
-          fi
-
-          # 清空后写入新产物，保证已删除的页面不会残留在站点上。
-          find . -mindepth 1 -maxdepth 1 -not -name '.vitepress' -exec rm -rf {} +
-          cp -a .vitepress/dist/. .
+          cd "$SITE_OUT_DIR"
           touch .nojekyll
-
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add -A
-          if git diff --cached --quiet; then
-            echo "站点产物无变化，跳过提交"
-          else
-            git commit -m "docs: 发布站点（${GITHUB_SHA::7}）"
-            git push origin gh-pages
-            echo "已发布到 gh-pages"
-          fi
+          git commit -q -m "docs: 发布站点（${GITHUB_SHA::7}）"
+          # gh-pages 只承载构建产物，每次整体替换。
+          git push --force origin gh-pages
+          echo "已发布到 gh-pages"
