@@ -1855,8 +1855,8 @@ export interface components {
         /**
          * AiSearchExpandRead
          * @example {
-         *       "original": "original-示例",
-         *       "expanded": "expanded-示例"
+         *       "original": "电机|接触器",
+         *       "expanded": "电机|电动机|接触器"
          *     }
          */
         AiSearchExpandRead: {
@@ -1868,7 +1868,7 @@ export interface components {
         /**
          * AiSearchExpandRequest
          * @example {
-         *       "value": "value-示例"
+         *       "value": "电机|接触器"
          *     }
          */
         AiSearchExpandRequest: {
@@ -1878,26 +1878,27 @@ export interface components {
         /**
          * AiSearchSettingsRead
          * @example {
-         *       "endpoint": "endpoint-示例",
-         *       "api_key": "sk-example-key",
-         *       "model": "model-示例",
+         *       "endpoint": "https://api.deepseek.com/v1",
+         *       "api_key": "sk-4f2c1a4e8b7d4c1e9f2a5d6e7f8a9b0c",
+         *       "model": "deepseek-chat",
          *       "enabled": true,
-         *       "mini_program_code_env": "mini_program_code_env-示例",
-         *       "mini_program_code_app_id": 1,
+         *       "mini_program_code_env": "release",
+         *       "mini_program_code_app_id": "wx9d2f1c8a5b3e4701",
          *       "mini_program_app_ids": [
-         *         "mini_program_app_ids_item-示例"
+         *         "wx9d2f1c8a5b3e4701",
+         *         "wx4b7e0a6d2c918f35"
          *       ],
          *       "mini_program_registration_enabled": true,
          *       "mini_program_new_user_enabled": true,
-         *       "image_acceleration_server_url": "https://example.com/hook/token",
-         *       "inventory_mode": "inventory_mode-示例",
-         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
-         *       "purchase_plans_mode": "purchase_plans_mode-示例",
-         *       "purchase_records_mode": "purchase_records_mode-示例",
-         *       "material_codes_mode": "material_codes_mode-示例",
-         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例",
+         *       "image_acceleration_server_url": "https://img.hxni-electrical.com",
+         *       "inventory_mode": "read_write",
+         *       "huaxing_inventory_mode": "query_only",
+         *       "purchase_plans_mode": "query_only",
+         *       "purchase_records_mode": "query_only",
+         *       "material_codes_mode": "query_only",
+         *       "secondary_warehouse_mode": "full",
          *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "version": 3
          *     }
          */
         AiSearchSettingsRead: {
@@ -1934,22 +1935,22 @@ export interface components {
         /**
          * AiSearchSettingsUpdate
          * @example {
-         *       "endpoint": "endpoint-示例",
-         *       "api_key": "sk-example-key",
-         *       "model": "model-示例",
+         *       "endpoint": "https://api.deepseek.com/v1",
+         *       "api_key": "sk-4f2c1a4e8b7d4c1e9f2a5d6e7f8a9b0c",
+         *       "model": "deepseek-chat",
          *       "enabled": true,
-         *       "mini_program_code_env": "mini_program_code_env-示例",
-         *       "mini_program_code_app_id": 1,
+         *       "mini_program_code_env": "release",
+         *       "mini_program_code_app_id": "wx9d2f1c8a5b3e4701",
          *       "mini_program_registration_enabled": true,
          *       "mini_program_new_user_enabled": true,
-         *       "image_acceleration_server_url": "https://example.com/hook/token",
-         *       "inventory_mode": "inventory_mode-示例",
-         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
-         *       "purchase_plans_mode": "purchase_plans_mode-示例",
-         *       "purchase_records_mode": "purchase_records_mode-示例",
-         *       "material_codes_mode": "material_codes_mode-示例",
-         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例",
-         *       "version": 1
+         *       "image_acceleration_server_url": "https://img.hxni-electrical.com",
+         *       "inventory_mode": "read_write",
+         *       "huaxing_inventory_mode": "query_only",
+         *       "purchase_plans_mode": "query_only",
+         *       "purchase_records_mode": "query_only",
+         *       "material_codes_mode": "query_only",
+         *       "secondary_warehouse_mode": "full",
+         *       "version": 3
          *     }
          */
         AiSearchSettingsUpdate: {
@@ -2023,8 +2024,8 @@ export interface components {
         /**
          * AiSearchTestRead
          * @example {
-         *       "original": "original-示例",
-         *       "expanded": "expanded-示例"
+         *       "original": "空开",
+         *       "expanded": "空开|小型断路器|微型断路器"
          *     }
          */
         AiSearchTestRead: {
@@ -2036,9 +2037,9 @@ export interface components {
         /**
          * AiSearchTestRequest
          * @example {
-         *       "endpoint": "endpoint-示例",
-         *       "api_key": "sk-example-key",
-         *       "model": "model-示例"
+         *       "endpoint": "https://api.deepseek.com/v1",
+         *       "api_key": "sk-4f2c1a4e8b7d4c1e9f2a5d6e7f8a9b0c",
+         *       "model": "deepseek-chat"
          *     }
          */
         AiSearchTestRequest: {
@@ -2053,9 +2054,11 @@ export interface components {
          * ApiError
          * @example {
          *       "code": "NOT_FOUND",
-         *       "message": "操作成功",
-         *       "details": {},
-         *       "request_id": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c"
+         *       "message": "二级库物资不存在",
+         *       "details": {
+         *         "material_id": 404
+         *       },
+         *       "request_id": "967336b6-a5d9-4d99-ab62-3fb99f380371"
          *     }
          */
         ApiError: {
@@ -2073,18 +2076,18 @@ export interface components {
         /**
          * BatchMovePurchasePlansRequest
          * @example {
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
-         *       "consolidation_date": "2026-09-13",
+         *       "purchase_order_no": "申购 2026/9/14",
+         *       "trace_no": "HX20260914001",
+         *       "contract_no": "HX-CG-2026-0190",
+         *       "vessel_no": "MV HXNI 05",
+         *       "consolidation_date": "2026-09-24",
          *       "consolidation_port": "Morowali",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "purchase_date": "2026-09-13",
-         *       "salesperson": "李四",
-         *       "status": "正常",
-         *       "record_remark": "record_remark-示例",
+         *       "sailing_date": "2026-09-29",
+         *       "contract_sign_date": "2026-09-20",
+         *       "purchase_date": "2026-09-14",
+         *       "salesperson": "何丽娟",
+         *       "status": "已申购",
+         *       "record_remark": "9 月低库存补库整单申购",
          *       "material_ids": [
          *         1
          *       ]
@@ -2130,17 +2133,12 @@ export interface components {
          *       "materials": [
          *         {
          *           "id": 1,
-         *           "version": 1
+         *           "version": 3
          *         }
          *       ],
-         *       "plan_date": "2026-09-13",
-         *       "category": "低压电器",
-         *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "subitem_no": "01",
-         *       "usage": "设备检修更换",
+         *       "plan_date": "2026-09-14",
+         *       "urgency": "紧急",
+         *       "purchase_responsible": "吴德海",
          *       "status": "正常"
          *     }
          */
@@ -2174,21 +2172,21 @@ export interface components {
          *           "version": 1
          *         }
          *       ],
-         *       "plan_date": "2026-09-13",
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
-         *       "consolidation_date": "2026-09-13",
+         *       "plan_date": "2026-08-05",
+         *       "purchase_order_no": "申购 2026/8/20",
+         *       "trace_no": "HX20260820001",
+         *       "contract_no": "HX-CG-2026-0157",
+         *       "vessel_no": "MV HXNI 03",
+         *       "consolidation_date": "2026-08-28",
          *       "consolidation_port": "Morowali",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "purchase_date": "2026-09-13",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "salesperson": "李四",
-         *       "status": "正常",
-         *       "record_remark": "record_remark-示例"
+         *       "sailing_date": "2026-09-02",
+         *       "contract_sign_date": "2026-08-25",
+         *       "purchase_date": "2026-08-20",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "salesperson": "马晓东",
+         *       "status": "已采购",
+         *       "record_remark": "8 月低压电器备件整单申购"
          *     }
          */
         BatchUpdatePurchaseRecordsRequest: {
@@ -2228,7 +2226,7 @@ export interface components {
         /**
          * Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post
          * @example {
-         *       "file": "file-示例"
+         *       "file": "华星库存导出_20260912.xlsx"
          *     }
          */
         Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post: {
@@ -2238,7 +2236,7 @@ export interface components {
         /**
          * Body_import_lite_inventory_api_v1_secondary_warehouse_import_post
          * @example {
-         *       "file": "file-示例"
+         *       "file": "精简二级库台账_20260912.xlsx"
          *     }
          */
         Body_import_lite_inventory_api_v1_secondary_warehouse_import_post: {
@@ -2248,7 +2246,7 @@ export interface components {
         /**
          * Body_import_material_codes_api_v1_material_code_library_import_post
          * @example {
-         *       "file": "file-示例"
+         *       "file": "物资编码库_20260912.xlsx"
          *     }
          */
         Body_import_material_codes_api_v1_material_code_library_import_post: {
@@ -2258,7 +2256,7 @@ export interface components {
         /**
          * Body_upload_api_v1_files_images_post
          * @example {
-         *       "file": "file-示例"
+         *       "file": "交流接触器-CJX2-2510-正面.jpg"
          *     }
          */
         Body_upload_api_v1_files_images_post: {
@@ -2268,10 +2266,10 @@ export interface components {
         /**
          * DashboardSummaryRead
          * @example {
-         *       "stock_material_count": 3,
-         *       "low_stock_count": 3,
-         *       "uncoded_purchase_material_count": 3,
-         *       "purchase_record_count": 3
+         *       "stock_material_count": 23,
+         *       "low_stock_count": 9,
+         *       "uncoded_purchase_material_count": 2,
+         *       "purchase_record_count": 5
          *     }
          */
         DashboardSummaryRead: {
@@ -2288,17 +2286,23 @@ export interface components {
          * ExcelExportJobRead
          * @example {
          *       "id": 1,
-         *       "export_type": "export_type-示例",
-         *       "status": "正常",
-         *       "download_filename": "download_filename-示例",
-         *       "file_uuid": "file_uuid-示例",
-         *       "params": {},
-         *       "result": {},
-         *       "error_code": "DQ-000123",
-         *       "error_message": "error_message-示例",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "started_at": "2026-09-13T10:30:00+08:00",
-         *       "finished_at": "2026-09-13T10:30:00+08:00"
+         *       "export_type": "PURCHASE_PLAN_RESULTS",
+         *       "status": "SUCCEEDED",
+         *       "download_filename": "申购计划导出_20260913.xlsx",
+         *       "file_uuid": "f8252584-1591-7c8d-804a-c3015f9eb786",
+         *       "params": {
+         *         "status": "正常",
+         *         "category": "备品备件"
+         *       },
+         *       "result": {
+         *         "rows": 16,
+         *         "image_count": 0
+         *       },
+         *       "error_code": null,
+         *       "error_message": null,
+         *       "created_at": "2026-09-13T10:00:00+08:00",
+         *       "started_at": "2026-09-13T10:00:01+08:00",
+         *       "finished_at": "2026-09-13T10:00:04+08:00"
          *     }
          */
         ExcelExportJobRead: {
@@ -2342,15 +2346,17 @@ export interface components {
          * ExcelImportJobRead
          * @example {
          *       "id": 1,
-         *       "import_type": "import_type-示例",
-         *       "status": "正常",
-         *       "original_filename": "original_filename-示例",
-         *       "result": {},
-         *       "error_code": "DQ-000123",
-         *       "error_message": "error_message-示例",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "started_at": "2026-09-13T10:30:00+08:00",
-         *       "finished_at": "2026-09-13T10:30:00+08:00"
+         *       "import_type": "HUAXING_INVENTORY",
+         *       "status": "SUCCEEDED",
+         *       "original_filename": "华星库存导出_20260912.xlsx",
+         *       "result": {
+         *         "imported_count": 12
+         *       },
+         *       "error_code": null,
+         *       "error_message": null,
+         *       "created_at": "2026-09-12T18:20:00+08:00",
+         *       "started_at": "2026-09-12T18:20:01+08:00",
+         *       "finished_at": "2026-09-12T18:20:03+08:00"
          *     }
          */
         ExcelImportJobRead: {
@@ -2387,12 +2393,12 @@ export interface components {
         /**
          * FileObjectRead
          * @example {
-         *       "id": 1,
-         *       "original_name": "stock-material-20260913.png",
-         *       "mime_type": "image/png",
-         *       "size_bytes": 204800,
-         *       "width": 800,
-         *       "height": 600
+         *       "id": "32d7f854-769d-72e7-8eac-1dc6b831456c",
+         *       "original_name": "交流接触器-CJX2-2510-正面.jpg",
+         *       "mime_type": "image/jpeg",
+         *       "size_bytes": 486912,
+         *       "width": 1600,
+         *       "height": 1200
          *     }
          */
         FileObjectRead: {
@@ -2417,10 +2423,14 @@ export interface components {
          * HuaXingFilterOptions
          * @example {
          *       "purchase_departments": [
-         *         "purchase_departments_item-示例"
+         *         "HXNI冶炼厂",
+         *         "生产调度中心",
+         *         "设备管理部"
          *       ],
          *       "purchasers": [
-         *         "purchasers_item-示例"
+         *         "吴冰",
+         *         "夏军",
+         *         "李振国"
          *       ]
          *     }
          */
@@ -2434,16 +2444,16 @@ export interface components {
          * HuaXingInventoryRead
          * @example {
          *       "id": 1,
-         *       "first_inbound_date": "2026-09-13",
-         *       "warehouse": "warehouse-示例",
-         *       "material_code": "DQ-000123",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "quantity": "10.000",
+         *       "first_inbound_date": "2022-10-28",
+         *       "warehouse": "P05综合仓",
+         *       "material_code": "L012-05048",
+         *       "name": "内丝三通",
+         *       "model_spec": "DN15",
+         *       "quantity": "25",
          *       "unit_name": "个",
-         *       "purchaser": "purchaser-示例",
-         *       "purchase_department": "purchase_department-示例",
-         *       "subitem_no_name": "低压电器"
+         *       "purchaser": "吴冰",
+         *       "purchase_department": "生产调度中心",
+         *       "subitem_no_name": "201-冶炼主厂房"
          *     }
          */
         HuaXingInventoryRead: {
@@ -2473,7 +2483,7 @@ export interface components {
         /**
          * ImageAccelerationSettingsRead
          * @example {
-         *       "image_acceleration_server_url": "https://example.com/hook/token"
+         *       "image_acceleration_server_url": "https://img.hxni-electrical.com"
          *     }
          */
         ImageAccelerationSettingsRead: {
@@ -2484,15 +2494,15 @@ export interface components {
          * InventoryBalanceRead
          * @example {
          *       "stock_material_id": 1,
-         *       "name": "二级库物资",
+         *       "name": "交流接触器",
          *       "alias": "接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "current_qty": "42.000",
-         *       "minimum_qty": "5.000",
+         *       "current_qty": "6",
+         *       "minimum_qty": "8",
          *       "is_low_stock": true,
-         *       "suggested_purchase_qty": "10.000",
-         *       "updated_at": "2026-09-13T10:30:00+08:00"
+         *       "suggested_purchase_qty": "10",
+         *       "updated_at": "2026-08-27T10:05:00+08:00"
          *     }
          */
         InventoryBalanceRead: {
@@ -2523,7 +2533,7 @@ export interface components {
         /**
          * LastImportRead
          * @example {
-         *       "last_import_at": "2026-09-13T10:30:00+08:00"
+         *       "last_import_at": "2026-09-12T18:20:00+08:00"
          *     }
          */
         LastImportRead: {
@@ -2534,7 +2544,7 @@ export interface components {
          * LinkStockMaterialRequest
          * @example {
          *       "stock_material_id": 1,
-         *       "version": 1
+         *       "version": 3
          *     }
          */
         LinkStockMaterialRequest: {
@@ -2548,11 +2558,11 @@ export interface components {
          * @description 管理端精简二级库行（Excel 一次性导入 + 只读查询）。
          * @example {
          *       "id": 1,
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "unit_name": "个",
-         *       "quantity": "10.000",
-         *       "remark": "无"
+         *       "name": "绝缘胶带",
+         *       "model_spec": "3M 1600 18mm×20m 黑色",
+         *       "unit_name": "卷",
+         *       "quantity": "60",
+         *       "remark": "日常检修耗材"
          *     }
          */
         LiteInventoryRead: {
@@ -2572,8 +2582,8 @@ export interface components {
         /**
          * LoginRequest
          * @example {
-         *       "username": "warehouse",
-         *       "password": "password-示例"
+         *       "username": "admin",
+         *       "password": "123456"
          *     }
          */
         LoginRequest: {
@@ -2585,10 +2595,17 @@ export interface components {
         /**
          * LoginResponse
          * @example {
-         *       "access_token": "api-token-example",
-         *       "refresh_token": "api-token-example",
+         *       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q",
+         *       "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q",
          *       "token_type": "bearer",
-         *       "user": "user-示例"
+         *       "user": {
+         *         "id": 1,
+         *         "username": "admin",
+         *         "display_name": "系统管理员",
+         *         "role": "SUPER_ADMIN",
+         *         "enabled": true,
+         *         "version": 1
+         *       }
          *     }
          */
         LoginResponse: {
@@ -2607,7 +2624,7 @@ export interface components {
         /**
          * MaterialCodeExistsRead
          * @example {
-         *       "material_code": "DQ-000123",
+         *       "material_code": "E011-00237",
          *       "exists": true
          *     }
          */
@@ -2621,9 +2638,9 @@ export interface components {
          * MaterialCodeLibraryRead
          * @example {
          *       "id": 1,
-         *       "material_code": "DQ-000123",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "material_code": "E011-00237",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个"
          *     }
          */
@@ -2642,8 +2659,8 @@ export interface components {
         /**
          * MemoCreate
          * @example {
-         *       "title": "title-示例",
-         *       "content": "content-示例"
+         *       "title": "9 月二级库盘点安排",
+         *       "content": "9 月 18 日下班前完成二级库盘点，重点核对熔断器芯、指示灯、温湿度控制器的账实差异；盘点差异在下月 5 日前开出库冲销。"
          *     }
          */
         MemoCreate: {
@@ -2663,11 +2680,11 @@ export interface components {
          * @description 管理端个人备忘录（纯文本）：一级 tab 快捷切换多条，按创建人隔离。
          * @example {
          *       "id": 1,
-         *       "title": "title-示例",
-         *       "content": "content-示例",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "title": "9 月二级库盘点安排",
+         *       "content": "9 月 18 日下班前完成二级库盘点，重点核对熔断器芯、指示灯、温湿度控制器的账实差异；盘点差异在下月 5 日前开出库冲销。",
+         *       "created_at": "2026-09-10T08:40:00+08:00",
+         *       "updated_at": "2026-09-12T16:20:00+08:00",
+         *       "version": 2
          *     }
          */
         MemoRead: {
@@ -2693,9 +2710,9 @@ export interface components {
         /**
          * MemoUpdate
          * @example {
-         *       "title": "title-示例",
-         *       "content": "content-示例",
-         *       "version": 1
+         *       "title": "9 月二级库盘点安排",
+         *       "content": "9 月 18 日下班前完成二级库盘点，重点核对熔断器芯、指示灯、温湿度控制器的账实差异；盘点差异在下月 5 日前开出库冲销。",
+         *       "version": 2
          *     }
          */
         MemoUpdate: {
@@ -2719,12 +2736,12 @@ export interface components {
         /**
          * MiniProgramFeaturesRead
          * @example {
-         *       "inventory_mode": "inventory_mode-示例",
-         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
-         *       "purchase_plans_mode": "purchase_plans_mode-示例",
-         *       "purchase_records_mode": "purchase_records_mode-示例",
-         *       "material_codes_mode": "material_codes_mode-示例",
-         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例"
+         *       "inventory_mode": "read_write",
+         *       "huaxing_inventory_mode": "query_only",
+         *       "purchase_plans_mode": "query_only",
+         *       "purchase_records_mode": "query_only",
+         *       "material_codes_mode": "query_only",
+         *       "secondary_warehouse_mode": "full"
          *     }
          */
         MiniProgramFeaturesRead: {
@@ -2738,17 +2755,17 @@ export interface components {
         /**
          * MiniProgramHuaXingInventoryRead
          * @example {
-         *       "id": 1,
-         *       "first_inbound_date": "2026-09-13",
-         *       "warehouse": "warehouse-示例",
-         *       "material_code": "DQ-000123",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "quantity": "10.000",
+         *       "id": 3,
+         *       "first_inbound_date": "2024-03-12",
+         *       "warehouse": "P03电气仓",
+         *       "material_code": "E011-00237",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
+         *       "quantity": "46",
          *       "unit_name": "个",
-         *       "purchaser": "purchaser-示例",
-         *       "purchase_department": "purchase_department-示例",
-         *       "subitem_no_name": "低压电器"
+         *       "purchaser": "李振国",
+         *       "purchase_department": "设备管理部",
+         *       "subitem_no_name": "305-硫酸厂"
          *     }
          */
         MiniProgramHuaXingInventoryRead: {
@@ -2778,10 +2795,10 @@ export interface components {
         /**
          * MiniProgramIdentityRead
          * @example {
-         *       "id": 1,
-         *       "app_id": 1,
-         *       "wechat_openid": "wechat_openid-示例",
-         *       "created_at": "2026-09-13T10:30:00+08:00"
+         *       "id": 11,
+         *       "app_id": "wx9d2f1c8a5b3e4701",
+         *       "wechat_openid": "oHXNI-9f3c1d2a8b7e4f5c",
+         *       "created_at": "2026-08-14T10:20:00+08:00"
          *     }
          */
         MiniProgramIdentityRead: {
@@ -2800,12 +2817,12 @@ export interface components {
         /**
          * MiniProgramInventoryItemRead
          * @example {
-         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "current_qty": "42.000",
-         *       "stock_status": "stock_status-示例"
+         *       "current_qty": "6",
+         *       "stock_status": "low_stock"
          *     }
          */
         MiniProgramInventoryItemRead: {
@@ -2829,10 +2846,10 @@ export interface components {
          * @description 小程序端精简二级库行（无出入库，仅查看）。
          * @example {
          *       "id": 1,
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "unit_name": "个",
-         *       "quantity": "10.000"
+         *       "name": "绝缘胶带",
+         *       "model_spec": "3M 1600 18mm×20m 黑色",
+         *       "unit_name": "卷",
+         *       "quantity": "60"
          *     }
          */
         MiniProgramLiteInventoryItemRead: {
@@ -2850,27 +2867,33 @@ export interface components {
         /**
          * MiniProgramLoginResponse
          * @example {
-         *       "access_token": "api-token-example",
-         *       "registration_token": "api-token-example",
+         *       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q",
+         *       "registration_token": null,
          *       "token_type": "bearer",
          *       "user": {
          *         "id": 1,
-         *         "display_name": "张三",
-         *         "department_name": "低压电器",
+         *         "display_name": "孙浩宇",
+         *         "department_name": "检修维护部电气自动化车间",
          *         "enabled": true,
          *         "identities": [
          *           {
-         *             "id": 1,
-         *             "app_id": 1,
-         *             "wechat_openid": "wechat_openid-示例",
-         *             "created_at": "2026-09-13T10:30:00+08:00"
+         *             "id": 11,
+         *             "app_id": "wx9d2f1c8a5b3e4701",
+         *             "wechat_openid": "oHXNI-9f3c1d2a8b7e4f5c",
+         *             "created_at": "2026-08-14T10:20:00+08:00"
+         *           },
+         *           {
+         *             "id": 12,
+         *             "app_id": "wx4b7e0a6d2c918f35",
+         *             "wechat_openid": "oHXNI-1a2b3c4d5e6f7a8b",
+         *             "created_at": "2026-09-02T09:35:00+08:00"
          *           }
          *         ],
-         *         "created_at": "2026-09-13T10:30:00+08:00",
-         *         "updated_at": "2026-09-13T10:30:00+08:00",
-         *         "version": 1
+         *         "created_at": "2026-08-14T10:20:00+08:00",
+         *         "updated_at": "2026-09-02T09:35:00+08:00",
+         *         "version": 2
          *       },
-         *       "requires_profile": true
+         *       "requires_profile": false
          *     }
          */
         MiniProgramLoginResponse: {
@@ -2892,9 +2915,9 @@ export interface components {
          * MiniProgramMaterialCodeRead
          * @example {
          *       "id": 1,
-         *       "material_code": "DQ-000123",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "material_code": "E011-00237",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个"
          *     }
          */
@@ -2913,22 +2936,30 @@ export interface components {
         /**
          * MiniProgramMaterialRead
          * @example {
-         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "current_qty": "42.000",
-         *       "stock_status": "stock_status-示例",
-         *       "minimum_qty": "5.000",
-         *       "remark": "无",
+         *       "current_qty": "6",
+         *       "stock_status": "low_stock",
+         *       "minimum_qty": "8",
+         *       "remark": "启停控制回路常用，单台控制柜 2 只",
          *       "images": [
          *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
+         *           "id": "23ee8930-737f-739e-83d0-69076b428b66",
+         *           "original_name": "交流接触器-CJX2-2510-正面.jpg",
+         *           "mime_type": "image/jpeg",
+         *           "size_bytes": 486912,
+         *           "width": 1600,
+         *           "height": 1200
+         *         },
+         *         {
+         *           "id": "83f45373-5982-7707-8003-2f16a4783a0b",
+         *           "original_name": "交流接触器-CJX2-2510-铭牌.jpg",
+         *           "mime_type": "image/jpeg",
+         *           "size_bytes": 372480,
+         *           "width": 1600,
+         *           "height": 1200
          *         }
          *       ]
          *     }
@@ -2961,21 +2992,21 @@ export interface components {
          *
          *     兼容入库/出库、小程序/管理端来源；多行操作按行展平为多条记录。
          * @example {
-         *       "operation_id": 1,
-         *       "operation_no": "CL-20260913-0001",
-         *       "operation_type": "operation_type-示例",
-         *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "operation_id": 13,
+         *       "operation_no": "OUT20260912000013",
+         *       "operation_type": "OUTBOUND",
+         *       "material_name": "接线端子",
+         *       "model_spec": "UK-2.5B 灰",
          *       "unit_name": "个",
-         *       "quantity": "10.000",
-         *       "before_qty": "45.000",
-         *       "after_qty": "42.000",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "receiver_name": "低压电器",
-         *       "subitem_no": "01",
-         *       "executed_by": "executed_by-示例"
+         *       "quantity": "50",
+         *       "before_qty": "800",
+         *       "after_qty": "750",
+         *       "occurred_at": "2026-09-12T15:40:00+08:00",
+         *       "business_reason": "现场检修配线耗材领用",
+         *       "receiver_unit": "电气检修二班",
+         *       "receiver_name": "孙浩宇",
+         *       "subitem_no": "305",
+         *       "executed_by": "孙浩宇"
          *     }
          */
         MiniProgramOperationRead: {
@@ -3015,13 +3046,13 @@ export interface components {
         /**
          * MiniProgramOutboundCreate
          * @example {
-         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
-         *       "material_uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "quantity": "10.000",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "subitem_no": "01"
+         *       "client_request_id": "10073bb4-da43-4007-a9ea-29706f230ef8",
+         *       "material_uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *       "occurred_at": "2026-09-12T15:40:00+08:00",
+         *       "quantity": "4",
+         *       "business_reason": "就地操作箱转换开关更换",
+         *       "receiver_unit": "电气检修二班",
+         *       "subitem_no": "305"
          *     }
          */
         MiniProgramOutboundCreate: {
@@ -3052,21 +3083,21 @@ export interface components {
         /**
          * MiniProgramOutboundRead
          * @example {
-         *       "operation_id": 1,
-         *       "operation_no": "CL-20260913-0001",
-         *       "material_uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "operation_id": 13,
+         *       "operation_no": "OUT20260912000013",
+         *       "material_uuid": "4472cf85-d9fc-4ab1-a362-eb7c4f5a18c4",
+         *       "material_name": "接线端子",
+         *       "model_spec": "UK-2.5B 灰",
          *       "unit_name": "个",
-         *       "quantity": "10.000",
-         *       "before_qty": "45.000",
-         *       "after_qty": "42.000",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "receiver_name": "低压电器",
-         *       "subitem_no": "01",
-         *       "executed_by": "executed_by-示例"
+         *       "quantity": "50",
+         *       "before_qty": "800",
+         *       "after_qty": "750",
+         *       "occurred_at": "2026-09-12T15:40:00+08:00",
+         *       "business_reason": "现场检修配线耗材领用",
+         *       "receiver_unit": "电气检修二班",
+         *       "receiver_name": "孙浩宇",
+         *       "subitem_no": "305",
+         *       "executed_by": "孙浩宇"
          *     }
          */
         MiniProgramOutboundRead: {
@@ -3110,8 +3141,8 @@ export interface components {
         /**
          * MiniProgramOutboundReason
          * @example {
-         *       "subitem_no": "01",
-         *       "reason": "reason-示例"
+         *       "subitem_no": "305",
+         *       "reason": "就地操作箱检修备件领用"
          *     }
          */
         MiniProgramOutboundReason: {
@@ -3125,14 +3156,30 @@ export interface components {
          * @example {
          *       "personal_reasons": [
          *         {
-         *           "subitem_no": "01",
-         *           "reason": "reason-示例"
+         *           "subitem_no": "305",
+         *           "reason": "就地操作箱检修备件领用"
+         *         },
+         *         {
+         *           "subitem_no": "201",
+         *           "reason": "1#回转窑主电机控制柜检修更换"
+         *         },
+         *         {
+         *           "subitem_no": "202",
+         *           "reason": "3#破碎机电源电缆及防爆穿管更换"
          *         }
          *       ],
          *       "system_reasons": [
          *         {
-         *           "subitem_no": "01",
-         *           "reason": "reason-示例"
+         *           "subitem_no": "305",
+         *           "reason": "2#皮带机启动回路检修"
+         *         },
+         *         {
+         *           "subitem_no": "305",
+         *           "reason": "仪表柜保险检查批量更换"
+         *         },
+         *         {
+         *           "subitem_no": "401",
+         *           "reason": "办公楼配电箱漏电保护器更换"
          *         }
          *       ]
          *     }
@@ -3146,8 +3193,8 @@ export interface components {
         /**
          * MiniProgramProfileUpdate
          * @example {
-         *       "display_name": "张三",
-         *       "department_name": "低压电器"
+         *       "display_name": "孙浩宇",
+         *       "department_name": "检修维护部电气自动化车间"
          *     }
          */
         MiniProgramProfileUpdate: {
@@ -3160,32 +3207,23 @@ export interface components {
          * MiniProgramPurchasePlanDetailRead
          * @example {
          *       "id": 1,
-         *       "plan_no": "CL-20260913-0001",
-         *       "plan_date": "2026-09-13",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "plan_no": "PLAN-20260805-001",
+         *       "plan_date": "2026-08-05",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "planned_qty": "10.000",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
+         *       "planned_qty": "20",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
          *       "urgency": "正常",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
-         *       "demand_department": "电气自动化车间",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
-         *       "images": [
-         *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
-         *         }
-         *       ],
-         *       "next_id": 1
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "subitem_no": "201",
+         *       "remark": null,
+         *       "images": [],
+         *       "next_id": 2
          *     }
          */
         MiniProgramPurchasePlanDetailRead: {
@@ -3233,10 +3271,20 @@ export interface components {
          * MiniProgramPurchasePlanFilterOptions
          * @example {
          *       "actual_demand_persons": [
-         *         "actual_demand_persons_item-示例"
+         *         "刘振华",
+         *         "周立新",
+         *         "孙浩宇",
+         *         "李建军",
+         *         "杨明辉",
+         *         "王海涛",
+         *         "陈志远"
          *       ],
          *       "subitem_nos": [
-         *         "subitem_nos_item-示例"
+         *         "201",
+         *         "202",
+         *         "301",
+         *         "305",
+         *         "401"
          *       ]
          *     }
          */
@@ -3250,14 +3298,14 @@ export interface components {
          * MiniProgramPurchasePlanItemRead
          * @example {
          *       "id": 1,
-         *       "plan_no": "CL-20260913-0001",
-         *       "plan_date": "2026-09-13",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "plan_no": "PLAN-20260805-001",
+         *       "plan_date": "2026-08-05",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "planned_qty": "10.000",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
+         *       "planned_qty": "20",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
          *       "urgency": "正常"
          *     }
          */
@@ -3290,10 +3338,15 @@ export interface components {
          * MiniProgramPurchaseRecordFilterOptions
          * @example {
          *       "statuses": [
-         *         "statuses_item-示例"
+         *         "已入库",
+         *         "已申购",
+         *         "已采购",
+         *         "部分入库"
          *       ],
          *       "subitem_nos": [
-         *         "subitem_nos_item-示例"
+         *         "201",
+         *         "202",
+         *         "305"
          *       ]
          *     }
          */
@@ -3308,34 +3361,25 @@ export interface components {
          * @example {
          *       "line_id": 1,
          *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "status": "正常",
+         *       "model_spec": "CJX2-2510 AC220V",
+         *       "purchase_order_no": "申购 2026/8/20",
+         *       "trace_no": "HX20260820001",
+         *       "status": "已入库",
          *       "unit_name": "个",
-         *       "purchase_qty": "10.000",
-         *       "plan_date": "2026-09-13",
-         *       "subitem_no": "01",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
-         *       "plan_no": "CL-20260913-0001",
-         *       "demand_department": "电气自动化车间",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "usage": "设备检修更换",
-         *       "remark": "无",
-         *       "purchase_date": "2026-09-13",
-         *       "salesperson": "李四",
-         *       "images": [
-         *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
-         *         }
-         *       ]
+         *       "purchase_qty": "20",
+         *       "plan_date": "2026-08-05",
+         *       "subitem_no": "201",
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
+         *       "plan_no": "PLAN-20260805-001",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "remark": "8 月低压电器备件整单申购",
+         *       "purchase_date": "2026-08-20",
+         *       "salesperson": "马晓东",
+         *       "images": []
          *     }
          */
         MiniProgramPurchaseRecordItemRead: {
@@ -3393,9 +3437,9 @@ export interface components {
         /**
          * MiniProgramUserMergeRequest
          * @example {
-         *       "source_user_id": 1,
-         *       "source_version": 1,
-         *       "target_version": 1
+         *       "source_user_id": 3,
+         *       "source_version": 2,
+         *       "target_version": 2
          *     }
          */
         MiniProgramUserMergeRequest: {
@@ -3410,20 +3454,26 @@ export interface components {
          * MiniProgramUserRead
          * @example {
          *       "id": 1,
-         *       "display_name": "张三",
-         *       "department_name": "低压电器",
+         *       "display_name": "孙浩宇",
+         *       "department_name": "检修维护部电气自动化车间",
          *       "enabled": true,
          *       "identities": [
          *         {
-         *           "id": 1,
-         *           "app_id": 1,
-         *           "wechat_openid": "wechat_openid-示例",
-         *           "created_at": "2026-09-13T10:30:00+08:00"
+         *           "id": 11,
+         *           "app_id": "wx9d2f1c8a5b3e4701",
+         *           "wechat_openid": "oHXNI-9f3c1d2a8b7e4f5c",
+         *           "created_at": "2026-08-14T10:20:00+08:00"
+         *         },
+         *         {
+         *           "id": 12,
+         *           "app_id": "wx4b7e0a6d2c918f35",
+         *           "wechat_openid": "oHXNI-1a2b3c4d5e6f7a8b",
+         *           "created_at": "2026-09-02T09:35:00+08:00"
          *         }
          *       ],
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "created_at": "2026-08-14T10:20:00+08:00",
+         *       "updated_at": "2026-09-02T09:35:00+08:00",
+         *       "version": 2
          *     }
          */
         MiniProgramUserRead: {
@@ -3453,10 +3503,10 @@ export interface components {
         /**
          * MiniProgramUserUpdate
          * @example {
-         *       "display_name": "张三",
-         *       "department_name": "低压电器",
+         *       "display_name": "孙浩宇",
+         *       "department_name": "检修维护部电气自动化车间",
          *       "enabled": true,
-         *       "version": 1
+         *       "version": 2
          *     }
          */
         MiniProgramUserUpdate: {
@@ -3472,8 +3522,8 @@ export interface components {
         /**
          * MiniProgramWechatLoginRequest
          * @example {
-         *       "code": "NOT_FOUND",
-         *       "app_id": 1
+         *       "code": "0a3Fk2ll2xQnkg4YzQml2aGkQp3Fk2lJ",
+         *       "app_id": "wx9d2f1c8a5b3e4701"
          *     }
          */
         MiniProgramWechatLoginRequest: {
@@ -3485,18 +3535,18 @@ export interface components {
         /**
          * MovePurchasePlanRequest
          * @example {
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
-         *       "consolidation_date": "2026-09-13",
+         *       "purchase_order_no": "申购 2026/9/14",
+         *       "trace_no": "HX20260914001",
+         *       "contract_no": "HX-CG-2026-0190",
+         *       "vessel_no": "MV HXNI 05",
+         *       "consolidation_date": "2026-09-24",
          *       "consolidation_port": "Morowali",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "purchase_date": "2026-09-13",
-         *       "salesperson": "李四",
-         *       "status": "正常",
-         *       "record_remark": "record_remark-示例"
+         *       "sailing_date": "2026-09-29",
+         *       "contract_sign_date": "2026-09-20",
+         *       "purchase_date": "2026-09-14",
+         *       "salesperson": "何丽娟",
+         *       "status": "已申购",
+         *       "record_remark": "9 月低库存补库整单申购"
          *     }
          */
         MovePurchasePlanRequest: {
@@ -3534,17 +3584,17 @@ export interface components {
         /**
          * OperationCreate
          * @example {
-         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "source_type": "source_type-示例",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "receiver_name": "低压电器",
-         *       "subitem_no": "01",
+         *       "client_request_id": "125b9d5d-f52f-4dd9-a7f2-1255c3240e39",
+         *       "occurred_at": "2026-09-12T09:40:00+08:00",
+         *       "source_type": "MANUAL",
+         *       "business_reason": "1#回转窑控制柜检修备件领用",
+         *       "receiver_unit": "电气检修一班",
+         *       "receiver_name": "李建军",
+         *       "subitem_no": "201",
          *       "lines": [
          *         {
          *           "stock_material_id": 1,
-         *           "quantity": "10.000"
+         *           "quantity": "2"
          *         }
          *       ]
          *     }
@@ -3576,7 +3626,7 @@ export interface components {
          * OperationLineWrite
          * @example {
          *       "stock_material_id": 1,
-         *       "quantity": "10.000"
+         *       "quantity": "2"
          *     }
          */
         OperationLineWrite: {
@@ -3594,17 +3644,29 @@ export interface components {
          * OperationUpdate
          * @example {
          *       "version": 1,
-         *       "operation_type": "operation_type-示例",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "source_type": "source_type-示例",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "receiver_name": "低压电器",
-         *       "subitem_no": "01",
+         *       "operation_type": "OUTBOUND",
+         *       "occurred_at": "2026-06-18T09:15:00+08:00",
+         *       "source_type": "MANUAL",
+         *       "business_reason": "1#回转窑主电机控制柜检修更换",
+         *       "receiver_unit": "电气检修一班",
+         *       "receiver_name": "李建军",
+         *       "subitem_no": "201",
          *       "lines": [
          *         {
          *           "stock_material_id": 1,
-         *           "quantity": "10.000"
+         *           "quantity": "4"
+         *         },
+         *         {
+         *           "stock_material_id": 5,
+         *           "quantity": "2"
+         *         },
+         *         {
+         *           "stock_material_id": 8,
+         *           "quantity": "6"
+         *         },
+         *         {
+         *           "stock_material_id": 10,
+         *           "quantity": "8"
          *         }
          *       ]
          *     }
@@ -3636,12 +3698,12 @@ export interface components {
         /**
          * OrphanFileCleanupRead
          * @example {
-         *       "cutoff": "2026-09-13T10:30:00+08:00",
+         *       "cutoff": "2026-08-14T00:00:00+08:00",
          *       "deleted_record_ids": [
-         *         "deleted_record_ids_item-示例"
+         *         "2c28dfba-20bf-7f38-80d3-796d97aa4dfe"
          *       ],
          *       "deleted_file_names": [
-         *         "deleted_file_names_item-示例"
+         *         "IMG_20260612_103512.jpg"
          *       ]
          *     }
          */
@@ -3659,10 +3721,10 @@ export interface components {
         /**
          * OrphanFileRead
          * @example {
-         *       "id": 1,
-         *       "original_name": "stock-material-20260913.png",
-         *       "size_bytes": 204800,
-         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "id": "2c28dfba-20bf-7f38-80d3-796d97aa4dfe",
+         *       "original_name": "IMG_20260612_103512.jpg",
+         *       "size_bytes": 742400,
+         *       "created_at": "2026-06-12T10:35:12+08:00",
          *       "file_exists": true
          *     }
          */
@@ -3684,21 +3746,21 @@ export interface components {
         /**
          * OrphanFileReportRead
          * @example {
-         *       "cutoff": "2026-09-13T10:30:00+08:00",
+         *       "cutoff": "2026-08-14T00:00:00+08:00",
          *       "unreferenced_records": [
          *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "size_bytes": 204800,
-         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "id": "2c28dfba-20bf-7f38-80d3-796d97aa4dfe",
+         *           "original_name": "IMG_20260612_103512.jpg",
+         *           "size_bytes": 742400,
+         *           "created_at": "2026-06-12T10:35:12+08:00",
          *           "file_exists": true
          *         }
          *       ],
          *       "untracked_file_names": [
-         *         "untracked_file_names_item-示例"
+         *         "IMG_20260612_103512.jpg"
          *       ],
          *       "missing_file_ids": [
-         *         "missing_file_ids_item-示例"
+         *         "a46f37cf-d6c7-7e69-8e36-6ae9c02cf1d8"
          *       ]
          *     }
          */
@@ -3721,21 +3783,164 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "first_inbound_date": "2026-09-13",
-         *           "warehouse": "warehouse-示例",
-         *           "material_code": "DQ-000123",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
-         *           "quantity": "10.000",
+         *           "first_inbound_date": "2022-10-28",
+         *           "warehouse": "P05综合仓",
+         *           "material_code": "L012-05048",
+         *           "name": "内丝三通",
+         *           "model_spec": "DN15",
+         *           "quantity": "25",
          *           "unit_name": "个",
-         *           "purchaser": "purchaser-示例",
-         *           "purchase_department": "purchase_department-示例",
-         *           "subitem_no_name": "低压电器"
+         *           "purchaser": "吴冰",
+         *           "purchase_department": "生产调度中心",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "first_inbound_date": "2025-11-16",
+         *           "warehouse": "P06综合仓",
+         *           "material_code": "W004-00003",
+         *           "name": "稀释剂",
+         *           "model_spec": "20L",
+         *           "quantity": "3",
+         *           "unit_name": "桶",
+         *           "purchaser": "夏军",
+         *           "purchase_department": "HXNI冶炼厂",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "first_inbound_date": "2024-03-12",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00237",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
+         *           "quantity": "46",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "first_inbound_date": "2023-08-05",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00402",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "quantity": "180",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "first_inbound_date": "2024-06-18",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00335",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "quantity": "120",
+         *           "unit_name": "个",
+         *           "purchaser": "夏军",
+         *           "purchase_department": "HXNI冶炼厂",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "first_inbound_date": "2024-09-09",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00521",
+         *           "name": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "quantity": "210",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 7,
+         *           "first_inbound_date": "2023-05-27",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00602",
+         *           "name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "quantity": "2600",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 8,
+         *           "first_inbound_date": "2024-01-16",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E012-00058",
+         *           "name": "铜芯控制电缆",
+         *           "model_spec": "KVV 4×1.5mm²",
+         *           "quantity": "1450",
+         *           "unit_name": "米",
+         *           "purchaser": "吴冰",
+         *           "purchase_department": "生产调度中心",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 9,
+         *           "first_inbound_date": "2024-11-21",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E012-00071",
+         *           "name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "quantity": "260",
+         *           "unit_name": "米",
+         *           "purchaser": "吴冰",
+         *           "purchase_department": "生产调度中心",
+         *           "subitem_no_name": "202-熔炼车间"
+         *         },
+         *         {
+         *           "id": 10,
+         *           "first_inbound_date": "2025-04-02",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E013-00019",
+         *           "name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "quantity": "4",
+         *           "unit_name": "台",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "202-熔炼车间"
+         *         },
+         *         {
+         *           "id": 11,
+         *           "first_inbound_date": "2023-02-14",
+         *           "warehouse": "P01金属仓",
+         *           "material_code": "L018-00226",
+         *           "name": "不锈钢螺栓",
+         *           "model_spec": "M10×40 304",
+         *           "quantity": "800",
+         *           "unit_name": "套",
+         *           "purchaser": "吴冰",
+         *           "purchase_department": "生产调度中心",
+         *           "subitem_no_name": "401-公辅设施"
+         *         },
+         *         {
+         *           "id": 12,
+         *           "first_inbound_date": "2025-09-03",
+         *           "warehouse": "P06综合仓",
+         *           "material_code": "W004-00011",
+         *           "name": "工业酒精",
+         *           "model_spec": "500ml",
+         *           "quantity": "24",
+         *           "unit_name": "瓶",
+         *           "purchaser": "夏军",
+         *           "purchase_department": "HXNI冶炼厂",
+         *           "subitem_no_name": "401-公辅设施"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 12
          *     }
          */
         Page_HuaXingInventoryRead_: {
@@ -3754,20 +3959,284 @@ export interface components {
          *       "items": [
          *         {
          *           "stock_material_id": 1,
-         *           "name": "二级库物资",
+         *           "name": "交流接触器",
          *           "alias": "接触器",
-         *           "model_spec": "CJX2-2510",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "current_qty": "42.000",
-         *           "minimum_qty": "5.000",
+         *           "current_qty": "6",
+         *           "minimum_qty": "8",
          *           "is_low_stock": true,
-         *           "suggested_purchase_qty": "10.000",
-         *           "updated_at": "2026-09-13T10:30:00+08:00"
+         *           "suggested_purchase_qty": "10",
+         *           "updated_at": "2026-08-27T10:05:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 2,
+         *           "name": "交流接触器辅助触头",
+         *           "alias": "辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个",
+         *           "current_qty": "12",
+         *           "minimum_qty": "6",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "6",
+         *           "updated_at": "2026-07-06T14:20:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 3,
+         *           "name": "小型断路器",
+         *           "alias": "空开",
+         *           "model_spec": "C65N-C16/2P",
+         *           "unit_name": "个",
+         *           "current_qty": "18",
+         *           "minimum_qty": "10",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "12",
+         *           "updated_at": "2026-07-14T08:40:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 4,
+         *           "name": "漏电保护断路器",
+         *           "alias": "漏保",
+         *           "model_spec": "DZ47LE-32 C32/2P",
+         *           "unit_name": "个",
+         *           "current_qty": "10",
+         *           "minimum_qty": "6",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "3",
+         *           "updated_at": "2026-09-06T10:15:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 5,
+         *           "name": "热继电器",
+         *           "alias": "热继",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个",
+         *           "current_qty": "14",
+         *           "minimum_qty": "8",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "2",
+         *           "updated_at": "2026-06-18T09:15:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 6,
+         *           "name": "中间继电器",
+         *           "alias": "中继",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个",
+         *           "current_qty": "7",
+         *           "minimum_qty": "8",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "7",
+         *           "updated_at": "2026-07-14T08:40:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 7,
+         *           "name": "时间继电器",
+         *           "alias": "时间继",
+         *           "model_spec": "ST3PA-B AC220V",
+         *           "unit_name": "个",
+         *           "current_qty": "11",
+         *           "minimum_qty": "5",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "4",
+         *           "updated_at": "2026-09-08T11:10:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 8,
+         *           "name": "熔断器芯",
+         *           "alias": "熔芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "current_qty": "2",
+         *           "minimum_qty": "20",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "28",
+         *           "updated_at": "2026-08-22T16:45:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 9,
+         *           "name": "熔断器底座",
+         *           "alias": "熔座",
+         *           "model_spec": "RT18-32 3P",
+         *           "unit_name": "个",
+         *           "current_qty": "28",
+         *           "minimum_qty": "10",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "0",
+         *           "updated_at": "2026-06-05T09:10:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 10,
+         *           "name": "智能电机保护器",
+         *           "alias": "保护器",
+         *           "model_spec": "M60-2P 5A",
+         *           "unit_name": "个",
+         *           "current_qty": "7",
+         *           "minimum_qty": "4",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "8",
+         *           "updated_at": "2026-06-18T09:15:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 11,
+         *           "name": "万能转换开关",
+         *           "alias": "转换开关",
+         *           "model_spec": "LW39-16B",
+         *           "unit_name": "个",
+         *           "current_qty": "16",
+         *           "minimum_qty": "8",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "4",
+         *           "updated_at": "2026-09-11T10:20:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 12,
+         *           "name": "指示灯",
+         *           "alias": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "unit_name": "个",
+         *           "current_qty": "8",
+         *           "minimum_qty": "20",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "22",
+         *           "updated_at": "2026-09-11T10:20:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 13,
+         *           "name": "接近开关",
+         *           "alias": "接近开关",
+         *           "model_spec": "LJ12A3-4-Z/BX",
+         *           "unit_name": "个",
+         *           "current_qty": "6",
+         *           "minimum_qty": "10",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "10",
+         *           "updated_at": "2026-07-14T08:40:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 14,
+         *           "name": "接线端子",
+         *           "alias": "端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个",
+         *           "current_qty": "750",
+         *           "minimum_qty": "200",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "50",
+         *           "updated_at": "2026-09-12T15:40:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 15,
+         *           "name": "防爆挠性连接管",
+         *           "alias": "防爆管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根",
+         *           "current_qty": "7",
+         *           "minimum_qty": "10",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "5",
+         *           "updated_at": "2026-08-15T09:50:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 16,
+         *           "name": "万用表保险管",
+         *           "alias": "保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "current_qty": "18",
+         *           "minimum_qty": "10",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "7",
+         *           "updated_at": "2026-08-22T16:45:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 17,
+         *           "name": "铜芯控制电缆",
+         *           "alias": "控制电缆",
+         *           "model_spec": "KVV 4×1.5mm²",
+         *           "unit_name": "米",
+         *           "current_qty": "320",
+         *           "minimum_qty": "100",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "80",
+         *           "updated_at": "2026-07-06T14:20:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 18,
+         *           "name": "铜芯电力电缆",
+         *           "alias": "电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米",
+         *           "current_qty": "45",
+         *           "minimum_qty": "60",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "75",
+         *           "updated_at": "2026-08-15T09:50:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 19,
+         *           "name": "铜芯塑料线",
+         *           "alias": "塑料线",
+         *           "model_spec": "BV 2.5mm² 蓝色",
+         *           "unit_name": "米",
+         *           "current_qty": "800",
+         *           "minimum_qty": "200",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "200",
+         *           "updated_at": "2026-07-14T08:40:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 20,
+         *           "name": "变频器",
+         *           "alias": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台",
+         *           "current_qty": "2",
+         *           "minimum_qty": "1",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "1",
+         *           "updated_at": "2026-08-15T09:50:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 21,
+         *           "name": "软启动器",
+         *           "alias": "软启",
+         *           "model_spec": "STR022L-3 22kW",
+         *           "unit_name": "台",
+         *           "current_qty": "1",
+         *           "minimum_qty": "1",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "1",
+         *           "updated_at": "2026-09-08T11:10:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 22,
+         *           "name": "绝缘胶带",
+         *           "alias": "胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷",
+         *           "current_qty": "55",
+         *           "minimum_qty": "20",
+         *           "is_low_stock": false,
+         *           "suggested_purchase_qty": "25",
+         *           "updated_at": "2026-09-11T10:20:00+08:00"
+         *         },
+         *         {
+         *           "stock_material_id": 23,
+         *           "name": "温湿度控制器",
+         *           "alias": "温湿度",
+         *           "model_spec": "WSK-SH",
+         *           "unit_name": "个",
+         *           "current_qty": "0",
+         *           "minimum_qty": "4",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "8",
+         *           "updated_at": "2026-09-08T11:10:00+08:00"
          *         }
          *       ],
          *       "page": 1,
-         *       "page_size": 20,
-         *       "total": 128
+         *       "page_size": 50,
+         *       "total": 23
          *     }
          */
         Page_InventoryBalanceRead_: {
@@ -3786,16 +4255,72 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "name": "绝缘胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷",
+         *           "quantity": "60",
+         *           "remark": "日常检修耗材"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "name": "尼龙扎带",
+         *           "model_spec": "4×200mm 白色",
+         *           "unit_name": "包",
+         *           "quantity": "35",
+         *           "remark": null
+         *         },
+         *         {
+         *           "id": 3,
+         *           "name": "线号管",
+         *           "model_spec": "φ2.5 白色",
+         *           "unit_name": "卷",
+         *           "quantity": "12",
+         *           "remark": "柜内配线标识"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "name": "铜接线端子",
+         *           "model_spec": "DT-70",
          *           "unit_name": "个",
-         *           "quantity": "10.000",
-         *           "remark": "无"
+         *           "quantity": "40",
+         *           "remark": "电缆头制作"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "name": "镀锌线槽",
+         *           "model_spec": "100×50mm",
+         *           "unit_name": "米",
+         *           "quantity": "60",
+         *           "remark": "电缆桥架整改"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "name": "砂纸",
+         *           "model_spec": "400 目",
+         *           "unit_name": "张",
+         *           "quantity": "200",
+         *           "remark": "柜内除锈打磨"
+         *         },
+         *         {
+         *           "id": 7,
+         *           "name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个",
+         *           "quantity": "1500",
+         *           "remark": null
+         *         },
+         *         {
+         *           "id": 8,
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "quantity": "30",
+         *           "remark": "仪表班备件"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 8
          *     }
          */
         Page_LiteInventoryRead_: {
@@ -3814,15 +4339,211 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "material_code": "DQ-000123",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "material_code": "E011-00237",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "material_code": "E011-00241",
+         *           "name": "交流接触器辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "material_code": "E011-00312",
+         *           "name": "小型断路器",
+         *           "model_spec": "C65N-C16/2P",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "material_code": "E011-00315",
+         *           "name": "漏电保护断路器",
+         *           "model_spec": "DZ47LE-32 C32/2P",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "material_code": "E011-00327",
+         *           "name": "热继电器",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "material_code": "E011-00335",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 7,
+         *           "material_code": "E011-00338",
+         *           "name": "时间继电器",
+         *           "model_spec": "ST3PA-B AC220V",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 8,
+         *           "material_code": "E011-00402",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 9,
+         *           "material_code": "E011-00405",
+         *           "name": "熔断器底座",
+         *           "model_spec": "RT18-32 3P",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 10,
+         *           "material_code": "E011-00451",
+         *           "name": "智能电机保护器",
+         *           "model_spec": "M60-2P 5A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 11,
+         *           "material_code": "E011-00511",
+         *           "name": "万能转换开关",
+         *           "model_spec": "LW39-16B",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 12,
+         *           "material_code": "E011-00521",
+         *           "name": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 13,
+         *           "material_code": "E011-00540",
+         *           "name": "接近开关",
+         *           "model_spec": "LJ12A3-4-Z/BX",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 14,
+         *           "material_code": "E011-00602",
+         *           "name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 15,
+         *           "material_code": "E011-00631",
+         *           "name": "防爆挠性连接管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根"
+         *         },
+         *         {
+         *           "id": 16,
+         *           "material_code": "E011-00644",
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 17,
+         *           "material_code": "E012-00058",
+         *           "name": "铜芯控制电缆",
+         *           "model_spec": "KVV 4×1.5mm²",
+         *           "unit_name": "米"
+         *         },
+         *         {
+         *           "id": 18,
+         *           "material_code": "E012-00071",
+         *           "name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米"
+         *         },
+         *         {
+         *           "id": 19,
+         *           "material_code": "E012-00083",
+         *           "name": "铜芯塑料线",
+         *           "model_spec": "BV 2.5mm² 蓝色",
+         *           "unit_name": "米"
+         *         },
+         *         {
+         *           "id": 20,
+         *           "material_code": "E013-00019",
+         *           "name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台"
+         *         },
+         *         {
+         *           "id": 21,
+         *           "material_code": "E013-00024",
+         *           "name": "软启动器",
+         *           "model_spec": "STR022L-3 22kW",
+         *           "unit_name": "台"
+         *         },
+         *         {
+         *           "id": 22,
+         *           "material_code": "E014-00007",
+         *           "name": "绝缘胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷"
+         *         },
+         *         {
+         *           "id": 23,
+         *           "material_code": "E021-00006",
+         *           "name": "温湿度控制器",
+         *           "model_spec": "WSK-SH",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 24,
+         *           "material_code": "E011-00308",
+         *           "name": "塑壳断路器",
+         *           "model_spec": "NM1-125S/3300 100A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 25,
+         *           "material_code": "E011-00518",
+         *           "name": "按钮开关",
+         *           "model_spec": "LA38-11 绿色",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 26,
+         *           "material_code": "L012-05048",
+         *           "name": "内丝三通",
+         *           "model_spec": "DN15",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 27,
+         *           "material_code": "W004-00003",
+         *           "name": "稀释剂",
+         *           "model_spec": "20L",
+         *           "unit_name": "桶"
+         *         },
+         *         {
+         *           "id": 28,
+         *           "material_code": "L018-00226",
+         *           "name": "不锈钢螺栓",
+         *           "model_spec": "M10×40 304",
+         *           "unit_name": "套"
+         *         },
+         *         {
+         *           "id": 29,
+         *           "material_code": "W004-00011",
+         *           "name": "工业酒精",
+         *           "model_spec": "500ml",
+         *           "unit_name": "瓶"
          *         }
          *       ],
          *       "page": 1,
-         *       "page_size": 20,
-         *       "total": 128
+         *       "page_size": 50,
+         *       "total": 29
          *     }
          */
         Page_MaterialCodeLibraryRead_: {
@@ -3841,21 +4562,86 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "first_inbound_date": "2026-09-13",
-         *           "warehouse": "warehouse-示例",
-         *           "material_code": "DQ-000123",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
-         *           "quantity": "10.000",
+         *           "first_inbound_date": "2022-10-28",
+         *           "warehouse": "P05综合仓",
+         *           "material_code": "L012-05048",
+         *           "name": "内丝三通",
+         *           "model_spec": "DN15",
+         *           "quantity": "25",
          *           "unit_name": "个",
-         *           "purchaser": "purchaser-示例",
-         *           "purchase_department": "purchase_department-示例",
-         *           "subitem_no_name": "低压电器"
+         *           "purchaser": "吴冰",
+         *           "purchase_department": "生产调度中心",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "first_inbound_date": "2025-11-16",
+         *           "warehouse": "P06综合仓",
+         *           "material_code": "W004-00003",
+         *           "name": "稀释剂",
+         *           "model_spec": "20L",
+         *           "quantity": "3",
+         *           "unit_name": "桶",
+         *           "purchaser": "夏军",
+         *           "purchase_department": "HXNI冶炼厂",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "first_inbound_date": "2024-03-12",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00237",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
+         *           "quantity": "46",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "first_inbound_date": "2023-08-05",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00402",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "quantity": "180",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "first_inbound_date": "2024-06-18",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00335",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "quantity": "120",
+         *           "unit_name": "个",
+         *           "purchaser": "夏军",
+         *           "purchase_department": "HXNI冶炼厂",
+         *           "subitem_no_name": "201-冶炼主厂房"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "first_inbound_date": "2024-09-09",
+         *           "warehouse": "P03电气仓",
+         *           "material_code": "E011-00521",
+         *           "name": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "quantity": "210",
+         *           "unit_name": "个",
+         *           "purchaser": "李振国",
+         *           "purchase_department": "设备管理部",
+         *           "subitem_no_name": "305-硫酸厂"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 6
          *     }
          */
         Page_MiniProgramHuaXingInventoryRead_: {
@@ -3873,17 +4659,73 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "current_qty": "42.000",
-         *           "stock_status": "stock_status-示例"
+         *           "current_qty": "6",
+         *           "stock_status": "low_stock"
+         *         },
+         *         {
+         *           "uuid": "70df5052-4879-4c20-a553-13edd372115a",
+         *           "name": "交流接触器辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个",
+         *           "current_qty": "12",
+         *           "stock_status": "normal"
+         *         },
+         *         {
+         *           "uuid": "21539e9e-74be-4503-a864-4b95b3c6409b",
+         *           "name": "小型断路器",
+         *           "model_spec": "C65N-C16/2P",
+         *           "unit_name": "个",
+         *           "current_qty": "18",
+         *           "stock_status": "normal"
+         *         },
+         *         {
+         *           "uuid": "0f14e702-4b64-4180-a1e0-e3cd1c78a326",
+         *           "name": "漏电保护断路器",
+         *           "model_spec": "DZ47LE-32 C32/2P",
+         *           "unit_name": "个",
+         *           "current_qty": "10",
+         *           "stock_status": "normal"
+         *         },
+         *         {
+         *           "uuid": "a8638528-7c2b-47d6-a538-c32ad8b652e5",
+         *           "name": "热继电器",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个",
+         *           "current_qty": "14",
+         *           "stock_status": "normal"
+         *         },
+         *         {
+         *           "uuid": "daa28adf-c3dc-4172-a257-ca92a2743d4b",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个",
+         *           "current_qty": "7",
+         *           "stock_status": "low_stock"
+         *         },
+         *         {
+         *           "uuid": "16373242-dabc-4d25-ad1c-b4838854c29a",
+         *           "name": "时间继电器",
+         *           "model_spec": "ST3PA-B AC220V",
+         *           "unit_name": "个",
+         *           "current_qty": "11",
+         *           "stock_status": "normal"
+         *         },
+         *         {
+         *           "uuid": "678854ac-1345-4126-a02d-ff410b8aeb3c",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "current_qty": "2",
+         *           "stock_status": "low_stock"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 8
          *     }
          */
         Page_MiniProgramInventoryItemRead_: {
@@ -3902,15 +4744,64 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "name": "绝缘胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷",
+         *           "quantity": "60"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "name": "尼龙扎带",
+         *           "model_spec": "4×200mm 白色",
+         *           "unit_name": "包",
+         *           "quantity": "35"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "name": "线号管",
+         *           "model_spec": "φ2.5 白色",
+         *           "unit_name": "卷",
+         *           "quantity": "12"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "name": "铜接线端子",
+         *           "model_spec": "DT-70",
          *           "unit_name": "个",
-         *           "quantity": "10.000"
+         *           "quantity": "40"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "name": "镀锌线槽",
+         *           "model_spec": "100×50mm",
+         *           "unit_name": "米",
+         *           "quantity": "60"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "name": "砂纸",
+         *           "model_spec": "400 目",
+         *           "unit_name": "张",
+         *           "quantity": "200"
+         *         },
+         *         {
+         *           "id": 7,
+         *           "name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个",
+         *           "quantity": "1500"
+         *         },
+         *         {
+         *           "id": 8,
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "quantity": "30"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 8
          *     }
          */
         Page_MiniProgramLiteInventoryItemRead_: {
@@ -3929,15 +4820,64 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "material_code": "DQ-000123",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "material_code": "E011-00237",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "material_code": "E011-00241",
+         *           "name": "交流接触器辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "material_code": "E011-00312",
+         *           "name": "小型断路器",
+         *           "model_spec": "C65N-C16/2P",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "material_code": "E011-00315",
+         *           "name": "漏电保护断路器",
+         *           "model_spec": "DZ47LE-32 C32/2P",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "material_code": "E011-00327",
+         *           "name": "热继电器",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "material_code": "E011-00335",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 7,
+         *           "material_code": "E011-00338",
+         *           "name": "时间继电器",
+         *           "model_spec": "ST3PA-B AC220V",
+         *           "unit_name": "个"
+         *         },
+         *         {
+         *           "id": 8,
+         *           "material_code": "E011-00402",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
          *           "unit_name": "个"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 8
          *     }
          */
         Page_MiniProgramMaterialCodeRead_: {
@@ -3955,26 +4895,43 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "operation_id": 1,
-         *           "operation_no": "CL-20260913-0001",
-         *           "operation_type": "operation_type-示例",
-         *           "material_name": "交流接触器",
-         *           "model_spec": "CJX2-2510",
+         *           "operation_id": 13,
+         *           "operation_no": "OUT20260912000013",
+         *           "operation_type": "OUTBOUND",
+         *           "material_name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
          *           "unit_name": "个",
-         *           "quantity": "10.000",
-         *           "before_qty": "45.000",
-         *           "after_qty": "42.000",
-         *           "occurred_at": "2026-09-13T10:30:00+08:00",
-         *           "business_reason": "盘点差异修正",
-         *           "receiver_unit": "receiver_unit-示例",
-         *           "receiver_name": "低压电器",
-         *           "subitem_no": "01",
-         *           "executed_by": "executed_by-示例"
+         *           "quantity": "50",
+         *           "before_qty": "800",
+         *           "after_qty": "750",
+         *           "occurred_at": "2026-09-12T15:40:00+08:00",
+         *           "business_reason": "现场检修配线耗材领用",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "孙浩宇",
+         *           "subitem_no": "305",
+         *           "executed_by": "孙浩宇"
+         *         },
+         *         {
+         *           "operation_id": 12,
+         *           "operation_no": "OUT20260911000012",
+         *           "operation_type": "OUTBOUND",
+         *           "material_name": "万能转换开关",
+         *           "model_spec": "LW39-16B",
+         *           "unit_name": "个",
+         *           "quantity": "4",
+         *           "before_qty": "20",
+         *           "after_qty": "16",
+         *           "occurred_at": "2026-09-11T10:20:00+08:00",
+         *           "business_reason": "就地操作箱检修备件领用",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "孙浩宇",
+         *           "subitem_no": "305",
+         *           "executed_by": "孙浩宇"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 2
          *     }
          */
         Page_MiniProgramOperationRead_: {
@@ -3993,20 +4950,80 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "plan_no": "CL-20260913-0001",
-         *           "plan_date": "2026-09-13",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "plan_no": "PLAN-20260805-001",
+         *           "plan_date": "2026-08-05",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "planned_qty": "10.000",
-         *           "actual_demand_person": "赵六",
-         *           "purchase_responsible": "王五",
+         *           "planned_qty": "20",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "urgency": "正常"
+         *         },
+         *         {
+         *           "id": 2,
+         *           "plan_no": "PLAN-20260805-002",
+         *           "plan_date": "2026-08-05",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "planned_qty": "20",
+         *           "actual_demand_person": "王海涛",
+         *           "purchase_responsible": "吴德海",
+         *           "urgency": "正常"
+         *         },
+         *         {
+         *           "id": 3,
+         *           "plan_no": "PLAN-20260812-001",
+         *           "plan_date": "2026-08-12",
+         *           "name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台",
+         *           "planned_qty": "1",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "urgency": "正常"
+         *         },
+         *         {
+         *           "id": 4,
+         *           "plan_no": "PLAN-20260820-001",
+         *           "plan_date": "2026-08-20",
+         *           "name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米",
+         *           "planned_qty": "80",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "urgency": "正常"
+         *         },
+         *         {
+         *           "id": 5,
+         *           "plan_no": "PLAN-20260905-001",
+         *           "plan_date": "2026-09-05",
+         *           "name": "防爆挠性连接管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根",
+         *           "planned_qty": "10",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "urgency": "正常"
+         *         },
+         *         {
+         *           "id": 6,
+         *           "plan_no": "PLAN-20260820-002",
+         *           "plan_date": "2026-08-20",
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "planned_qty": "10",
+         *           "actual_demand_person": "刘振华",
+         *           "purchase_responsible": "吴德海",
          *           "urgency": "正常"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 6
          *     }
          */
         Page_MiniProgramPurchasePlanItemRead_: {
@@ -4026,39 +5043,122 @@ export interface components {
          *         {
          *           "line_id": 1,
          *           "material_name": "交流接触器",
-         *           "model_spec": "CJX2-2510",
-         *           "purchase_order_no": "申购单-2026年09月13日",
-         *           "trace_no": "HX2026080001",
-         *           "status": "正常",
+         *           "model_spec": "CJX2-2510 AC220V",
+         *           "purchase_order_no": "申购 2026/8/20",
+         *           "trace_no": "HX20260820001",
+         *           "status": "已入库",
          *           "unit_name": "个",
-         *           "purchase_qty": "10.000",
-         *           "plan_date": "2026-09-13",
-         *           "subitem_no": "01",
-         *           "material_code": "DQ-000123",
-         *           "category": "低压电器",
-         *           "plan_no": "CL-20260913-0001",
-         *           "demand_department": "电气自动化车间",
-         *           "actual_demand_person": "赵六",
-         *           "purchase_responsible": "王五",
-         *           "usage": "设备检修更换",
-         *           "remark": "无",
-         *           "purchase_date": "2026-09-13",
-         *           "salesperson": "李四",
-         *           "images": [
-         *             {
-         *               "id": 1,
-         *               "original_name": "stock-material-20260913.png",
-         *               "mime_type": "image/png",
-         *               "size_bytes": 204800,
-         *               "width": 800,
-         *               "height": 600
-         *             }
-         *           ]
+         *           "purchase_qty": "20",
+         *           "plan_date": "2026-08-05",
+         *           "subitem_no": "201",
+         *           "material_code": "E011-00237",
+         *           "category": "备品备件",
+         *           "plan_no": "PLAN-20260805-001",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "usage": "1#回转窑控制柜检修备件补充",
+         *           "remark": "8 月低压电器备件整单申购",
+         *           "purchase_date": "2026-08-20",
+         *           "salesperson": "马晓东",
+         *           "images": []
+         *         },
+         *         {
+         *           "line_id": 2,
+         *           "material_name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "purchase_order_no": "申购 2026/8/20",
+         *           "trace_no": "HX20260820001",
+         *           "status": "部分入库",
+         *           "unit_name": "个",
+         *           "purchase_qty": "20",
+         *           "plan_date": "2026-08-05",
+         *           "subitem_no": "305",
+         *           "material_code": "E011-00402",
+         *           "category": "消耗物资",
+         *           "plan_no": "PLAN-20260805-002",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "actual_demand_person": "王海涛",
+         *           "purchase_responsible": "吴德海",
+         *           "usage": "仪表柜保险批量更换",
+         *           "remark": "8 月低压电器备件整单申购",
+         *           "purchase_date": "2026-08-20",
+         *           "salesperson": "马晓东",
+         *           "images": []
+         *         },
+         *         {
+         *           "line_id": 3,
+         *           "material_name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "purchase_order_no": "申购 2026/9/2",
+         *           "trace_no": "HX20260902001",
+         *           "status": "已采购",
+         *           "unit_name": "台",
+         *           "purchase_qty": "1",
+         *           "plan_date": "2026-08-12",
+         *           "subitem_no": "202",
+         *           "material_code": "E013-00019",
+         *           "category": "备品备件",
+         *           "plan_no": "PLAN-20260812-001",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "usage": "3#破碎机给料机变频器改造",
+         *           "remark": "变频器专项采购",
+         *           "purchase_date": "2026-09-02",
+         *           "salesperson": "徐怀志",
+         *           "images": []
+         *         },
+         *         {
+         *           "line_id": 4,
+         *           "material_name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "purchase_order_no": "申购 2026/9/9",
+         *           "trace_no": "HX20260909001",
+         *           "status": "已申购",
+         *           "unit_name": "米",
+         *           "purchase_qty": "80",
+         *           "plan_date": "2026-08-20",
+         *           "subitem_no": "202",
+         *           "material_code": "E012-00071",
+         *           "category": "备品备件",
+         *           "plan_no": "PLAN-20260820-001",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "usage": "3#破碎机电源电缆更换",
+         *           "remark": "破碎机与防爆区备件",
+         *           "purchase_date": "2026-09-09",
+         *           "salesperson": "何丽娟",
+         *           "images": []
+         *         },
+         *         {
+         *           "line_id": 5,
+         *           "material_name": "防爆挠性连接管",
+         *           "model_spec": "DN20×500mm",
+         *           "purchase_order_no": "申购 2026/9/9",
+         *           "trace_no": "HX20260909001",
+         *           "status": "已申购",
+         *           "unit_name": "根",
+         *           "purchase_qty": "10",
+         *           "plan_date": "2026-09-05",
+         *           "subitem_no": "305",
+         *           "material_code": "E011-00631",
+         *           "category": "备品备件",
+         *           "plan_no": "PLAN-20260905-001",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "usage": "防爆区域电缆穿管更换",
+         *           "remark": "破碎机与防爆区备件",
+         *           "purchase_date": "2026-09-09",
+         *           "salesperson": "何丽娟",
+         *           "images": []
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 5
          *     }
          */
         Page_MiniProgramPurchaseRecordItemRead_: {
@@ -4077,25 +5177,65 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "display_name": "张三",
-         *           "department_name": "低压电器",
+         *           "display_name": "孙浩宇",
+         *           "department_name": "检修维护部电气自动化车间",
          *           "enabled": true,
          *           "identities": [
          *             {
-         *               "id": null,
-         *               "app_id": null,
-         *               "wechat_openid": null,
-         *               "created_at": null
+         *               "id": 11,
+         *               "app_id": "wx9d2f1c8a5b3e4701",
+         *               "wechat_openid": "oHXNI-9f3c1d2a8b7e4f5c",
+         *               "created_at": "2026-08-14T10:20:00+08:00"
+         *             },
+         *             {
+         *               "id": 12,
+         *               "app_id": "wx4b7e0a6d2c918f35",
+         *               "wechat_openid": "oHXNI-1a2b3c4d5e6f7a8b",
+         *               "created_at": "2026-09-02T09:35:00+08:00"
          *             }
          *           ],
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "created_at": "2026-08-14T10:20:00+08:00",
+         *           "updated_at": "2026-09-02T09:35:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 2,
+         *           "display_name": "李建军",
+         *           "department_name": "检修维护部电气自动化车间",
+         *           "enabled": true,
+         *           "identities": [
+         *             {
+         *               "id": 21,
+         *               "app_id": "wx9d2f1c8a5b3e4701",
+         *               "wechat_openid": "oHXNI-2c4d6e8f0a1b3c5d",
+         *               "created_at": "2026-08-14T10:26:00+08:00"
+         *             }
+         *           ],
+         *           "created_at": "2026-08-14T10:26:00+08:00",
+         *           "updated_at": "2026-08-14T10:26:00+08:00",
          *           "version": 1
+         *         },
+         *         {
+         *           "id": 3,
+         *           "display_name": "王海涛",
+         *           "department_name": "检修维护部电气自动化车间",
+         *           "enabled": false,
+         *           "identities": [
+         *             {
+         *               "id": 31,
+         *               "app_id": "wx9d2f1c8a5b3e4701",
+         *               "wechat_openid": "oHXNI-3e5f7a9b1c2d4e6f",
+         *               "created_at": "2026-08-15T08:12:00+08:00"
+         *             }
+         *           ],
+         *           "created_at": "2026-08-15T08:12:00+08:00",
+         *           "updated_at": "2026-09-04T11:02:00+08:00",
+         *           "version": 2
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 3
          *     }
          */
         Page_MiniProgramUserRead_: {
@@ -4114,43 +5254,424 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "plan_no": "CL-20260913-0001",
-         *           "plan_date": "2026-09-13",
-         *           "material_code": "DQ-000123",
-         *           "category": "低压电器",
+         *           "plan_no": "PLAN-20260805-001",
+         *           "plan_date": "2026-08-05",
+         *           "material_code": "E011-00237",
+         *           "category": "备品备件",
          *           "urgency": "正常",
-         *           "demand_department": "电气自动化车间",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "actual_demand_person": "赵六",
-         *           "purchase_responsible": "王五",
-         *           "planned_qty": "10.000",
-         *           "usage": "设备检修更换",
-         *           "subitem_no": "01",
-         *           "remark": "无",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "20",
+         *           "usage": "1#回转窑控制柜检修备件补充",
+         *           "subitem_no": "201",
+         *           "remark": null,
          *           "stock_material_id": 1,
-         *           "stock_material_name": "低压电器",
+         *           "stock_material_name": "交流接触器",
          *           "status": "正常",
          *           "moved_to_record": true,
-         *           "images": [
-         *             {
-         *               "id": null,
-         *               "original_name": null,
-         *               "mime_type": null,
-         *               "size_bytes": null,
-         *               "width": null,
-         *               "height": null
-         *             }
-         *           ],
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "images": [],
+         *           "created_at": "2026-08-05T08:30:00+08:00",
+         *           "updated_at": "2026-08-05T08:30:00+08:00",
+         *           "version": 3
+         *         },
+         *         {
+         *           "id": 2,
+         *           "plan_no": "PLAN-20260805-002",
+         *           "plan_date": "2026-08-05",
+         *           "material_code": "E011-00402",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "王海涛",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "20",
+         *           "usage": "仪表柜保险批量更换",
+         *           "subitem_no": "305",
+         *           "remark": null,
+         *           "stock_material_id": 8,
+         *           "stock_material_name": "熔断器芯",
+         *           "status": "正常",
+         *           "moved_to_record": true,
+         *           "images": [],
+         *           "created_at": "2026-08-05T08:30:00+08:00",
+         *           "updated_at": "2026-08-05T08:30:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 3,
+         *           "plan_no": "PLAN-20260812-001",
+         *           "plan_date": "2026-08-12",
+         *           "material_code": "E013-00019",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "1",
+         *           "usage": "3#破碎机给料机变频器改造",
+         *           "subitem_no": "202",
+         *           "remark": null,
+         *           "stock_material_id": 20,
+         *           "stock_material_name": "变频器",
+         *           "status": "正常",
+         *           "moved_to_record": true,
+         *           "images": [],
+         *           "created_at": "2026-08-12T08:30:00+08:00",
+         *           "updated_at": "2026-08-12T08:30:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 4,
+         *           "plan_no": "PLAN-20260820-001",
+         *           "plan_date": "2026-08-20",
+         *           "material_code": "E012-00071",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "80",
+         *           "usage": "3#破碎机电源电缆更换",
+         *           "subitem_no": "202",
+         *           "remark": null,
+         *           "stock_material_id": 18,
+         *           "stock_material_name": "铜芯电力电缆",
+         *           "status": "正常",
+         *           "moved_to_record": true,
+         *           "images": [],
+         *           "created_at": "2026-08-20T08:30:00+08:00",
+         *           "updated_at": "2026-08-20T08:30:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 5,
+         *           "plan_no": "PLAN-20260905-001",
+         *           "plan_date": "2026-09-05",
+         *           "material_code": "E011-00631",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "防爆挠性连接管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "10",
+         *           "usage": "防爆区域电缆穿管更换",
+         *           "subitem_no": "305",
+         *           "remark": null,
+         *           "stock_material_id": 15,
+         *           "stock_material_name": "防爆挠性连接管",
+         *           "status": "正常",
+         *           "moved_to_record": true,
+         *           "images": [],
+         *           "created_at": "2026-09-05T08:30:00+08:00",
+         *           "updated_at": "2026-09-05T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 6,
+         *           "plan_no": "PLAN-20260820-002",
+         *           "plan_date": "2026-08-20",
+         *           "material_code": "E011-00644",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "刘振华",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "10",
+         *           "usage": "仪表班万用表保险管补充",
+         *           "subitem_no": "305",
+         *           "remark": null,
+         *           "stock_material_id": 16,
+         *           "stock_material_name": "万用表保险管",
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-08-20T08:30:00+08:00",
+         *           "updated_at": "2026-08-20T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 7,
+         *           "plan_no": "PLAN-20260828-001",
+         *           "plan_date": "2026-08-28",
+         *           "material_code": null,
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "镀锌线槽",
+         *           "model_spec": "100×50mm",
+         *           "unit_name": "米",
+         *           "actual_demand_person": "杨明辉",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "60",
+         *           "usage": "电缆桥架整改",
+         *           "subitem_no": "401",
+         *           "remark": "待采购部门补物资编码",
+         *           "stock_material_id": null,
+         *           "stock_material_name": null,
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-08-28T08:30:00+08:00",
+         *           "updated_at": "2026-08-28T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 8,
+         *           "plan_no": "PLAN-20260902-001",
+         *           "plan_date": "2026-09-02",
+         *           "material_code": "E011-00335",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "周立新",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "12",
+         *           "usage": "DCS 信号回路备件补充",
+         *           "subitem_no": "201",
+         *           "remark": "低库存补库：现库存 7 个，低于下限 8 个",
+         *           "stock_material_id": 6,
+         *           "stock_material_name": "中间继电器",
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-02T08:30:00+08:00",
+         *           "updated_at": "2026-09-02T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 9,
+         *           "plan_no": "PLAN-20260905-002",
+         *           "plan_date": "2026-09-05",
+         *           "material_code": "E011-00521",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "孙浩宇",
+         *           "purchase_responsible": "黄立群",
+         *           "planned_qty": "30",
+         *           "usage": "就地操作箱指示灯更换",
+         *           "subitem_no": "305",
+         *           "remark": "低库存补库：现库存 8 个，低于下限 20 个",
+         *           "stock_material_id": 12,
+         *           "stock_material_name": "指示灯",
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-05T08:30:00+08:00",
+         *           "updated_at": "2026-09-05T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 10,
+         *           "plan_no": "PLAN-20260905-003",
+         *           "plan_date": "2026-09-05",
+         *           "material_code": "E011-00540",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "接近开关",
+         *           "model_spec": "LJ12A3-4-Z/BX",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "孙浩宇",
+         *           "purchase_responsible": "黄立群",
+         *           "planned_qty": "10",
+         *           "usage": "皮带限位开关备件补充",
+         *           "subitem_no": "305",
+         *           "remark": "低库存补库：现库存 6 个，低于下限 10 个",
+         *           "stock_material_id": 13,
+         *           "stock_material_name": "接近开关",
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-05T08:30:00+08:00",
+         *           "updated_at": "2026-09-05T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 11,
+         *           "plan_no": "PLAN-20260908-001",
+         *           "plan_date": "2026-09-08",
+         *           "material_code": "E021-00006",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "温湿度控制器",
+         *           "model_spec": "WSK-SH",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "王海涛",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "6",
+         *           "usage": "配电室除湿改造",
+         *           "subitem_no": "401",
+         *           "remark": "低库存补库：现库存 0 个，低于下限 4 个",
+         *           "stock_material_id": 23,
+         *           "stock_material_name": "温湿度控制器",
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-08T08:30:00+08:00",
+         *           "updated_at": "2026-09-08T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 12,
+         *           "plan_no": "PLAN-20260911-001",
+         *           "plan_date": "2026-09-11",
+         *           "material_code": null,
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "铜接线端子",
+         *           "model_spec": "DT-70",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "周立新",
+         *           "purchase_responsible": "黄立群",
+         *           "planned_qty": "40",
+         *           "usage": "电缆头制作",
+         *           "subitem_no": "202",
+         *           "remark": "待采购部门补物资编码",
+         *           "stock_material_id": null,
+         *           "stock_material_name": null,
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-11T08:30:00+08:00",
+         *           "updated_at": "2026-09-11T08:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 13,
+         *           "plan_no": "PLAN-20260912-001",
+         *           "plan_date": "2026-09-12",
+         *           "material_code": "E011-00308",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "塑壳断路器",
+         *           "model_spec": "NM1-125S/3300 100A",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "杨明辉",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "4",
+         *           "usage": "配电柜总开关备件（暂不采购）",
+         *           "subitem_no": "301",
+         *           "remark": null,
+         *           "stock_material_id": null,
+         *           "stock_material_name": null,
+         *           "status": "暂不申购",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-12T08:30:00+08:00",
+         *           "updated_at": "2026-09-12T08:30:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 14,
+         *           "plan_no": "PLAN-20260615-001",
+         *           "plan_date": "2026-06-15",
+         *           "material_code": "E011-00241",
+         *           "category": "备品备件",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "交流接触器辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "10",
+         *           "usage": "6 月检修备件",
+         *           "subitem_no": "201",
+         *           "remark": null,
+         *           "stock_material_id": 2,
+         *           "stock_material_name": "交流接触器辅助触头",
+         *           "status": "已归档",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-06-15T08:30:00+08:00",
+         *           "updated_at": "2026-06-15T08:30:00+08:00",
+         *           "version": 4
+         *         },
+         *         {
+         *           "id": 15,
+         *           "plan_no": "PLAN-20260615-002",
+         *           "plan_date": "2026-06-15",
+         *           "material_code": "E012-00083",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "铜芯塑料线",
+         *           "model_spec": "BV 2.5mm² 蓝色",
+         *           "unit_name": "米",
+         *           "actual_demand_person": "刘振华",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "200",
+         *           "usage": "6 月柜内配线耗材",
+         *           "subitem_no": "301",
+         *           "remark": null,
+         *           "stock_material_id": 19,
+         *           "stock_material_name": "铜芯塑料线",
+         *           "status": "已归档",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-06-15T08:30:00+08:00",
+         *           "updated_at": "2026-06-15T08:30:00+08:00",
+         *           "version": 3
+         *         },
+         *         {
+         *           "id": 16,
+         *           "plan_no": "PLAN-20260913-001",
+         *           "plan_date": "2026-09-13",
+         *           "material_code": "E011-00518",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "按钮开关",
+         *           "model_spec": "LA38-11 绿色",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "孙浩宇",
+         *           "purchase_responsible": "黄立群",
+         *           "planned_qty": "40",
+         *           "usage": "就地操作箱按钮更换",
+         *           "subitem_no": "305",
+         *           "remark": "补库计划：建议申购 3 个，确认计划 40 个",
+         *           "stock_material_id": null,
+         *           "stock_material_name": null,
+         *           "status": "正常",
+         *           "moved_to_record": false,
+         *           "images": [],
+         *           "created_at": "2026-09-13T08:30:00+08:00",
+         *           "updated_at": "2026-09-13T08:30:00+08:00",
          *           "version": 1
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 16
          *     }
          */
         Page_PurchaseMaterialRead_: {
@@ -4169,39 +5690,96 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "material_code": "DQ-000123",
-         *           "category": "低压电器",
+         *           "material_code": "E014-00007",
+         *           "category": "消耗物资",
          *           "urgency": "正常",
-         *           "demand_department": "电气自动化车间",
-         *           "name": "二级库物资",
-         *           "model_spec": "CJX2-2510",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "绝缘胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷",
+         *           "actual_demand_person": "周立新",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "60",
+         *           "usage": "日常检修耗材补充",
+         *           "subitem_no": "305",
+         *           "remark": "每月按实际消耗补充",
+         *           "stock_material_id": 22,
+         *           "stock_material_name": "绝缘胶带",
+         *           "images": [],
+         *           "created_at": "2026-06-20T09:00:00+08:00",
+         *           "updated_at": "2026-09-01T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 2,
+         *           "material_code": "E011-00521",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
          *           "unit_name": "个",
-         *           "actual_demand_person": "赵六",
-         *           "purchase_responsible": "王五",
-         *           "planned_qty": "10.000",
-         *           "usage": "设备检修更换",
-         *           "subitem_no": "01",
-         *           "remark": "无",
-         *           "stock_material_id": 1,
-         *           "stock_material_name": "低压电器",
-         *           "images": [
-         *             {
-         *               "id": null,
-         *               "original_name": null,
-         *               "mime_type": null,
-         *               "size_bytes": null,
-         *               "width": null,
-         *               "height": null
-         *             }
-         *           ],
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "actual_demand_person": "孙浩宇",
+         *           "purchase_responsible": "黄立群",
+         *           "planned_qty": "30",
+         *           "usage": "柜门指示灯更换",
+         *           "subitem_no": "305",
+         *           "remark": null,
+         *           "stock_material_id": 12,
+         *           "stock_material_name": "指示灯",
+         *           "images": [],
+         *           "created_at": "2026-06-20T09:00:00+08:00",
+         *           "updated_at": "2026-09-01T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 3,
+         *           "material_code": "E011-00602",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "接线端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "planned_qty": "500",
+         *           "usage": "柜内配线耗材补充",
+         *           "subitem_no": "201",
+         *           "remark": null,
+         *           "stock_material_id": 14,
+         *           "stock_material_name": "接线端子",
+         *           "images": [],
+         *           "created_at": "2026-06-20T09:00:00+08:00",
+         *           "updated_at": "2026-09-01T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 4,
+         *           "material_code": "E011-00644",
+         *           "category": "消耗物资",
+         *           "urgency": "正常",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "name": "万用表保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "刘振华",
+         *           "purchase_responsible": "吴德海",
+         *           "planned_qty": "20",
+         *           "usage": "仪表班万用表保险管补充",
+         *           "subitem_no": "305",
+         *           "remark": "按季度补充",
+         *           "stock_material_id": 16,
+         *           "stock_material_name": "万用表保险管",
+         *           "images": [],
+         *           "created_at": "2026-06-20T09:00:00+08:00",
+         *           "updated_at": "2026-09-01T09:00:00+08:00",
          *           "version": 1
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 4
          *     }
          */
         Page_PurchasePlanTemplateRead_: {
@@ -4222,51 +5800,186 @@ export interface components {
          *           "line_id": 1,
          *           "purchase_request_id": 1,
          *           "purchase_material_id": 1,
-         *           "plan_no": "CL-20260913-0001",
-         *           "plan_date": "2026-09-13",
-         *           "purchase_order_no": "申购单-2026年09月13日",
-         *           "trace_no": "HX2026080001",
-         *           "contract_no": "HT-2026-0001",
-         *           "vessel_no": "MV HX 001",
-         *           "consolidation_date": "2026-09-13",
+         *           "plan_no": "PLAN-20260805-001",
+         *           "plan_date": "2026-08-05",
+         *           "purchase_order_no": "申购 2026/8/20",
+         *           "trace_no": "HX20260820001",
+         *           "contract_no": "HX-CG-2026-0157",
+         *           "vessel_no": "MV HXNI 03",
+         *           "consolidation_date": "2026-08-28",
          *           "consolidation_port": "Morowali",
-         *           "sailing_date": "2026-09-13",
-         *           "contract_sign_date": "2026-09-13",
-         *           "status": "正常",
-         *           "material_code": "DQ-000123",
-         *           "category": "低压电器",
-         *           "demand_department": "电气自动化车间",
+         *           "sailing_date": "2026-09-02",
+         *           "contract_sign_date": "2026-08-25",
+         *           "status": "已入库",
+         *           "material_code": "E011-00237",
+         *           "category": "备品备件",
+         *           "demand_department": "检修维护部电气自动化车间",
          *           "material_name": "交流接触器",
-         *           "model_spec": "CJX2-2510",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "purchase_qty": "10.000",
-         *           "actual_demand_person": "赵六",
-         *           "purchase_responsible": "王五",
-         *           "salesperson": "李四",
-         *           "plan_remark": "plan_remark-示例",
-         *           "record_remark": "record_remark-示例",
-         *           "usage": "设备检修更换",
-         *           "subitem_no": "01",
-         *           "images": [
-         *             {
-         *               "id": null,
-         *               "original_name": null,
-         *               "mime_type": null,
-         *               "size_bytes": null,
-         *               "width": null,
-         *               "height": null
-         *             }
-         *           ],
+         *           "purchase_qty": "20",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "salesperson": "马晓东",
+         *           "plan_remark": null,
+         *           "record_remark": "8 月低压电器备件整单申购",
+         *           "usage": "1#回转窑控制柜检修备件补充",
+         *           "subitem_no": "201",
+         *           "images": [],
          *           "stock_material_id": 1,
-         *           "purchase_date": "2026-09-13",
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "purchase_date": "2026-08-20",
+         *           "created_at": "2026-08-20T09:00:00+08:00",
+         *           "updated_at": "2026-08-20T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "line_id": 2,
+         *           "purchase_request_id": 1,
+         *           "purchase_material_id": 2,
+         *           "plan_no": "PLAN-20260805-002",
+         *           "plan_date": "2026-08-05",
+         *           "purchase_order_no": "申购 2026/8/20",
+         *           "trace_no": "HX20260820001",
+         *           "contract_no": "HX-CG-2026-0157",
+         *           "vessel_no": "MV HXNI 03",
+         *           "consolidation_date": "2026-08-28",
+         *           "consolidation_port": "Morowali",
+         *           "sailing_date": "2026-09-02",
+         *           "contract_sign_date": "2026-08-25",
+         *           "status": "部分入库",
+         *           "material_code": "E011-00402",
+         *           "category": "消耗物资",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "material_name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "purchase_qty": "20",
+         *           "actual_demand_person": "王海涛",
+         *           "purchase_responsible": "吴德海",
+         *           "salesperson": "马晓东",
+         *           "plan_remark": null,
+         *           "record_remark": "8 月低压电器备件整单申购",
+         *           "usage": "仪表柜保险批量更换",
+         *           "subitem_no": "305",
+         *           "images": [],
+         *           "stock_material_id": 8,
+         *           "purchase_date": "2026-08-20",
+         *           "created_at": "2026-08-20T09:00:00+08:00",
+         *           "updated_at": "2026-08-20T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "line_id": 3,
+         *           "purchase_request_id": 2,
+         *           "purchase_material_id": 3,
+         *           "plan_no": "PLAN-20260812-001",
+         *           "plan_date": "2026-08-12",
+         *           "purchase_order_no": "申购 2026/9/2",
+         *           "trace_no": "HX20260902001",
+         *           "contract_no": "HX-CG-2026-0172",
+         *           "vessel_no": "MV HXNI 05",
+         *           "consolidation_date": "2026-09-10",
+         *           "consolidation_port": "Morowali",
+         *           "sailing_date": "2026-09-15",
+         *           "contract_sign_date": "2026-09-04",
+         *           "status": "已采购",
+         *           "material_code": "E013-00019",
+         *           "category": "备品备件",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "material_name": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台",
+         *           "purchase_qty": "1",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "salesperson": "徐怀志",
+         *           "plan_remark": null,
+         *           "record_remark": "变频器专项采购",
+         *           "usage": "3#破碎机给料机变频器改造",
+         *           "subitem_no": "202",
+         *           "images": [],
+         *           "stock_material_id": 20,
+         *           "purchase_date": "2026-09-02",
+         *           "created_at": "2026-09-02T09:00:00+08:00",
+         *           "updated_at": "2026-09-02T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "line_id": 4,
+         *           "purchase_request_id": 3,
+         *           "purchase_material_id": 4,
+         *           "plan_no": "PLAN-20260820-001",
+         *           "plan_date": "2026-08-20",
+         *           "purchase_order_no": "申购 2026/9/9",
+         *           "trace_no": "HX20260909001",
+         *           "contract_no": "HX-CG-2026-0183",
+         *           "vessel_no": "MV HXNI 05",
+         *           "consolidation_date": "2026-09-18",
+         *           "consolidation_port": "Morowali",
+         *           "sailing_date": "2026-09-23",
+         *           "contract_sign_date": null,
+         *           "status": "已申购",
+         *           "material_code": "E012-00071",
+         *           "category": "备品备件",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "material_name": "铜芯电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米",
+         *           "purchase_qty": "80",
+         *           "actual_demand_person": "陈志远",
+         *           "purchase_responsible": "郑文斌",
+         *           "salesperson": "何丽娟",
+         *           "plan_remark": null,
+         *           "record_remark": "破碎机与防爆区备件",
+         *           "usage": "3#破碎机电源电缆更换",
+         *           "subitem_no": "202",
+         *           "images": [],
+         *           "stock_material_id": 18,
+         *           "purchase_date": "2026-09-09",
+         *           "created_at": "2026-09-09T09:00:00+08:00",
+         *           "updated_at": "2026-09-09T09:00:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "line_id": 5,
+         *           "purchase_request_id": 3,
+         *           "purchase_material_id": 5,
+         *           "plan_no": "PLAN-20260905-001",
+         *           "plan_date": "2026-09-05",
+         *           "purchase_order_no": "申购 2026/9/9",
+         *           "trace_no": "HX20260909001",
+         *           "contract_no": "HX-CG-2026-0183",
+         *           "vessel_no": "MV HXNI 05",
+         *           "consolidation_date": "2026-09-18",
+         *           "consolidation_port": "Morowali",
+         *           "sailing_date": "2026-09-23",
+         *           "contract_sign_date": null,
+         *           "status": "已申购",
+         *           "material_code": "E011-00631",
+         *           "category": "备品备件",
+         *           "demand_department": "检修维护部电气自动化车间",
+         *           "material_name": "防爆挠性连接管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根",
+         *           "purchase_qty": "10",
+         *           "actual_demand_person": "李建军",
+         *           "purchase_responsible": "吴德海",
+         *           "salesperson": "何丽娟",
+         *           "plan_remark": null,
+         *           "record_remark": "破碎机与防爆区备件",
+         *           "usage": "防爆区域电缆穿管更换",
+         *           "subitem_no": "305",
+         *           "images": [],
+         *           "stock_material_id": 15,
+         *           "purchase_date": "2026-09-09",
+         *           "created_at": "2026-09-09T09:00:00+08:00",
+         *           "updated_at": "2026-09-09T09:00:00+08:00",
          *           "version": 1
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 5
          *     }
          */
         Page_PurchaseRecordRead_: {
@@ -4284,23 +5997,26 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "token": "token-示例",
-         *           "share_type": "share_type-示例",
-         *           "item_count": 3,
-         *           "expires_at": "2026-09-13T10:30:00+08:00",
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "created_by": 1,
-         *           "created_by_name": "低压电器",
+         *           "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *           "share_type": "purchase_plan",
+         *           "item_count": 2,
+         *           "expires_at": "2026-10-13T10:30:00+08:00",
+         *           "created_at": "2026-09-13T09:40:00+08:00",
          *           "columns": [
+         *             "plan_no",
          *             "material_code",
-         *             "name",
-         *             "quantity"
-         *           ]
+         *             "material_name",
+         *             "model_spec",
+         *             "unit_name",
+         *             "planned_qty"
+         *           ],
+         *           "created_by": 3,
+         *           "created_by_name": "申购管理员"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 1
          *     }
          */
         Page_ShareListRead_: {
@@ -4319,38 +6035,517 @@ export interface components {
          *       "items": [
          *         {
          *           "id": 1,
-         *           "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *           "name": "二级库物资",
-         *           "name_id": 1,
+         *           "uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *           "name": "交流接触器",
+         *           "name_id": "E011-00237",
          *           "alias": "接触器",
-         *           "model_spec": "CJX2-2510",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "remark": "无",
-         *           "current_qty": "42.000",
+         *           "remark": "启停控制回路常用，单台控制柜 2 只",
+         *           "current_qty": "6",
          *           "images": [
          *             {
-         *               "id": null,
-         *               "original_name": null,
-         *               "mime_type": null,
-         *               "size_bytes": null,
-         *               "width": null,
-         *               "height": null
+         *               "id": "23ee8930-737f-739e-83d0-69076b428b66",
+         *               "original_name": "交流接触器-CJX2-2510-正面.jpg",
+         *               "mime_type": "image/jpeg",
+         *               "size_bytes": 486912,
+         *               "width": 1600,
+         *               "height": 1200
+         *             },
+         *             {
+         *               "id": "83f45373-5982-7707-8003-2f16a4783a0b",
+         *               "original_name": "交流接触器-CJX2-2510-铭牌.jpg",
+         *               "mime_type": "image/jpeg",
+         *               "size_bytes": 372480,
+         *               "width": 1600,
+         *               "height": 1200
          *             }
          *           ],
          *           "replenishment_policy": {
-         *             "minimum_qty": "5.000",
+         *             "minimum_qty": "8",
          *             "enabled": true,
          *             "version": 1
          *           },
          *           "has_operation_records": true,
-         *           "created_at": "2026-09-13T10:30:00+08:00",
-         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-27T10:05:00+08:00",
+         *           "version": 5
+         *         },
+         *         {
+         *           "id": 2,
+         *           "uuid": "70df5052-4879-4c20-a553-13edd372115a",
+         *           "name": "交流接触器辅助触头",
+         *           "name_id": "E011-00241",
+         *           "alias": "辅助触头",
+         *           "model_spec": "F4-22",
+         *           "unit_name": "个",
+         *           "remark": "与交流接触器配套",
+         *           "current_qty": "12",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "6",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-06T14:20:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 3,
+         *           "uuid": "21539e9e-74be-4503-a864-4b95b3c6409b",
+         *           "name": "小型断路器",
+         *           "name_id": "E011-00312",
+         *           "alias": "空开",
+         *           "model_spec": "C65N-C16/2P",
+         *           "unit_name": "个",
+         *           "remark": "照明与风机回路",
+         *           "current_qty": "18",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "10",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-14T08:40:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 4,
+         *           "uuid": "0f14e702-4b64-4180-a1e0-e3cd1c78a326",
+         *           "name": "漏电保护断路器",
+         *           "name_id": "E011-00315",
+         *           "alias": "漏保",
+         *           "model_spec": "DZ47LE-32 C32/2P",
+         *           "unit_name": "个",
+         *           "remark": "配电箱检修常用",
+         *           "current_qty": "10",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "6",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-06T10:15:00+08:00",
+         *           "version": 3
+         *         },
+         *         {
+         *           "id": 5,
+         *           "uuid": "a8638528-7c2b-47d6-a538-c32ad8b652e5",
+         *           "name": "热继电器",
+         *           "name_id": "E011-00327",
+         *           "alias": "热继",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个",
+         *           "remark": "与接触器配套做过载保护",
+         *           "current_qty": "14",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "8",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-06-18T09:15:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 6,
+         *           "uuid": "daa28adf-c3dc-4172-a257-ca92a2743d4b",
+         *           "name": "中间继电器",
+         *           "name_id": "E011-00335",
+         *           "alias": "中继",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个",
+         *           "remark": "DCS 信号回路",
+         *           "current_qty": "7",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "8",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-14T08:40:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 7,
+         *           "uuid": "16373242-dabc-4d25-ad1c-b4838854c29a",
+         *           "name": "时间继电器",
+         *           "name_id": "E011-00338",
+         *           "alias": "时间继",
+         *           "model_spec": "ST3PA-B AC220V",
+         *           "unit_name": "个",
+         *           "remark": "延时启动回路",
+         *           "current_qty": "11",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "5",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-08T11:10:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 8,
+         *           "uuid": "678854ac-1345-4126-a02d-ff410b8aeb3c",
+         *           "name": "熔断器芯",
+         *           "name_id": "E011-00402",
+         *           "alias": "熔芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "remark": "仪表柜与操作柱保险",
+         *           "current_qty": "2",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "20",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-22T16:45:00+08:00",
+         *           "version": 3
+         *         },
+         *         {
+         *           "id": 9,
+         *           "uuid": "0abfc5e1-a3b8-4d3e-abde-6c3a9745ffee",
+         *           "name": "熔断器底座",
+         *           "name_id": "E011-00405",
+         *           "alias": "熔座",
+         *           "model_spec": "RT18-32 3P",
+         *           "unit_name": "个",
+         *           "remark": "与熔断器芯配套",
+         *           "current_qty": "28",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "10",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": false,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-06-05T09:10:00+08:00",
          *           "version": 1
+         *         },
+         *         {
+         *           "id": 10,
+         *           "uuid": "27f1e71b-a7e4-4ac4-abd8-4a0427b61e25",
+         *           "name": "智能电机保护器",
+         *           "name_id": "E011-00451",
+         *           "alias": "保护器",
+         *           "model_spec": "M60-2P 5A",
+         *           "unit_name": "个",
+         *           "remark": "低压电机保护",
+         *           "current_qty": "7",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "4",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-06-18T09:15:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 11,
+         *           "uuid": "e074f34a-e152-415b-aa6c-71dcad6b32c7",
+         *           "name": "万能转换开关",
+         *           "name_id": "E011-00511",
+         *           "alias": "转换开关",
+         *           "model_spec": "LW39-16B",
+         *           "unit_name": "个",
+         *           "remark": "就地操作箱",
+         *           "current_qty": "16",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "8",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-11T10:20:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 12,
+         *           "uuid": "e6b552e0-a58c-473f-a42f-47f420cf1943",
+         *           "name": "指示灯",
+         *           "name_id": "E011-00521",
+         *           "alias": "指示灯",
+         *           "model_spec": "AD16-22D AC220V 红色",
+         *           "unit_name": "个",
+         *           "remark": "柜门指示",
+         *           "current_qty": "8",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "20",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-11T10:20:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 13,
+         *           "uuid": "7283b750-e77c-4245-a63f-82304d8e0be5",
+         *           "name": "接近开关",
+         *           "name_id": "E011-00540",
+         *           "alias": "接近开关",
+         *           "model_spec": "LJ12A3-4-Z/BX",
+         *           "unit_name": "个",
+         *           "remark": "皮带跑偏与限位检测",
+         *           "current_qty": "6",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "10",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-14T08:40:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 14,
+         *           "uuid": "4472cf85-d9fc-4ab1-a362-eb7c4f5a18c4",
+         *           "name": "接线端子",
+         *           "name_id": "E011-00602",
+         *           "alias": "端子",
+         *           "model_spec": "UK-2.5B 灰",
+         *           "unit_name": "个",
+         *           "remark": "柜内配线耗材",
+         *           "current_qty": "750",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "200",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-12T15:40:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 15,
+         *           "uuid": "0318bb07-d7cb-4854-afc7-55c150a188c0",
+         *           "name": "防爆挠性连接管",
+         *           "name_id": "E011-00631",
+         *           "alias": "防爆管",
+         *           "model_spec": "DN20×500mm",
+         *           "unit_name": "根",
+         *           "remark": "防爆区电缆穿管",
+         *           "current_qty": "7",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "10",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-15T09:50:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 16,
+         *           "uuid": "1ba2329b-4af2-4c65-a794-8ba6826e4c14",
+         *           "name": "万用表保险管",
+         *           "name_id": "E011-00644",
+         *           "alias": "保险管",
+         *           "model_spec": "DMM-11A 10A",
+         *           "unit_name": "个",
+         *           "remark": "仪表班万用表备件",
+         *           "current_qty": "18",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "10",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-22T16:45:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 17,
+         *           "uuid": "66709e72-8c4d-4e06-a68c-ad9d3c16ecd9",
+         *           "name": "铜芯控制电缆",
+         *           "name_id": "E012-00058",
+         *           "alias": "控制电缆",
+         *           "model_spec": "KVV 4×1.5mm²",
+         *           "unit_name": "米",
+         *           "remark": "控制回路敷设",
+         *           "current_qty": "320",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "100",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-06T14:20:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 18,
+         *           "uuid": "f1413603-dc01-455f-ad95-0be0be8797c7",
+         *           "name": "铜芯电力电缆",
+         *           "name_id": "E012-00071",
+         *           "alias": "电力电缆",
+         *           "model_spec": "YJV 3×25+1×16mm²",
+         *           "unit_name": "米",
+         *           "remark": "动力回路敷设",
+         *           "current_qty": "45",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "60",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-15T09:50:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 19,
+         *           "uuid": "199af5cf-4f06-468e-a859-5a78c5c2fd75",
+         *           "name": "铜芯塑料线",
+         *           "name_id": "E012-00083",
+         *           "alias": "塑料线",
+         *           "model_spec": "BV 2.5mm² 蓝色",
+         *           "unit_name": "米",
+         *           "remark": "柜内配线耗材",
+         *           "current_qty": "800",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "200",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-07-14T08:40:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 20,
+         *           "uuid": "859cd33a-1ec1-45e3-a853-04de0242ca2a",
+         *           "name": "变频器",
+         *           "name_id": "E013-00019",
+         *           "alias": "变频器",
+         *           "model_spec": "ATV310HU22N4A 2.2kW",
+         *           "unit_name": "台",
+         *           "remark": "给料机变频驱动，拆机件需确认参数",
+         *           "current_qty": "2",
+         *           "images": [
+         *             {
+         *               "id": "060c804f-0af9-77cc-8fd4-3bf22b5361a5",
+         *               "original_name": "变频器-ATV310-铭牌.jpg",
+         *               "mime_type": "image/jpeg",
+         *               "size_bytes": 512640,
+         *               "width": 1600,
+         *               "height": 1200
+         *             }
+         *           ],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "1",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-08-15T09:50:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 21,
+         *           "uuid": "39dd0941-748a-42bb-aeef-50d078729768",
+         *           "name": "软启动器",
+         *           "name_id": "E013-00024",
+         *           "alias": "软启",
+         *           "model_spec": "STR022L-3 22kW",
+         *           "unit_name": "台",
+         *           "remark": "皮带机软启动",
+         *           "current_qty": "1",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "1",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-08T11:10:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 22,
+         *           "uuid": "5df26cc4-c7fb-4e7c-a17f-70004cec7d6d",
+         *           "name": "绝缘胶带",
+         *           "name_id": "E014-00007",
+         *           "alias": "胶带",
+         *           "model_spec": "3M 1600 18mm×20m 黑色",
+         *           "unit_name": "卷",
+         *           "remark": "日常检修耗材",
+         *           "current_qty": "55",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "20",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-11T10:20:00+08:00",
+         *           "version": 2
+         *         },
+         *         {
+         *           "id": 23,
+         *           "uuid": "0a757c16-09f0-4afe-aee7-5e6486076850",
+         *           "name": "温湿度控制器",
+         *           "name_id": "E021-00006",
+         *           "alias": "温湿度",
+         *           "model_spec": "WSK-SH",
+         *           "unit_name": "个",
+         *           "remark": "配电室除湿控制",
+         *           "current_qty": "0",
+         *           "images": [],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "4",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-06-05T09:10:00+08:00",
+         *           "updated_at": "2026-09-08T11:10:00+08:00",
+         *           "version": 3
          *         }
          *       ],
          *       "page": 1,
-         *       "page_size": 20,
-         *       "total": 128
+         *       "page_size": 50,
+         *       "total": 23
          *     }
          */
         Page_StockMaterialRead_: {
@@ -4368,39 +6563,564 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "id": 1,
-         *           "operation_no": "CL-20260913-0001",
-         *           "operation_type": "operation_type-示例",
-         *           "occurred_at": "2026-09-13T10:30:00+08:00",
-         *           "business_reason": "盘点差异修正",
-         *           "receiver_unit": "receiver_unit-示例",
-         *           "receiver_name": "低压电器",
-         *           "subitem_no": "01",
-         *           "source_type": "source_type-示例",
-         *           "reversal_of_id": 1,
+         *           "id": 13,
+         *           "operation_no": "OUT20260912000013",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-09-12T15:40:00+08:00",
+         *           "business_reason": "现场检修配线耗材领用",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "孙浩宇",
+         *           "subitem_no": "305",
+         *           "source_type": "MINI_PROGRAM",
+         *           "reversal_of_id": null,
          *           "is_reversed": false,
-         *           "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
-         *           "mini_program_user_name": "低压电器",
+         *           "client_request_id": "fe1d3470-9372-4c9a-a17a-14ef398a1d43",
+         *           "mini_program_user_name": "孙浩宇",
          *           "lines": [
          *             {
-         *               "id": null,
-         *               "stock_material_id": null,
-         *               "material_name": null,
-         *               "model_spec": null,
-         *               "unit_name": null,
-         *               "quantity": null,
-         *               "remaining_qty": null,
-         *               "before_qty": null,
-         *               "after_qty": null
+         *               "id": 131,
+         *               "stock_material_id": 14,
+         *               "material_name": "接线端子",
+         *               "model_spec": "UK-2.5B 灰",
+         *               "unit_name": "个",
+         *               "quantity": "50",
+         *               "remaining_qty": "50",
+         *               "before_qty": "800",
+         *               "after_qty": "750"
          *             }
          *           ],
-         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "created_at": "2026-09-12T15:40:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 12,
+         *           "operation_no": "OUT20260911000012",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-09-11T10:20:00+08:00",
+         *           "business_reason": "就地操作箱检修备件领用",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "孙浩宇",
+         *           "subitem_no": "305",
+         *           "source_type": "MINI_PROGRAM",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "4fce1766-a555-41b0-a8cc-8e846a49b22f",
+         *           "mini_program_user_name": "孙浩宇",
+         *           "lines": [
+         *             {
+         *               "id": 121,
+         *               "stock_material_id": 11,
+         *               "material_name": "万能转换开关",
+         *               "model_spec": "LW39-16B",
+         *               "unit_name": "个",
+         *               "quantity": "4",
+         *               "remaining_qty": "4",
+         *               "before_qty": "20",
+         *               "after_qty": "16"
+         *             },
+         *             {
+         *               "id": 122,
+         *               "stock_material_id": 12,
+         *               "material_name": "指示灯",
+         *               "model_spec": "AD16-22D AC220V 红色",
+         *               "unit_name": "个",
+         *               "quantity": "22",
+         *               "remaining_qty": "22",
+         *               "before_qty": "30",
+         *               "after_qty": "8"
+         *             },
+         *             {
+         *               "id": 123,
+         *               "stock_material_id": 22,
+         *               "material_name": "绝缘胶带",
+         *               "model_spec": "3M 1600 18mm×20m 黑色",
+         *               "unit_name": "卷",
+         *               "quantity": "25",
+         *               "remaining_qty": "25",
+         *               "before_qty": "80",
+         *               "after_qty": "55"
+         *             }
+         *           ],
+         *           "created_at": "2026-09-11T10:20:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 11,
+         *           "operation_no": "OUT20260908000011",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-09-08T11:10:00+08:00",
+         *           "business_reason": "2#皮带机启动回路检修",
+         *           "receiver_unit": "电气检修一班",
+         *           "receiver_name": "杨明辉",
+         *           "subitem_no": "305",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "a3a7c326-bc85-4e23-a493-a774256dc858",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 111,
+         *               "stock_material_id": 7,
+         *               "material_name": "时间继电器",
+         *               "model_spec": "ST3PA-B AC220V",
+         *               "unit_name": "个",
+         *               "quantity": "4",
+         *               "remaining_qty": "4",
+         *               "before_qty": "15",
+         *               "after_qty": "11"
+         *             },
+         *             {
+         *               "id": 112,
+         *               "stock_material_id": 21,
+         *               "material_name": "软启动器",
+         *               "model_spec": "STR022L-3 22kW",
+         *               "unit_name": "台",
+         *               "quantity": "1",
+         *               "remaining_qty": "1",
+         *               "before_qty": "2",
+         *               "after_qty": "1"
+         *             },
+         *             {
+         *               "id": 113,
+         *               "stock_material_id": 23,
+         *               "material_name": "温湿度控制器",
+         *               "model_spec": "WSK-SH",
+         *               "unit_name": "个",
+         *               "quantity": "3",
+         *               "remaining_qty": "3",
+         *               "before_qty": "3",
+         *               "after_qty": "0"
+         *             }
+         *           ],
+         *           "created_at": "2026-09-08T11:10:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 10,
+         *           "operation_no": "IN20260906000010",
+         *           "operation_type": "INBOUND",
+         *           "occurred_at": "2026-09-06T10:15:00+08:00",
+         *           "business_reason": "领用退回：现场未使用",
+         *           "receiver_unit": null,
+         *           "receiver_name": null,
+         *           "subitem_no": null,
+         *           "source_type": "REVERSAL",
+         *           "reversal_of_id": 9,
+         *           "is_reversed": true,
+         *           "client_request_id": "7ee7f7ac-021e-4fbc-af4e-ccae067ae9b8",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 101,
+         *               "stock_material_id": 4,
+         *               "material_name": "漏电保护断路器",
+         *               "model_spec": "DZ47LE-32 C32/2P",
+         *               "unit_name": "个",
+         *               "quantity": "1",
+         *               "remaining_qty": "1",
+         *               "before_qty": "9",
+         *               "after_qty": "10"
+         *             }
+         *           ],
+         *           "created_at": "2026-09-06T10:15:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 9,
+         *           "operation_no": "OUT20260905000009",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-09-05T15:30:00+08:00",
+         *           "business_reason": "办公楼配电箱漏电保护器更换",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "刘振华",
+         *           "subitem_no": "401",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "40619b38-03f4-48ff-afa2-bc3fe6778197",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 91,
+         *               "stock_material_id": 4,
+         *               "material_name": "漏电保护断路器",
+         *               "model_spec": "DZ47LE-32 C32/2P",
+         *               "unit_name": "个",
+         *               "quantity": "3",
+         *               "remaining_qty": "2",
+         *               "before_qty": "12",
+         *               "after_qty": "9"
+         *             }
+         *           ],
+         *           "created_at": "2026-09-05T15:30:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 8,
+         *           "operation_no": "IN20260827000008",
+         *           "operation_type": "INBOUND",
+         *           "occurred_at": "2026-08-27T10:05:00+08:00",
+         *           "business_reason": "申购到货入库（合同 HX-CG-2026-0157）",
+         *           "receiver_unit": null,
+         *           "receiver_name": null,
+         *           "subitem_no": null,
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "44387aa6-ddf8-4e59-a8fa-c0fe399c57c7",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 81,
+         *               "stock_material_id": 1,
+         *               "material_name": "交流接触器",
+         *               "model_spec": "CJX2-2510 AC220V",
+         *               "unit_name": "个",
+         *               "quantity": "4",
+         *               "remaining_qty": "4",
+         *               "before_qty": "2",
+         *               "after_qty": "6"
+         *             }
+         *           ],
+         *           "created_at": "2026-08-27T10:05:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 7,
+         *           "operation_no": "OUT20260822000007",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-08-22T16:45:00+08:00",
+         *           "business_reason": "仪表柜保险检查批量更换",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "周立新",
+         *           "subitem_no": "305",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "3784aef0-42d7-4bb8-a7c4-c1b7f39cce43",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 71,
+         *               "stock_material_id": 8,
+         *               "material_name": "熔断器芯",
+         *               "model_spec": "RT18-32 10A",
+         *               "unit_name": "个",
+         *               "quantity": "22",
+         *               "remaining_qty": "22",
+         *               "before_qty": "24",
+         *               "after_qty": "2"
+         *             },
+         *             {
+         *               "id": 72,
+         *               "stock_material_id": 16,
+         *               "material_name": "万用表保险管",
+         *               "model_spec": "DMM-11A 10A",
+         *               "unit_name": "个",
+         *               "quantity": "7",
+         *               "remaining_qty": "7",
+         *               "before_qty": "25",
+         *               "after_qty": "18"
+         *             }
+         *           ],
+         *           "created_at": "2026-08-22T16:45:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 6,
+         *           "operation_no": "OUT20260815000006",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-08-15T09:50:00+08:00",
+         *           "business_reason": "3#破碎机电源电缆及防爆穿管更换",
+         *           "receiver_unit": "电气检修一班",
+         *           "receiver_name": "王海涛",
+         *           "subitem_no": "202",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "f7f7279a-6552-4a82-aac6-e0527f64625d",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 61,
+         *               "stock_material_id": 15,
+         *               "material_name": "防爆挠性连接管",
+         *               "model_spec": "DN20×500mm",
+         *               "unit_name": "根",
+         *               "quantity": "5",
+         *               "remaining_qty": "5",
+         *               "before_qty": "12",
+         *               "after_qty": "7"
+         *             },
+         *             {
+         *               "id": 62,
+         *               "stock_material_id": 18,
+         *               "material_name": "铜芯电力电缆",
+         *               "model_spec": "YJV 3×25+1×16mm²",
+         *               "unit_name": "米",
+         *               "quantity": "75",
+         *               "remaining_qty": "75",
+         *               "before_qty": "120",
+         *               "after_qty": "45"
+         *             },
+         *             {
+         *               "id": 63,
+         *               "stock_material_id": 20,
+         *               "material_name": "变频器",
+         *               "model_spec": "ATV310HU22N4A 2.2kW",
+         *               "unit_name": "台",
+         *               "quantity": "1",
+         *               "remaining_qty": "1",
+         *               "before_qty": "3",
+         *               "after_qty": "2"
+         *             }
+         *           ],
+         *           "created_at": "2026-08-15T09:50:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 5,
+         *           "operation_no": "OUT20260718000005",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-07-18T10:40:00+08:00",
+         *           "business_reason": "高压配电室除湿控制器更换",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "刘振华",
+         *           "subitem_no": "401",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "f17a0349-8a7f-4dac-ae03-ec9868a047a1",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 51,
+         *               "stock_material_id": 23,
+         *               "material_name": "温湿度控制器",
+         *               "model_spec": "WSK-SH",
+         *               "unit_name": "个",
+         *               "quantity": "5",
+         *               "remaining_qty": "5",
+         *               "before_qty": "8",
+         *               "after_qty": "3"
+         *             }
+         *           ],
+         *           "created_at": "2026-07-18T10:40:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 4,
+         *           "operation_no": "OUT20260714000004",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-07-14T08:40:00+08:00",
+         *           "business_reason": "配电室照明回路与 DCS 信号回路改造",
+         *           "receiver_unit": "电气检修一班",
+         *           "receiver_name": "陈志远",
+         *           "subitem_no": "301",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "f67e6378-a0c1-44a5-ab18-1a82e655112f",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 41,
+         *               "stock_material_id": 3,
+         *               "material_name": "小型断路器",
+         *               "model_spec": "C65N-C16/2P",
+         *               "unit_name": "个",
+         *               "quantity": "12",
+         *               "remaining_qty": "12",
+         *               "before_qty": "30",
+         *               "after_qty": "18"
+         *             },
+         *             {
+         *               "id": 42,
+         *               "stock_material_id": 6,
+         *               "material_name": "中间继电器",
+         *               "model_spec": "MY4N-GS DC24V",
+         *               "unit_name": "个",
+         *               "quantity": "7",
+         *               "remaining_qty": "7",
+         *               "before_qty": "14",
+         *               "after_qty": "7"
+         *             },
+         *             {
+         *               "id": 43,
+         *               "stock_material_id": 13,
+         *               "material_name": "接近开关",
+         *               "model_spec": "LJ12A3-4-Z/BX",
+         *               "unit_name": "个",
+         *               "quantity": "10",
+         *               "remaining_qty": "10",
+         *               "before_qty": "16",
+         *               "after_qty": "6"
+         *             },
+         *             {
+         *               "id": 44,
+         *               "stock_material_id": 19,
+         *               "material_name": "铜芯塑料线",
+         *               "model_spec": "BV 2.5mm² 蓝色",
+         *               "unit_name": "米",
+         *               "quantity": "200",
+         *               "remaining_qty": "200",
+         *               "before_qty": "1000",
+         *               "after_qty": "800"
+         *             }
+         *           ],
+         *           "created_at": "2026-07-14T08:40:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 3,
+         *           "operation_no": "OUT20260706000003",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-07-06T14:20:00+08:00",
+         *           "business_reason": "2#焙烧炉引风机控制柜更换及控制电缆敷设",
+         *           "receiver_unit": "电气检修二班",
+         *           "receiver_name": "王海涛",
+         *           "subitem_no": "201",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "0441b946-9880-4f17-ad09-4a9740d1c925",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 31,
+         *               "stock_material_id": 1,
+         *               "material_name": "交流接触器",
+         *               "model_spec": "CJX2-2510 AC220V",
+         *               "unit_name": "个",
+         *               "quantity": "6",
+         *               "remaining_qty": "6",
+         *               "before_qty": "8",
+         *               "after_qty": "2"
+         *             },
+         *             {
+         *               "id": 32,
+         *               "stock_material_id": 2,
+         *               "material_name": "交流接触器辅助触头",
+         *               "model_spec": "F4-22",
+         *               "unit_name": "个",
+         *               "quantity": "6",
+         *               "remaining_qty": "6",
+         *               "before_qty": "18",
+         *               "after_qty": "12"
+         *             },
+         *             {
+         *               "id": 33,
+         *               "stock_material_id": 17,
+         *               "material_name": "铜芯控制电缆",
+         *               "model_spec": "KVV 4×1.5mm²",
+         *               "unit_name": "米",
+         *               "quantity": "80",
+         *               "remaining_qty": "80",
+         *               "before_qty": "400",
+         *               "after_qty": "320"
+         *             }
+         *           ],
+         *           "created_at": "2026-07-06T14:20:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 2,
+         *           "operation_no": "OUT20260618000002",
+         *           "operation_type": "OUTBOUND",
+         *           "occurred_at": "2026-06-18T09:15:00+08:00",
+         *           "business_reason": "1#回转窑主电机控制柜检修更换",
+         *           "receiver_unit": "电气检修一班",
+         *           "receiver_name": "李建军",
+         *           "subitem_no": "201",
+         *           "source_type": "MANUAL",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "7ad20d2b-3af9-4cbd-a943-cb6ba2df11f1",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 21,
+         *               "stock_material_id": 1,
+         *               "material_name": "交流接触器",
+         *               "model_spec": "CJX2-2510 AC220V",
+         *               "unit_name": "个",
+         *               "quantity": "4",
+         *               "remaining_qty": "4",
+         *               "before_qty": "12",
+         *               "after_qty": "8"
+         *             },
+         *             {
+         *               "id": 22,
+         *               "stock_material_id": 5,
+         *               "material_name": "热继电器",
+         *               "model_spec": "JRS1-25/Z 4-6A",
+         *               "unit_name": "个",
+         *               "quantity": "2",
+         *               "remaining_qty": "2",
+         *               "before_qty": "16",
+         *               "after_qty": "14"
+         *             },
+         *             {
+         *               "id": 23,
+         *               "stock_material_id": 8,
+         *               "material_name": "熔断器芯",
+         *               "model_spec": "RT18-32 10A",
+         *               "unit_name": "个",
+         *               "quantity": "6",
+         *               "remaining_qty": "6",
+         *               "before_qty": "30",
+         *               "after_qty": "24"
+         *             },
+         *             {
+         *               "id": 24,
+         *               "stock_material_id": 10,
+         *               "material_name": "智能电机保护器",
+         *               "model_spec": "M60-2P 5A",
+         *               "unit_name": "个",
+         *               "quantity": "8",
+         *               "remaining_qty": "8",
+         *               "before_qty": "15",
+         *               "after_qty": "7"
+         *             }
+         *           ],
+         *           "created_at": "2026-06-18T09:15:00+08:00",
+         *           "version": 1
+         *         },
+         *         {
+         *           "id": 1,
+         *           "operation_no": "IN20260605000001",
+         *           "operation_type": "INBOUND",
+         *           "occurred_at": "2026-06-05T09:10:00+08:00",
+         *           "business_reason": "期初库存导入",
+         *           "receiver_unit": null,
+         *           "receiver_name": null,
+         *           "subitem_no": null,
+         *           "source_type": "INITIALIZATION",
+         *           "reversal_of_id": null,
+         *           "is_reversed": false,
+         *           "client_request_id": "cd2106b8-b0e3-465c-af90-3393464e64e1",
+         *           "mini_program_user_name": null,
+         *           "lines": [
+         *             {
+         *               "id": 11,
+         *               "stock_material_id": 1,
+         *               "material_name": "交流接触器",
+         *               "model_spec": "CJX2-2510 AC220V",
+         *               "unit_name": "个",
+         *               "quantity": "12",
+         *               "remaining_qty": "12",
+         *               "before_qty": "0",
+         *               "after_qty": "12"
+         *             }
+         *           ],
+         *           "created_at": "2026-06-05T09:10:00+08:00",
          *           "version": 1
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 13
          *     }
          */
         Page_StockOperationRead_: {
@@ -4418,18 +7138,18 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "id": 1,
+         *           "id": 2,
          *           "username": "warehouse",
-         *           "display_name": "张三",
+         *           "display_name": "仓库管理员",
          *           "role": "WAREHOUSE_ADMIN",
          *           "enabled": true,
          *           "version": 1,
-         *           "api_token": "api-token-example"
+         *           "api_token": "2b7e9d10-3f4a-4c8b-9e12-6a5d3f1c08b7"
          *         }
          *       ],
          *       "page": 1,
          *       "page_size": 20,
-         *       "total": 128
+         *       "total": 1
          *     }
          */
         Page_UserApiTokenRead_: {
@@ -4446,16 +7166,29 @@ export interface components {
          * PurchaseFilterOptions
          * @example {
          *       "actual_demand_persons": [
-         *         "actual_demand_persons_item-示例"
+         *         "刘振华",
+         *         "周立新",
+         *         "孙浩宇",
+         *         "李建军",
+         *         "杨明辉",
+         *         "王海涛",
+         *         "陈志远"
          *       ],
          *       "purchase_responsibles": [
-         *         "purchase_responsibles_item-示例"
+         *         "吴德海",
+         *         "郑文斌",
+         *         "黄立群"
          *       ],
          *       "subitem_nos": [
-         *         "subitem_nos_item-示例"
+         *         "201",
+         *         "202",
+         *         "301",
+         *         "305",
+         *         "401"
          *       ],
          *       "categories": [
-         *         "categories_item-示例"
+         *         "备品备件",
+         *         "消耗物资"
          *       ]
          *     }
          */
@@ -4473,23 +7206,21 @@ export interface components {
          * PurchaseMaterialCreate
          * @example {
          *       "plan_date": "2026-09-13",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "material_code": "E011-00518",
+         *       "category": "消耗物资",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "按钮开关",
+         *       "model_spec": "LA38-11 绿色",
          *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
-         *       "stock_material_id": 1,
-         *       "image_ids": [
-         *         "image_ids_item-示例"
-         *       ],
+         *       "actual_demand_person": "孙浩宇",
+         *       "purchase_responsible": "黄立群",
+         *       "planned_qty": "40",
+         *       "usage": "就地操作箱按钮更换",
+         *       "subitem_no": "305",
+         *       "remark": "",
+         *       "stock_material_id": null,
+         *       "image_ids": [],
          *       "status": "正常"
          *     }
          */
@@ -4539,38 +7270,29 @@ export interface components {
          * PurchaseMaterialRead
          * @example {
          *       "id": 1,
-         *       "plan_no": "CL-20260913-0001",
-         *       "plan_date": "2026-09-13",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "plan_no": "PLAN-20260805-001",
+         *       "plan_date": "2026-08-05",
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "planned_qty": "20",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "subitem_no": "201",
+         *       "remark": null,
          *       "stock_material_id": 1,
-         *       "stock_material_name": "低压电器",
+         *       "stock_material_name": "交流接触器",
          *       "status": "正常",
          *       "moved_to_record": true,
-         *       "images": [
-         *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
-         *         }
-         *       ],
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "images": [],
+         *       "created_at": "2026-08-05T08:30:00+08:00",
+         *       "updated_at": "2026-08-05T08:30:00+08:00",
+         *       "version": 3
          *     }
          */
         PurchaseMaterialRead: {
@@ -4634,26 +7356,24 @@ export interface components {
         /**
          * PurchaseMaterialUpdate
          * @example {
-         *       "plan_date": "2026-09-13",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "plan_date": "2026-08-05",
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "交流接触器",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "planned_qty": "20",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "subitem_no": "201",
+         *       "remark": "",
          *       "stock_material_id": 1,
-         *       "image_ids": [
-         *         "image_ids_item-示例"
-         *       ],
+         *       "image_ids": [],
          *       "status": "正常",
-         *       "version": 1
+         *       "version": 3
          *     }
          */
         PurchaseMaterialUpdate: {
@@ -4704,7 +7424,8 @@ export interface components {
          * PurchasePlanExportRequest
          * @example {
          *       "material_ids": [
-         *         1
+         *         1,
+         *         8
          *       ]
          *     }
          */
@@ -4716,18 +7437,15 @@ export interface components {
          * PurchasePlanResultExportRequest
          * @example {
          *       "columns": [
-         *         "plan_no"
+         *         "plan_no",
+         *         "material_code",
+         *         "name",
+         *         "planned_qty"
          *       ],
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "actual_demand_person": "赵六",
-         *       "empty_actual_demand_person": "张三",
-         *       "subitem_no": "01",
-         *       "empty_subitem_no": "CL-20260913-0001",
          *       "status": "正常",
-         *       "category": "低压电器",
-         *       "sort_by": "plan_no",
-         *       "sort_order": "asc"
+         *       "category": "备品备件",
+         *       "sort_by": "plan_date",
+         *       "sort_order": "desc"
          *     }
          */
         PurchasePlanResultExportRequest: {
@@ -4772,23 +7490,21 @@ export interface components {
         /**
          * PurchasePlanTemplateCreate
          * @example {
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "material_code": "E014-00007",
+         *       "category": "消耗物资",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
-         *       "stock_material_id": 1,
-         *       "image_ids": [
-         *         "image_ids_item-示例"
-         *       ]
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "绝缘胶带",
+         *       "model_spec": "3M 1600 18mm×20m 黑色",
+         *       "unit_name": "卷",
+         *       "actual_demand_person": "周立新",
+         *       "purchase_responsible": "郑文斌",
+         *       "planned_qty": "60",
+         *       "usage": "日常检修耗材补充",
+         *       "subitem_no": "305",
+         *       "remark": "每月按实际消耗补充",
+         *       "stock_material_id": 22,
+         *       "image_ids": []
          *     }
          */
         PurchasePlanTemplateCreate: {
@@ -4833,13 +7549,18 @@ export interface components {
          * PurchasePlanTemplateFilterOptions
          * @example {
          *       "actual_demand_persons": [
-         *         "actual_demand_persons_item-示例"
+         *         "刘振华",
+         *         "周立新",
+         *         "孙浩宇",
+         *         "陈志远"
          *       ],
          *       "purchase_responsibles": [
-         *         "purchase_responsibles_item-示例"
+         *         "吴德海",
+         *         "郑文斌",
+         *         "黄立群"
          *       ],
          *       "categories": [
-         *         "categories_item-示例"
+         *         "消耗物资"
          *       ]
          *     }
          */
@@ -4855,33 +7576,24 @@ export interface components {
          * PurchasePlanTemplateRead
          * @example {
          *       "id": 1,
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "material_code": "E014-00007",
+         *       "category": "消耗物资",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
-         *       "stock_material_id": 1,
-         *       "stock_material_name": "低压电器",
-         *       "images": [
-         *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
-         *         }
-         *       ],
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "绝缘胶带",
+         *       "model_spec": "3M 1600 18mm×20m 黑色",
+         *       "unit_name": "卷",
+         *       "actual_demand_person": "周立新",
+         *       "purchase_responsible": "郑文斌",
+         *       "planned_qty": "60",
+         *       "usage": "日常检修耗材补充",
+         *       "subitem_no": "305",
+         *       "remark": "每月按实际消耗补充",
+         *       "stock_material_id": 22,
+         *       "stock_material_name": "绝缘胶带",
+         *       "images": [],
+         *       "created_at": "2026-06-20T09:00:00+08:00",
+         *       "updated_at": "2026-09-01T09:00:00+08:00",
          *       "version": 1
          *     }
          */
@@ -4936,23 +7648,21 @@ export interface components {
         /**
          * PurchasePlanTemplateUpdate
          * @example {
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
+         *       "material_code": "E014-00007",
+         *       "category": "消耗物资",
          *       "urgency": "正常",
-         *       "demand_department": "电气自动化车间",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "planned_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "remark": "无",
-         *       "stock_material_id": 1,
-         *       "image_ids": [
-         *         "image_ids_item-示例"
-         *       ],
+         *       "demand_department": "检修维护部电气自动化车间",
+         *       "name": "绝缘胶带",
+         *       "model_spec": "3M 1600 18mm×20m 黑色",
+         *       "unit_name": "卷",
+         *       "actual_demand_person": "周立新",
+         *       "purchase_responsible": "郑文斌",
+         *       "planned_qty": "60",
+         *       "usage": "日常检修耗材补充",
+         *       "subitem_no": "305",
+         *       "remark": "每月按实际消耗补充",
+         *       "stock_material_id": 22,
+         *       "image_ids": [],
          *       "version": 1
          *     }
          */
@@ -5000,7 +7710,7 @@ export interface components {
          * PurchasePlanVersion
          * @example {
          *       "id": 1,
-         *       "version": 1
+         *       "version": 3
          *     }
          */
         PurchasePlanVersion: {
@@ -5013,22 +7723,33 @@ export interface components {
          * PurchaseRecordFilterOptions
          * @example {
          *       "actual_demand_persons": [
-         *         "actual_demand_persons_item-示例"
+         *         "李建军",
+         *         "王海涛",
+         *         "陈志远"
          *       ],
          *       "purchase_responsibles": [
-         *         "purchase_responsibles_item-示例"
+         *         "吴德海",
+         *         "郑文斌"
          *       ],
          *       "subitem_nos": [
-         *         "subitem_nos_item-示例"
+         *         "201",
+         *         "202",
+         *         "305"
          *       ],
          *       "categories": [
-         *         "categories_item-示例"
+         *         "备品备件",
+         *         "消耗物资"
          *       ],
          *       "salespersons": [
-         *         "salespersons_item-示例"
+         *         "何丽娟",
+         *         "徐怀志",
+         *         "马晓东"
          *       ],
          *       "statuses": [
-         *         "statuses_item-示例"
+         *         "已入库",
+         *         "已申购",
+         *         "已采购",
+         *         "部分入库"
          *       ]
          *     }
          */
@@ -5052,45 +7773,36 @@ export interface components {
          *       "line_id": 1,
          *       "purchase_request_id": 1,
          *       "purchase_material_id": 1,
-         *       "plan_no": "CL-20260913-0001",
-         *       "plan_date": "2026-09-13",
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
-         *       "consolidation_date": "2026-09-13",
+         *       "plan_no": "PLAN-20260805-001",
+         *       "plan_date": "2026-08-05",
+         *       "purchase_order_no": "申购 2026/8/20",
+         *       "trace_no": "HX20260820001",
+         *       "contract_no": "HX-CG-2026-0157",
+         *       "vessel_no": "MV HXNI 03",
+         *       "consolidation_date": "2026-08-28",
          *       "consolidation_port": "Morowali",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "status": "正常",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
-         *       "demand_department": "电气自动化车间",
+         *       "sailing_date": "2026-09-02",
+         *       "contract_sign_date": "2026-08-25",
+         *       "status": "已入库",
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
+         *       "demand_department": "检修维护部电气自动化车间",
          *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "purchase_qty": "10.000",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "salesperson": "李四",
-         *       "plan_remark": "plan_remark-示例",
-         *       "record_remark": "record_remark-示例",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "images": [
-         *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
-         *         }
-         *       ],
+         *       "purchase_qty": "20",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "salesperson": "马晓东",
+         *       "plan_remark": null,
+         *       "record_remark": "8 月低压电器备件整单申购",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "subitem_no": "201",
+         *       "images": [],
          *       "stock_material_id": 1,
-         *       "purchase_date": "2026-09-13",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "purchase_date": "2026-08-20",
+         *       "created_at": "2026-08-20T09:00:00+08:00",
+         *       "updated_at": "2026-08-20T09:00:00+08:00",
          *       "version": 1
          *     }
          */
@@ -5177,22 +7889,14 @@ export interface components {
          * PurchaseRecordResultExportRequest
          * @example {
          *       "columns": [
-         *         "purchase_qty"
+         *         "purchase_order_no",
+         *         "material_name",
+         *         "purchase_qty",
+         *         "status"
          *       ],
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "category": "低压电器",
-         *       "name": "二级库物资",
-         *       "model_spec": "CJX2-2510",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "salesperson": "李四",
-         *       "status": "正常",
-         *       "empty_status": true,
-         *       "subitem_no": "01",
-         *       "empty_subitem_no": "CL-20260913-0001",
-         *       "sort_by": "purchase_qty",
-         *       "sort_order": "asc"
+         *       "status": "已采购",
+         *       "sort_by": "purchase_date",
+         *       "sort_order": "desc"
          *     }
          */
         PurchaseRecordResultExportRequest: {
@@ -5242,15 +7946,15 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "salesperson": "李四",
-         *           "contract_no": "HT-2026-0001",
-         *           "vessel_no": "MV HX 001",
+         *           "salesperson": "何丽娟",
+         *           "contract_no": "HX-CG-2026-0183",
+         *           "vessel_no": "MV HXNI 05",
          *           "consolidation_port": "Morowali",
-         *           "consolidation_date": "2026-09-13",
-         *           "sailing_date": "2026-09-13",
-         *           "contract_sign_date": "2026-09-13",
-         *           "status": "正常",
-         *           "trace_no": "HX2026080001"
+         *           "consolidation_date": "2026-09-18",
+         *           "sailing_date": "2026-09-23",
+         *           "contract_sign_date": "2026-09-12",
+         *           "status": "已采购",
+         *           "trace_no": "HX20260909001"
          *         }
          *       ]
          *     }
@@ -5263,9 +7967,9 @@ export interface components {
          * PurchaseRecordSyncOrderApplyRead
          * @example {
          *       "applied": 1,
-         *       "not_found": 1,
+         *       "not_found": 0,
          *       "affected_headers": 1,
-         *       "affected_lines": 1
+         *       "affected_lines": 2
          *     }
          */
         PurchaseRecordSyncOrderApplyRead: {
@@ -5281,11 +7985,11 @@ export interface components {
         /**
          * PurchaseRecordSyncOrderTargetRead
          * @example {
-         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "purchase_order_no": "申购 2026/9/9",
          *       "trace_nos": [
-         *         "trace_nos_item-示例"
+         *         "HX20260909001"
          *       ],
-         *       "cursor_id": 1
+         *       "cursor_id": 2
          *     }
          */
         PurchaseRecordSyncOrderTargetRead: {
@@ -5301,15 +8005,15 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "purchase_order_no": "申购单-2026年09月13日",
+         *           "purchase_order_no": "申购 2026/9/9",
          *           "trace_nos": [
-         *             "trace_nos_item-示例"
+         *             "HX20260909001"
          *           ],
-         *           "cursor_id": 1
+         *           "cursor_id": 2
          *         }
          *       ],
-         *       "has_more": true,
-         *       "next_cursor": 1
+         *       "has_more": false,
+         *       "next_cursor": 2
          *     }
          */
         PurchaseRecordSyncOrderTargetsRead: {
@@ -5327,15 +8031,15 @@ export interface components {
          * PurchaseRecordSyncOrderUpdateItem
          * @description 整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。
          * @example {
-         *       "salesperson": "李四",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
+         *       "salesperson": "何丽娟",
+         *       "contract_no": "HX-CG-2026-0183",
+         *       "vessel_no": "MV HXNI 05",
          *       "consolidation_port": "Morowali",
-         *       "consolidation_date": "2026-09-13",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "status": "正常",
-         *       "trace_no": "HX2026080001"
+         *       "consolidation_date": "2026-09-18",
+         *       "sailing_date": "2026-09-23",
+         *       "contract_sign_date": "2026-09-12",
+         *       "status": "已采购",
+         *       "trace_no": "HX20260909001"
          *     }
          */
         PurchaseRecordSyncOrderUpdateItem: {
@@ -5362,7 +8066,7 @@ export interface components {
          * PurchaseRecordSyncResultRead
          * @example {
          *       "affected_headers": 1,
-         *       "affected_lines": 1
+         *       "affected_lines": 2
          *     }
          */
         PurchaseRecordSyncResultRead: {
@@ -5374,9 +8078,9 @@ export interface components {
         /**
          * PurchaseRecordSyncTargetRead
          * @example {
-         *       "trace_no": "HX2026080001",
-         *       "target_count": 3,
-         *       "cursor_id": 1
+         *       "trace_no": "HX20260909001",
+         *       "target_count": 2,
+         *       "cursor_id": 3
          *     }
          */
         PurchaseRecordSyncTargetRead: {
@@ -5392,13 +8096,13 @@ export interface components {
          * @example {
          *       "items": [
          *         {
-         *           "trace_no": "HX2026080001",
-         *           "target_count": 3,
-         *           "cursor_id": 1
+         *           "trace_no": "HX20260909001",
+         *           "target_count": 2,
+         *           "cursor_id": 3
          *         }
          *       ],
-         *       "has_more": true,
-         *       "next_cursor": 1
+         *       "has_more": false,
+         *       "next_cursor": 3
          *     }
          */
         PurchaseRecordSyncTargetsRead: {
@@ -5415,14 +8119,14 @@ export interface components {
         /**
          * PurchaseRecordSyncTraceUpdate
          * @example {
-         *       "salesperson": "李四",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
+         *       "salesperson": "何丽娟",
+         *       "contract_no": "HX-CG-2026-0183",
+         *       "vessel_no": "MV HXNI 05",
          *       "consolidation_port": "Morowali",
-         *       "consolidation_date": "2026-09-13",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "status": "正常"
+         *       "consolidation_date": "2026-09-18",
+         *       "sailing_date": "2026-09-23",
+         *       "contract_sign_date": "2026-09-12",
+         *       "status": "已采购"
          *     }
          */
         PurchaseRecordSyncTraceUpdate: {
@@ -5446,36 +8150,34 @@ export interface components {
         /**
          * PurchaseRecordUpdate
          * @example {
-         *       "plan_date": "2026-09-13",
-         *       "material_code": "DQ-000123",
-         *       "category": "低压电器",
-         *       "demand_department": "电气自动化车间",
+         *       "plan_date": "2026-08-05",
+         *       "material_code": "E011-00237",
+         *       "category": "备品备件",
+         *       "demand_department": "检修维护部电气自动化车间",
          *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五",
-         *       "purchase_qty": "10.000",
-         *       "usage": "设备检修更换",
-         *       "subitem_no": "01",
-         *       "plan_remark": "plan_remark-示例",
+         *       "actual_demand_person": "李建军",
+         *       "purchase_responsible": "吴德海",
+         *       "purchase_qty": "20",
+         *       "usage": "1#回转窑控制柜检修备件补充",
+         *       "subitem_no": "201",
+         *       "plan_remark": "",
          *       "stock_material_id": 1,
-         *       "image_ids": [
-         *         "image_ids_item-示例"
-         *       ],
-         *       "purchase_order_no": "申购单-2026年09月13日",
-         *       "trace_no": "HX2026080001",
-         *       "contract_no": "HT-2026-0001",
-         *       "vessel_no": "MV HX 001",
-         *       "consolidation_date": "2026-09-13",
+         *       "image_ids": [],
+         *       "vessel_no": "MV HXNI 03",
+         *       "consolidation_date": "2026-08-28",
          *       "consolidation_port": "Morowali",
-         *       "sailing_date": "2026-09-13",
-         *       "contract_sign_date": "2026-09-13",
-         *       "purchase_date": "2026-09-13",
-         *       "salesperson": "李四",
-         *       "status": "正常",
-         *       "record_remark": "record_remark-示例",
-         *       "version": 1
+         *       "sailing_date": "2026-09-02",
+         *       "contract_sign_date": "2026-08-25",
+         *       "purchase_date": "2026-08-20",
+         *       "salesperson": "马晓东",
+         *       "status": "已入库",
+         *       "version": 1,
+         *       "purchase_order_no": "申购 2026/8/20",
+         *       "trace_no": "HX20260820001",
+         *       "contract_no": "HX-CG-2026-0157",
+         *       "record_remark": "8 月低压电器备件整单申购"
          *     }
          */
         PurchaseRecordUpdate: {
@@ -5558,7 +8260,7 @@ export interface components {
         /**
          * RefreshTokenRequest
          * @example {
-         *       "refresh_token": "api-token-example"
+         *       "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q"
          *     }
          */
         RefreshTokenRequest: {
@@ -5568,7 +8270,7 @@ export interface components {
         /**
          * ReplenishmentDefaultsRead
          * @example {
-         *       "purchase_responsible": "王五",
+         *       "purchase_responsible": "吴德海",
          *       "demand_date": "2026-09-13"
          *     }
          */
@@ -5584,10 +8286,10 @@ export interface components {
         /**
          * ReplenishmentDraftCreate
          * @example {
-         *       "planned_qty": "10.000",
+         *       "planned_qty": "12",
          *       "demand_date": "2026-09-13",
-         *       "actual_demand_person": "赵六",
-         *       "purchase_responsible": "王五"
+         *       "actual_demand_person": "周立新",
+         *       "purchase_responsible": "吴德海"
          *     }
          */
         ReplenishmentDraftCreate: {
@@ -5604,7 +8306,7 @@ export interface components {
          * ReplenishmentDraftRead
          * @example {
          *       "next": "purchase_material",
-         *       "resource_id": 1
+         *       "resource_id": 17
          *     }
          */
         ReplenishmentDraftRead: {
@@ -5619,7 +8321,7 @@ export interface components {
         /**
          * ReplenishmentPolicyRead
          * @example {
-         *       "minimum_qty": "5.000",
+         *       "minimum_qty": "8",
          *       "enabled": true,
          *       "version": 1
          *     }
@@ -5638,7 +8340,7 @@ export interface components {
         /**
          * ReplenishmentPolicyWrite
          * @example {
-         *       "minimum_qty": "5.000",
+         *       "minimum_qty": "8",
          *       "enabled": true,
          *       "version": 1
          *     }
@@ -5657,12 +8359,12 @@ export interface components {
         /**
          * ReverseOperationRequest
          * @example {
-         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
-         *       "reason": "reason-示例",
+         *       "client_request_id": "07db7477-c741-4f48-abf6-2f297e48ae8e",
+         *       "reason": "领用退回：现场未使用",
          *       "lines": [
          *         {
          *           "stock_material_id": 1,
-         *           "quantity": "10.000"
+         *           "quantity": "1"
          *         }
          *       ]
          *     }
@@ -5690,15 +8392,19 @@ export interface components {
          * ShareCreateRequest
          * @description 创建匿名分享链接：把勾选的申购计划/申购记录分享为无鉴权页面。
          * @example {
-         *       "share_type": "share_type-示例",
+         *       "share_type": "purchase_plan",
          *       "item_ids": [
-         *         1
+         *         1,
+         *         8
          *       ],
-         *       "expires_in": "expires_in-示例",
+         *       "expires_in": "7d",
          *       "columns": [
+         *         "plan_no",
          *         "material_code",
-         *         "name",
-         *         "quantity"
+         *         "material_name",
+         *         "model_spec",
+         *         "unit_name",
+         *         "planned_qty"
          *       ]
          *     }
          */
@@ -5720,18 +8426,21 @@ export interface components {
          * ShareListRead
          * @description 管理端「分享链接」列表项。
          * @example {
-         *       "token": "token-示例",
-         *       "share_type": "share_type-示例",
-         *       "item_count": 3,
-         *       "expires_at": "2026-09-13T10:30:00+08:00",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "created_by": 1,
-         *       "created_by_name": "低压电器",
+         *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *       "share_type": "purchase_plan",
+         *       "item_count": 2,
+         *       "expires_at": "2026-10-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T09:40:00+08:00",
          *       "columns": [
+         *         "plan_no",
          *         "material_code",
-         *         "name",
-         *         "quantity"
-         *       ]
+         *         "material_name",
+         *         "model_spec",
+         *         "unit_name",
+         *         "planned_qty"
+         *       ],
+         *       "created_by": 3,
+         *       "created_by_name": "申购管理员"
          *     }
          */
         ShareListRead: {
@@ -5761,17 +8470,37 @@ export interface components {
          *     当 columns 为 NULL 时 items 为完整类型行；否则 items 为仅含所选列（+行身份键）的字典行，
          *     隐藏列的数据不会随响应下发。
          * @example {
-         *       "share_type": "share_type-示例",
-         *       "item_count": 3,
-         *       "expires_at": "2026-09-13T10:30:00+08:00",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "share_type": "purchase_plan",
+         *       "item_count": 2,
+         *       "expires_at": "2026-10-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T09:40:00+08:00",
          *       "columns": [
+         *         "plan_no",
          *         "material_code",
-         *         "name",
-         *         "quantity"
+         *         "material_name",
+         *         "model_spec",
+         *         "unit_name",
+         *         "planned_qty"
          *       ],
          *       "items": [
-         *         {}
+         *         {
+         *           "id": 1,
+         *           "plan_no": "PLAN-20260805-001",
+         *           "material_code": "E011-00237",
+         *           "material_name": "交流接触器",
+         *           "model_spec": "CJX2-2510 AC220V",
+         *           "unit_name": "个",
+         *           "planned_qty": "20"
+         *         },
+         *         {
+         *           "id": 8,
+         *           "plan_no": "PLAN-20260902-001",
+         *           "material_code": "E011-00335",
+         *           "material_name": "中间继电器",
+         *           "model_spec": "MY4N-GS DC24V",
+         *           "unit_name": "个",
+         *           "planned_qty": "12"
+         *         }
          *       ]
          *     }
          */
@@ -5796,15 +8525,18 @@ export interface components {
         /**
          * ShareRead
          * @example {
-         *       "token": "token-示例",
-         *       "share_type": "share_type-示例",
-         *       "item_count": 3,
-         *       "expires_at": "2026-09-13T10:30:00+08:00",
-         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "token": "0198f3a72c000000-0000-7000-8000-000000000001",
+         *       "share_type": "purchase_plan",
+         *       "item_count": 2,
+         *       "expires_at": "2026-10-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T09:40:00+08:00",
          *       "columns": [
+         *         "plan_no",
          *         "material_code",
-         *         "name",
-         *         "quantity"
+         *         "material_name",
+         *         "model_spec",
+         *         "unit_name",
+         *         "planned_qty"
          *       ]
          *     }
          */
@@ -5835,11 +8567,11 @@ export interface components {
          * @description 更新分享链接：展示列 + 到期时间。缺省/为 None 表示对应项不修改。
          * @example {
          *       "columns": [
-         *         "material_code",
-         *         "name",
-         *         "quantity"
+         *         "plan_no",
+         *         "material_name",
+         *         "planned_qty"
          *       ],
-         *       "expires_in": {}
+         *       "expires_in": "30d"
          *     }
          */
         ShareUpdateRequest: {
@@ -5855,14 +8587,14 @@ export interface components {
         /**
          * StockMaterialCreate
          * @example {
-         *       "name": "二级库物资",
-         *       "name_id": 1,
-         *       "alias": "接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "name": "塑壳断路器",
+         *       "name_id": "E011-00308",
+         *       "alias": "塑壳",
+         *       "model_spec": "NM1-125S/3300 100A",
          *       "unit_name": "个",
-         *       "remark": "无",
+         *       "remark": "配电柜总开关备件",
          *       "image_ids": [
-         *         "image_ids_item-示例"
+         *         "cc079417-9f02-79f4-8e9c-fc1053f15b75"
          *       ]
          *     }
          */
@@ -5886,33 +8618,41 @@ export interface components {
          * StockMaterialRead
          * @example {
          *       "id": 1,
-         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
-         *       "name": "二级库物资",
-         *       "name_id": 1,
+         *       "uuid": "f197715a-47e4-488d-aab6-43a5e2a76111",
+         *       "name": "交流接触器",
+         *       "name_id": "E011-00237",
          *       "alias": "接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "remark": "无",
-         *       "current_qty": "42.000",
+         *       "remark": "启停控制回路常用，单台控制柜 2 只",
+         *       "current_qty": "6",
          *       "images": [
          *         {
-         *           "id": 1,
-         *           "original_name": "stock-material-20260913.png",
-         *           "mime_type": "image/png",
-         *           "size_bytes": 204800,
-         *           "width": 800,
-         *           "height": 600
+         *           "id": "23ee8930-737f-739e-83d0-69076b428b66",
+         *           "original_name": "交流接触器-CJX2-2510-正面.jpg",
+         *           "mime_type": "image/jpeg",
+         *           "size_bytes": 486912,
+         *           "width": 1600,
+         *           "height": 1200
+         *         },
+         *         {
+         *           "id": "83f45373-5982-7707-8003-2f16a4783a0b",
+         *           "original_name": "交流接触器-CJX2-2510-铭牌.jpg",
+         *           "mime_type": "image/jpeg",
+         *           "size_bytes": 372480,
+         *           "width": 1600,
+         *           "height": 1200
          *         }
          *       ],
          *       "replenishment_policy": {
-         *         "minimum_qty": "5.000",
+         *         "minimum_qty": "8",
          *         "enabled": true,
          *         "version": 1
          *       },
          *       "has_operation_records": true,
-         *       "created_at": "2026-09-13T10:30:00+08:00",
-         *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "created_at": "2026-06-05T09:10:00+08:00",
+         *       "updated_at": "2026-08-27T10:05:00+08:00",
+         *       "version": 5
          *     }
          */
         StockMaterialRead: {
@@ -5961,16 +8701,16 @@ export interface components {
         /**
          * StockMaterialUpdate
          * @example {
-         *       "name": "二级库物资",
-         *       "name_id": 1,
-         *       "alias": "接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "name": "塑壳断路器",
+         *       "name_id": "E011-00308",
+         *       "alias": "塑壳",
+         *       "model_spec": "NM1-125S/3300 100A",
          *       "unit_name": "个",
-         *       "remark": "无",
+         *       "remark": "配电柜总开关备件",
          *       "image_ids": [
-         *         "image_ids_item-示例"
+         *         "cc079417-9f02-79f4-8e9c-fc1053f15b75"
          *       ],
-         *       "version": 1
+         *       "version": 2
          *     }
          */
         StockMaterialUpdate: {
@@ -5994,15 +8734,15 @@ export interface components {
         /**
          * StockOperationLineRead
          * @example {
-         *       "id": 1,
+         *       "id": 21,
          *       "stock_material_id": 1,
          *       "material_name": "交流接触器",
-         *       "model_spec": "CJX2-2510",
+         *       "model_spec": "CJX2-2510 AC220V",
          *       "unit_name": "个",
-         *       "quantity": "10.000",
-         *       "remaining_qty": "42.000",
-         *       "before_qty": "45.000",
-         *       "after_qty": "42.000"
+         *       "quantity": "4",
+         *       "remaining_qty": "4",
+         *       "before_qty": "12",
+         *       "after_qty": "8"
          *     }
          */
         StockOperationLineRead: {
@@ -6028,33 +8768,66 @@ export interface components {
         /**
          * StockOperationRead
          * @example {
-         *       "id": 1,
-         *       "operation_no": "CL-20260913-0001",
-         *       "operation_type": "operation_type-示例",
-         *       "occurred_at": "2026-09-13T10:30:00+08:00",
-         *       "business_reason": "盘点差异修正",
-         *       "receiver_unit": "receiver_unit-示例",
-         *       "receiver_name": "低压电器",
-         *       "subitem_no": "01",
-         *       "source_type": "source_type-示例",
-         *       "reversal_of_id": 1,
+         *       "id": 2,
+         *       "operation_no": "OUT20260618000002",
+         *       "operation_type": "OUTBOUND",
+         *       "occurred_at": "2026-06-18T09:15:00+08:00",
+         *       "business_reason": "1#回转窑主电机控制柜检修更换",
+         *       "receiver_unit": "电气检修一班",
+         *       "receiver_name": "李建军",
+         *       "subitem_no": "201",
+         *       "source_type": "MANUAL",
+         *       "reversal_of_id": null,
          *       "is_reversed": false,
-         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
-         *       "mini_program_user_name": "低压电器",
+         *       "client_request_id": "7ad20d2b-3af9-4cbd-a943-cb6ba2df11f1",
+         *       "mini_program_user_name": null,
          *       "lines": [
          *         {
-         *           "id": 1,
+         *           "id": 21,
          *           "stock_material_id": 1,
          *           "material_name": "交流接触器",
-         *           "model_spec": "CJX2-2510",
+         *           "model_spec": "CJX2-2510 AC220V",
          *           "unit_name": "个",
-         *           "quantity": "10.000",
-         *           "remaining_qty": "42.000",
-         *           "before_qty": "45.000",
-         *           "after_qty": "42.000"
+         *           "quantity": "4",
+         *           "remaining_qty": "4",
+         *           "before_qty": "12",
+         *           "after_qty": "8"
+         *         },
+         *         {
+         *           "id": 22,
+         *           "stock_material_id": 5,
+         *           "material_name": "热继电器",
+         *           "model_spec": "JRS1-25/Z 4-6A",
+         *           "unit_name": "个",
+         *           "quantity": "2",
+         *           "remaining_qty": "2",
+         *           "before_qty": "16",
+         *           "after_qty": "14"
+         *         },
+         *         {
+         *           "id": 23,
+         *           "stock_material_id": 8,
+         *           "material_name": "熔断器芯",
+         *           "model_spec": "RT18-32 10A",
+         *           "unit_name": "个",
+         *           "quantity": "6",
+         *           "remaining_qty": "6",
+         *           "before_qty": "30",
+         *           "after_qty": "24"
+         *         },
+         *         {
+         *           "id": 24,
+         *           "stock_material_id": 10,
+         *           "material_name": "智能电机保护器",
+         *           "model_spec": "M60-2P 5A",
+         *           "unit_name": "个",
+         *           "quantity": "8",
+         *           "remaining_qty": "8",
+         *           "before_qty": "15",
+         *           "after_qty": "7"
          *         }
          *       ],
-         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "created_at": "2026-06-18T09:15:00+08:00",
          *       "version": 1
          *     }
          */
@@ -6102,8 +8875,8 @@ export interface components {
         /**
          * TokenPairResponse
          * @example {
-         *       "access_token": "api-token-example",
-         *       "refresh_token": "api-token-example",
+         *       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q",
+         *       "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImV4cCI6MTc1Nzc2MDYwMH0.7Ql3Yk8mZ0dW1nXvT4bC2rP6sJ9aH5eF1uG0iO3kM8Q",
          *       "token_type": "bearer"
          *     }
          */
@@ -6122,13 +8895,13 @@ export interface components {
         /**
          * UserApiTokenRead
          * @example {
-         *       "id": 1,
+         *       "id": 2,
          *       "username": "warehouse",
-         *       "display_name": "张三",
+         *       "display_name": "仓库管理员",
          *       "role": "WAREHOUSE_ADMIN",
          *       "enabled": true,
          *       "version": 1,
-         *       "api_token": "api-token-example"
+         *       "api_token": "2b7e9d10-3f4a-4c8b-9e12-6a5d3f1c08b7"
          *     }
          */
         UserApiTokenRead: {
@@ -6163,8 +8936,8 @@ export interface components {
          * UserCreate
          * @example {
          *       "username": "warehouse",
-         *       "password": "password-示例",
-         *       "display_name": "张三",
+         *       "password": "123456",
+         *       "display_name": "仓库管理员",
          *       "role": "WAREHOUSE_ADMIN",
          *       "enabled": true
          *     }
@@ -6186,9 +8959,9 @@ export interface components {
         /**
          * UserRead
          * @example {
-         *       "id": 1,
+         *       "id": 2,
          *       "username": "warehouse",
-         *       "display_name": "张三",
+         *       "display_name": "仓库管理员",
          *       "role": "WAREHOUSE_ADMIN",
          *       "enabled": true,
          *       "version": 1
@@ -6211,11 +8984,11 @@ export interface components {
          * UserUpdate
          * @example {
          *       "username": "warehouse",
-         *       "display_name": "张三",
-         *       "password": "password-示例",
+         *       "display_name": "仓库管理员",
+         *       "password": "123456",
          *       "role": "WAREHOUSE_ADMIN",
          *       "enabled": true,
-         *       "version": 1
+         *       "version": 2
          *     }
          */
         UserUpdate: {
@@ -6234,10 +9007,10 @@ export interface components {
         /**
          * VersionInfoRead
          * @example {
-         *       "app_name": "低压电器",
-         *       "version": 1,
-         *       "commit": "commit-示例",
-         *       "build_time": "2026-09-13T02:00:00+08:00"
+         *       "app_name": "电气车间备件管理系统",
+         *       "version": "1.0.0",
+         *       "commit": "9d21f4c",
+         *       "build_time": "2026-09-13T09:00:00+08:00"
          *     }
          */
         VersionInfoRead: {
@@ -6256,14 +9029,15 @@ export interface components {
          *       "platform": "FEISHU",
          *       "enabled": true,
          *       "subscribed_events": [
-         *         {}
+         *         "stock.outbound.created",
+         *         "stock.inbound.created"
          *       ],
-         *       "webhook_url": "https://example.com/hook/token",
-         *       "secret": "secret-示例",
+         *       "webhook_url": "https://open.feishu.cn/open-apis/bot/v2/hook/8f0c2b74-5d19-4a63-9c81-2e7b4a0d5f13",
+         *       "secret": "hxni-feishu-2026Kx7Q",
          *       "webhook_configured": true,
          *       "secret_configured": true,
          *       "updated_at": "2026-09-13T10:30:00+08:00",
-         *       "version": 1
+         *       "version": 2
          *     }
          */
         WebhookChannelRead: {
@@ -6289,10 +9063,10 @@ export interface components {
          * WebhookChannelUpdate
          * @example {
          *       "enabled": true,
-         *       "webhook_url": "https://example.com/hook/token",
-         *       "secret": "secret-示例",
+         *       "webhook_url": "https://oapi.dingtalk.com/robot/send?access_token=9c1d4f7a2b6e8c0d3f5a7b9c1e2d4f60",
+         *       "secret": "hxni-dingtalk-2026Wm3T",
          *       "subscribed_events": [
-         *         {}
+         *         "stock.outbound.created"
          *       ],
          *       "version": 1
          *     }
@@ -6333,7 +9107,7 @@ export interface components {
          * @example {
          *       "platform": "FEISHU",
          *       "success": true,
-         *       "message": "操作成功"
+         *       "message": "测试消息已发送"
          *     }
          */
         WebhookTestRead: {
@@ -6346,8 +9120,8 @@ export interface components {
         /**
          * WebhookTestRequest
          * @example {
-         *       "webhook_url": "https://example.com/hook/token",
-         *       "secret": "secret-示例"
+         *       "webhook_url": "https://open.feishu.cn/open-apis/bot/v2/hook/8f0c2b74-5d19-4a63-9c81-2e7b4a0d5f13",
+         *       "secret": "hxni-feishu-2026Kx7Q"
          *     }
          */
         WebhookTestRequest: {
