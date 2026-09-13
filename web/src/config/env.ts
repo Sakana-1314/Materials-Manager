@@ -3,6 +3,16 @@ export function normalizeBaseUrl(value: string | undefined, fallback: string): s
   return baseUrl === '/' ? baseUrl : baseUrl.replace(/\/+$/, '')
 }
 
+/** 把 public/ 下的资源按构建 base 拼成正确路径。
+ *
+ * Vite 只会重写 index.html 里的绝对路径，代码里的字符串（例如 '/logo.png'）不会自动加 base，
+ * 于是子路径部署（如演示站 /Electrical-Manager/demo/）会去站点根找资源而 404。
+ * 这里统一经 import.meta.env.BASE_URL 拼接；默认 base='/' 时结果与原来完全一致。
+ */
+export function publicUrl(path: string, base: string = import.meta.env.BASE_URL): string {
+  return joinUrl(base, path)
+}
+
 export function joinUrl(baseUrl: string, path: string): string {
   const normalizedBaseUrl = baseUrl === '/' ? '' : baseUrl.replace(/\/+$/, '')
   return `${normalizedBaseUrl}/${path.replace(/^\/+/, '')}`

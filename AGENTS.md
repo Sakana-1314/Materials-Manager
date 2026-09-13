@@ -82,6 +82,9 @@ npm run build             # 类型检查 + 生产构建
 - **提交信息**：中文 + Conventional Commits 前缀（`feat` / `fix` / `style` / `chore` / `ci` / `docs` / `refactor` / `test`），一行简洁标题 + 空行 + 详细说明（可选列点）。
 - **分功能点提交**：一个逻辑改动（一个功能/一个修复）对应一个 commit；不要把无关改动混进同一 commit。
 - **分支命名**：`<type>/<kebab-case-描述>`，如 `fix/export-total-display`、`feat/share-link-columns`。
+- **public/ 资源要用 `publicUrl()` 拼 base**：Vite 只重写 `index.html` 里的绝对路径，代码里写死的
+  `'/logo.png'` 不会自动加 base，子路径部署（演示站 `/Electrical-Manager/demo/`）会 404。
+  需要引用 `web/public/` 下的资源时用 `web/src/config/env.ts` 的 `publicUrl('xxx.png')`。
 - **模板 vs JS 中 ref 的差异**：`<script setup>` 里从 composable 解构出的 `ref` 只在模板中自动解包；在 computed / 普通 JS / 模板字符串中必须写 `.value`（否则显示 `[object Object]`）。
 
 ## 数据库结构约定（必须遵守）

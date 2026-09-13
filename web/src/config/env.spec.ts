@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   joinUrl,
   normalizeBaseUrl,
+  publicUrl,
   resolveApiBaseUrl,
   resolveImageBaseUrl,
   resolveMcpUrl,
@@ -35,6 +36,19 @@ describe('构建环境配置', () => {
     )
     expect(resolveImageBaseUrl(undefined, 'https://api.example.com/api/v1')).toBe(
       'https://api.example.com/api/v1/files/images',
+    )
+  })
+
+  it('把 public 资源按构建 base 拼成路径', () => {
+    // 根路径部署：与原来的 '/logo.png' 一致，不引入行为变化
+    expect(publicUrl('logo.png', '/')).toBe('/logo.png')
+    // 子路径部署（演示站）：必须带上前缀，否则会去站点根找资源
+    expect(publicUrl('logo.png', '/Electrical-Manager/demo/')).toBe(
+      '/Electrical-Manager/demo/logo.png',
+    )
+    // 容错：路径前后多余的斜杠
+    expect(publicUrl('/logo.png', '/Electrical-Manager/demo')).toBe(
+      '/Electrical-Manager/demo/logo.png',
     )
   })
 
