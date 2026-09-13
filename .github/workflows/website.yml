@@ -65,25 +65,24 @@ jobs:
         working-directory: web
         run: npx vite build --mode demo
 
-      # 演示站要处理「深层路由被直接刷新」：站点 404 页把原路径回传，入口自带的引导脚本据此还原
-      # 路径。该属性只在演示产物里注入；业务构建没有它，引导脚本直接 return，行为完全不变。
+      # 演示站要处理「深层路由被直接刷新」：站点 404 页把原路径回传，入口自带的引导脚本据此还原。
+      # 标记名 data-demo-base 只在演示产物里出现；业务构建没有它，引导脚本直接 return，行为不变。
       - name: 给演示入口标记 base（启用深链回退）
         run: |
           set -e
-          python3 - "${{ github.workspace }}/web/dist/index.html" <<'PYEOF'
+          python3 - <<'PYEOF'
           import pathlib
-          import sys
 
-          path = pathlib.Path(sys.argv[1])
+          path = pathlib.Path("web/dist/index.html")
           html = path.read_text(encoding="utf-8")
-          assert "data-spa-fallback-base" not in html, path
           html = html.replace(
-              '<html lang="zh-CN">',
-              '<html lang="zh-CN" data-spa-fallback-base="/Electrical-Manager/demo/">',
+              "<html lang=\"zh-CN\">",
+              '<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/">',
               1,
           )
+          assert 'data-demo-base="/Electrical-Manager/demo/"' in html
           path.write_text(html, encoding="utf-8")
-          print(f"已标记 {path}")
+          print("演示入口已标记 data-demo-base")
           PYEOF
 
       - name: 把演示（Apifox Mock）放进站点输出的 demo/
@@ -105,20 +104,19 @@ jobs:
       - name: 给离线演示入口标记 base（启用深链回退）
         run: |
           set -e
-          python3 - "${{ github.workspace }}/web/dist/index.html" <<'PYEOF'
+          python3 - <<'PYEOF'
           import pathlib
-          import sys
 
-          path = pathlib.Path(sys.argv[1])
+          path = pathlib.Path("web/dist/index.html")
           html = path.read_text(encoding="utf-8")
-          assert "data-spa-fallback-base" not in html, path
           html = html.replace(
-              '<html lang="zh-CN">',
-              '<html lang="zh-CN" data-spa-fallback-base="/Electrical-Manager/demo/offline/">',
+              "<html lang=\"zh-CN\">",
+              '<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/offline/">',
               1,
           )
+          assert 'data-demo-base="/Electrical-Manager/demo/offline/"' in html
           path.write_text(html, encoding="utf-8")
-          print(f"已标记 {path}")
+          print("离线演示入口已标记 data-demo-base")
           PYEOF
 
       - name: 把离线演示放进站点输出的 demo/offline/

@@ -11,14 +11,14 @@
     <script>
       /*
        * 单页应用在静态托管上的深链回退（只对演示产物生效）：
-       * 业务构建不带 data-spa-fallback-base，本段直接 return，行为与之前完全一致。
+       * 业务构建不带 data-demo-base，本段直接 return，行为与之前完全一致。
        *
        * 刷新 /demo/.../warehouse/stock 这类深层路由时，静态托管找不到文件，会落到站点 404 页；
        * 404 页把原路径以 ?path= 回传到入口。本脚本在入口脚本执行前把它还原成真实路径，
        * 于是 history 路由照常工作——不改路由配置，也不改变正常访问时的 URL。
        */
       ;(function () {
-        var base = document.documentElement.dataset.spaFallbackBase
+        var base = document.documentElement.dataset.demoBase
         if (!base) return
         var url = new URL(window.location.href)
         var deep = url.searchParams.get('path')
