@@ -1,10 +1,20 @@
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
-import { NButton, NCard, NDialogProvider, NEmpty, NInput, NMessageProvider, NSpace } from 'naive-ui'
+import {
+  NButton,
+  NCard,
+  NDialogProvider,
+  NEmpty,
+  NInput,
+  NMessageProvider,
+  NSelect,
+  NSpace,
+} from 'naive-ui'
 import { createPinia } from 'pinia'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 import type { Memo } from '@/api/generated'
 import { memoApi } from '@/api/memos'
+import { MEMO_FONT_SIZE_STORAGE_KEY } from '@/utils/memoFontSize'
 import MemosView from './MemosView.vue'
 
 vi.mock('@/api/memos', () => ({
@@ -55,6 +65,7 @@ async function mountView(memos: Memo[]): Promise<VueWrapper> {
         NEmpty,
         NInput,
         NMessageProvider,
+        NSelect,
         NSpace,
       },
     },
@@ -191,5 +202,59 @@ describe('MemosView 新建与删除确认', () => {
 
     expect(api.deleteMemo).toHaveBeenCalledWith(1)
     expect(view.text()).toContain('还没有备忘录')
+  })
+})
+
+describe('MemosView 字号控制', () => {
+  /** 页面上承载字号的 CSS 变量（绑定在 .memo-page 的内联样式上）。 */
+  function pageFontSizeVar(): string {
+    return (
+      (wrapper?.element as HTMLElement).querySelector('.memo-page')?.getAttribute('style') ?? ''
+    )
+  }
+
+  function selectFontSize(value: number): void {
+    wrapper?.findComponent(NSelect).vm.$emit('update:value', value)
+  }
+
+  it('默认 16px，未改动前不写入浏览器本地', async () => {
+    const view = await mountView([memo()])
+
+    expect(view.find('.memo-font-size-select').exists()).toBe(true)
+    expect(view.find('.memo-font-size-label').text()).toBe('字号')
+    expect(pageFontSizeVar()).toContain('--memo-font-size: 16px')
+    // 字号靠 CSS 变量作用在编辑区内的 Naive 输入框上（标题 + 正文两个）。
+    expect(view.findAll('.memo-editor .n-input')).toHaveLength(2)
+    expect(localStorage.getItem(MEMO_FONT_SIZE_STORAGE_KEY)).toBeNull()
+  })
+
+  it('切换档位后立即生效并写入浏览器本地，且不发起任何请求', async () => {
+    await mountView([memo()])
+
+    selectFontSize(20)
+    await flushPromises()
+
+    expect(pageFontSizeVar()).toContain('--memo-font-size: 20px')
+    expect(localStorage.getItem(MEMO_FONT_SIZE_STORAGE_KEY)).toBe('20')
+    expect(api.updateMemo).not.toHaveBeenCalled()
+    expect(api.listMemos).toHaveBeenCalledTimes(1)
+  })
+
+  it('重新进入页面时恢复浏览器本地记录的字号', async () => {
+    localStorage.setItem(MEMO_FONT_SIZE_STORAGE_KEY, '24')
+    await mountView([memo()])
+
+    expect(pageFontSizeVar()).toContain('--memo-font-size: 24px')
+  })
+
+  it('本地记录为非法值或越界值时回落 16px', async () => {
+    localStorage.setItem(MEMO_FONT_SIZE_STORAGE_KEY, 'abc')
+    await mountView([memo()])
+    expect(pageFontSizeVar()).toContain('--memo-font-size: 16px')
+
+    wrapper?.unmount()
+    localStorage.setItem(MEMO_FONT_SIZE_STORAGE_KEY, '99')
+    await mountView([memo()])
+    expect(pageFontSizeVar()).toContain('--memo-font-size: 16px')
   })
 })

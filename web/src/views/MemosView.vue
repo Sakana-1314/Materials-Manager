@@ -14,6 +14,7 @@ import {
   removeMemoDraft,
   writeMemoDraft,
 } from '@/utils/memoDrafts'
+import { MEMO_FONT_SIZE_OPTIONS, readMemoFontSize, writeMemoFontSize } from '@/utils/memoFontSize'
 
 const message = useMessage()
 const dialog = useDialog()
@@ -26,6 +27,17 @@ const activeId = ref<number | null>(null)
 const loading = ref(true)
 /** 新建请求在途标记：按钮置灰并忽略重复确认，避免连点建出多条空白备忘录。 */
 const creating = ref(false)
+
+/** 编辑区字号：进入页面时读取浏览器本地记录（默认 16px），改动只落本地、不产生请求。 */
+const fontSize = ref(readMemoFontSize())
+const fontSizeOptions = MEMO_FONT_SIZE_OPTIONS.map((size) => ({
+  label: `${size}px`,
+  value: size,
+}))
+
+function changeFontSize(value: number): void {
+  fontSize.value = writeMemoFontSize(value)
+}
 
 interface MemoDraft {
   title: string
@@ -286,14 +298,23 @@ void loadMemos()
 </script>
 
 <template>
-  <div class="page memo-page">
+  <div class="page memo-page" :style="{ '--memo-font-size': `${fontSize}px` }">
     <div class="page-header">
       <div>
         <h1 class="page-title">备忘录</h1>
       </div>
-      <n-button type="primary" :loading="creating" :disabled="creating" @click="confirmCreate">
-        新建备忘录
-      </n-button>
+      <n-space :size="10" align="center">
+        <span class="memo-font-size-label">字号</span>
+        <n-select
+          class="memo-font-size-select"
+          :value="fontSize"
+          :options="fontSizeOptions"
+          @update:value="changeFontSize"
+        />
+        <n-button type="primary" :loading="creating" :disabled="creating" @click="confirmCreate">
+          新建备忘录
+        </n-button>
+      </n-space>
     </div>
 
     <n-card class="memo-card" :content-style="{ padding: '0' }">
@@ -549,6 +570,22 @@ void loadMemos()
 .memo-editor {
   display: grid;
   gap: 12px;
+}
+
+/* 字号由页头「字号」下拉控制（默认 16px）。这里只覆盖 Naive 输入框根元素的 font-size：
+   内部的 input / textarea / 自动高度镜像 / 字数统计都继承该字号，
+   自动高度测量与显示保持一致；单行输入行高固定为 --n-height，大字号也不会被裁切。 */
+.memo-editor :deep(.n-input) {
+  font-size: var(--memo-font-size, 16px);
+}
+
+.memo-font-size-label {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.memo-font-size-select {
+  width: 108px;
 }
 
 .memo-title-input {
