@@ -56,6 +56,10 @@
 - 文档页面之间互相引用用站点绝对路径（如 `/dev-data-model`、`/api-error-codes`），不要用相对路径 `../`；
   VitePress 构建会检查死链，写错会在 CI 里失败。
 - 站点文档不要写项目演进史或「以后会覆盖什么业务」，只描述当前实现与当前功能。
+- **演示站的深链刷新靠站点 404 页回退**：GitHub Pages 只回站点根目录的 `404.html`（子目录内的
+  `404.html` 不生效，已实测），所以回传脚本由 `docs/websites/scripts/inject_demo_fallback.py`
+  注入到站点 404 产物；演示入口的还原脚本在 `web/index.html`，只在带
+  `data-spa-fallback-base` 标记的演示产物里生效（业务构建直接 return）。改这条链路时两边要一起改。
 
 ## 验证命令（提交前必须通过）
 

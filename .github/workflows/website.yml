@@ -65,6 +65,26 @@ jobs:
         working-directory: web
         run: npx vite build --mode demo
 
+      # 演示站要处理「深层路由被直接刷新」：站点 404 页把原路径回传，入口自带的引导脚本据此还原。
+      # 标记名 data-demo-base 只在演示产物里出现；业务构建没有它，引导脚本直接 return，行为不变。
+      - name: 给演示入口标记 base（启用深链回退）
+        run: |
+          set -e
+          python3 - <<'PYEOF'
+          import pathlib
+
+          path = pathlib.Path("web/dist/index.html")
+          html = path.read_text(encoding="utf-8")
+          html = html.replace(
+              "<html lang=\"zh-CN\">",
+              '<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/">',
+              1,
+          )
+          assert 'data-demo-base="/Electrical-Manager/demo/"' in html
+          path.write_text(html, encoding="utf-8")
+          print("演示入口已标记 data-demo-base")
+          PYEOF
+
       - name: 把演示（Apifox Mock）放进站点输出的 demo/
         run: |
           set -e
@@ -79,6 +99,26 @@ jobs:
         working-directory: web
         run: npx vite build --mode demo-offline
 
+      # 演示站要处理「深层路由被直接刷新」：站点 404 页把原路径回传，入口自带的引导脚本据此还原
+      # 路径。该属性只在演示产物里注入；业务构建没有它，引导脚本直接 return，行为完全不变。
+      - name: 给离线演示入口标记 base（启用深链回退）
+        run: |
+          set -e
+          python3 - <<'PYEOF'
+          import pathlib
+
+          path = pathlib.Path("web/dist/index.html")
+          html = path.read_text(encoding="utf-8")
+          html = html.replace(
+              "<html lang=\"zh-CN\">",
+              '<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/offline/">',
+              1,
+          )
+          assert 'data-demo-base="/Electrical-Manager/demo/offline/"' in html
+          path.write_text(html, encoding="utf-8")
+          print("离线演示入口已标记 data-demo-base")
+          PYEOF
+
       - name: 把离线演示放进站点输出的 demo/offline/
         run: |
           set -e
@@ -92,6 +132,11 @@ jobs:
       # 构建仍然成功（曾因此误判过线上状态）。这里在发布前把每个 HTML 引用的本地资源逐个校验。
       # 站点的二级 tab 是自定义组件，只认 <Tabs>/<TabsContent>；写成 VitePress 的 ::: tabs 容器语法
       # 不会报错，但会把内容当普通文本渲染出来（曾线上出现过）。这里做一次静态检查。
+      # 站点 404 页由 VitePress 生成，而它会在 markdown 里剥掉 inline script，
+      # 所以演示深链回退脚本注入在构建产物上。
+      - name: 把演示深链回退脚本注入站点 404
+        run: python3 "${{ github.workspace }}/docs/websites/scripts/inject_demo_fallback.py" "$SITE_OUT_DIR"
+
       - name: "校验文档没有用不支持的 ::: tabs 语法"
         run: |
           set -e
