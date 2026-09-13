@@ -98,7 +98,11 @@ def _quantity_text(value: Decimal) -> str:
     return format(value, "f").rstrip("0").rstrip(".") or "0"
 
 
-@router.get("/purchase-records", response_model=Page[PurchaseRecordRead])
+@router.get(
+    "/purchase-records",
+    response_model=Page[PurchaseRecordRead],
+    summary="申购记录列表",
+)
 async def purchase_records(
     session: DbSession,
     user: CurrentUser,
@@ -158,7 +162,11 @@ async def purchase_records(
     )
 
 
-@router.get("/purchase-records/filter-options", response_model=PurchaseRecordFilterOptions)
+@router.get(
+    "/purchase-records/filter-options",
+    response_model=PurchaseRecordFilterOptions,
+    summary="筛选选项",
+)
 async def purchase_record_filter_options(
     session: DbSession, user: CurrentUser
 ) -> PurchaseRecordFilterOptions:
@@ -182,6 +190,7 @@ async def purchase_record_filter_options(
     "/purchase-records/export-results",
     response_model=ExcelExportJobRead,
     status_code=status.HTTP_202_ACCEPTED,
+    summary="导出申购记录",
 )
 async def export_purchase_record_results(
     data: PurchaseRecordResultExportRequest,
@@ -277,7 +286,11 @@ async def _process_record_export(
     }
 
 
-@router.patch("/purchase-records/batch", response_model=list[PurchaseRecordRead])
+@router.patch(
+    "/purchase-records/batch",
+    response_model=list[PurchaseRecordRead],
+    summary="批量编辑申购记录",
+)
 async def batch_edit_purchase_records(
     data: BatchUpdatePurchaseRecordsRequest,
     session: DbSession,
@@ -287,14 +300,22 @@ async def batch_edit_purchase_records(
     return [service.purchase_record_read(line) for line in lines]
 
 
-@router.get("/purchase-records/{line_id}", response_model=PurchaseRecordRead)
+@router.get(
+    "/purchase-records/{line_id}",
+    response_model=PurchaseRecordRead,
+    summary="申购记录详情",
+)
 async def purchase_record(
     line_id: int, session: DbSession, user: CurrentUser
 ) -> PurchaseRecordRead:
     return service.purchase_record_read(await service.get_purchase_record(session, line_id))
 
 
-@router.post("/purchase-records/{line_id}/restore-to-plan", response_model=PurchaseMaterialRead)
+@router.post(
+    "/purchase-records/{line_id}/restore-to-plan",
+    response_model=PurchaseMaterialRead,
+    summary="退回申购计划",
+)
 async def restore_purchase_record_to_plan(
     line_id: int,
     session: DbSession,
@@ -306,7 +327,11 @@ async def restore_purchase_record_to_plan(
     return await material_service.purchase_read(session, material)
 
 
-@router.patch("/purchase-records/{line_id}", response_model=PurchaseRecordRead)
+@router.patch(
+    "/purchase-records/{line_id}",
+    response_model=PurchaseRecordRead,
+    summary="编辑申购记录",
+)
 async def edit_purchase_record(
     line_id: int,
     data: PurchaseRecordUpdate,

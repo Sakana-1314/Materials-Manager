@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Response, status
 
 from app.api.deps import PageNo, PageSize
@@ -17,7 +16,11 @@ from app.services import share_link_service
 router = APIRouter(prefix="/shares", tags=["链接分享"])
 
 
-@router.get("", response_model=Page[ShareListRead])
+@router.get(
+    "",
+    response_model=Page[ShareListRead],
+    summary="分享链接列表",
+)
 async def list_shares(
     session: DbSession,
     user: CurrentUser,
@@ -48,7 +51,12 @@ async def list_shares(
     )
 
 
-@router.post("", response_model=ShareRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=ShareRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增分享链接",
+)
 async def create_share(
     data: ShareCreateRequest,
     session: DbSession,
@@ -77,7 +85,11 @@ async def create_share(
     )
 
 
-@router.get("/{token}", response_model=SharePublicView)
+@router.get(
+    "/{token}",
+    response_model=SharePublicView,
+    summary="分享链接详情",
+)
 async def get_share(token: FileId, session: DbSession) -> SharePublicView:
     # 匿名读取是刻意设计：分享页无需登录，任何拿到链接的人都能查看。
     # 安全性依赖 token 为 UUIDv7（不可猜解）+ 仅按 token 返回该分享的数据快照，
@@ -85,7 +97,11 @@ async def get_share(token: FileId, session: DbSession) -> SharePublicView:
     return await share_link_service.get_public_share(session, token=token)
 
 
-@router.patch("/{token}", response_model=ShareRead)
+@router.patch(
+    "/{token}",
+    response_model=ShareRead,
+    summary="编辑分享链接",
+)
 async def update_share(
     token: FileId,
     data: ShareUpdateRequest,
@@ -110,7 +126,11 @@ async def update_share(
     )
 
 
-@router.delete("/{token}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{token}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="作废分享链接",
+)
 async def revoke_share(
     token: FileId,
     session: DbSession,

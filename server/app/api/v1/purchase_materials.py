@@ -86,7 +86,11 @@ PLAN_RESULT_HEADERS = {
 }
 
 
-@router.get("", response_model=Page[PurchaseMaterialRead])
+@router.get(
+    "",
+    response_model=Page[PurchaseMaterialRead],
+    summary="申购计划列表",
+)
 async def list_materials(
     session: DbSession,
     user: CurrentUser,
@@ -155,7 +159,11 @@ async def list_materials(
     )
 
 
-@router.get("/filter-options", response_model=PurchaseFilterOptions)
+@router.get(
+    "/filter-options",
+    response_model=PurchaseFilterOptions,
+    summary="筛选选项",
+)
 async def filter_options(
     session: DbSession,
     user: CurrentUser,
@@ -179,7 +187,12 @@ async def filter_options(
     )
 
 
-@router.post("", response_model=PurchaseMaterialRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=PurchaseMaterialRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增申购计划",
+)
 async def create_material(
     data: PurchaseMaterialCreate, session: DbSession, user: PurchaseWriter
 ) -> PurchaseMaterialRead:
@@ -191,6 +204,7 @@ async def create_material(
     "/export-results",
     response_model=ExcelExportJobRead,
     status_code=status.HTTP_202_ACCEPTED,
+    summary="导出申购计划",
 )
 async def export_material_results(
     data: PurchasePlanResultExportRequest,
@@ -295,6 +309,7 @@ async def _process_material_export(
 @router.get(
     "/export-uncoded",
     responses={400: {"model": ApiError, "description": "Excel 导出模板缺失或格式错误"}},
+    summary="导出未编码物资",
 )
 async def export_uncoded_materials(
     session: DbSession,
@@ -330,6 +345,7 @@ async def export_uncoded_materials(
 @router.post(
     "/export-purchase-application",
     responses={400: {"model": ApiError, "description": "Excel 导出模板缺失或格式错误"}},
+    summary="导出采购申请表",
 )
 async def export_purchase_application(
     data: PurchasePlanExportRequest,
@@ -359,13 +375,15 @@ async def export_purchase_application(
         }
         for item in materials
     ]
-    return excel_export_service.excel_response(*excel_export_service.render_excel(
-      "purchase-application.json", rows))
+    return excel_export_service.excel_response(
+        *excel_export_service.render_excel("purchase-application.json", rows)
+    )
 
 
 @router.post(
     "/export-purchase-approval",
     responses={400: {"model": ApiError, "description": "Excel 导出模板缺失或格式错误"}},
+    summary="导出申购审批表",
 )
 async def export_purchase_approval(
     data: PurchasePlanExportRequest,
@@ -403,7 +421,11 @@ async def export_purchase_approval(
     )
 
 
-@router.post("/batch-move-to-record", response_model=list[PurchaseRecordRead])
+@router.post(
+    "/batch-move-to-record",
+    response_model=list[PurchaseRecordRead],
+    summary="批量转入申购记录",
+)
 async def batch_move_to_record(
     data: BatchMovePurchasePlansRequest,
     session: DbSession,
@@ -413,7 +435,11 @@ async def batch_move_to_record(
     return [purchase_request_service.purchase_record_read(line) for line in lines]
 
 
-@router.patch("/batch", response_model=list[PurchaseMaterialRead])
+@router.patch(
+    "/batch",
+    response_model=list[PurchaseMaterialRead],
+    summary="批量编辑申购计划",
+)
 async def batch_update_materials(
     data: BatchUpdatePurchasePlansRequest,
     session: DbSession,
@@ -423,12 +449,14 @@ async def batch_update_materials(
     moved_ids = await material_service.purchase_material_ids_moved_to_record(
         session, [item.id for item in items]
     )
-    return [
-        await material_service.purchase_read(session, item, moved_ids) for item in items
-    ]
+    return [await material_service.purchase_read(session, item, moved_ids) for item in items]
 
 
-@router.get("/{material_id}", response_model=PurchaseMaterialRead)
+@router.get(
+    "/{material_id}",
+    response_model=PurchaseMaterialRead,
+    summary="申购计划详情",
+)
 async def material_detail(
     material_id: int, session: DbSession, user: CurrentUser
 ) -> PurchaseMaterialRead:
@@ -442,7 +470,11 @@ async def material_detail(
     return await material_service.purchase_read(session, item)
 
 
-@router.patch("/{material_id}", response_model=PurchaseMaterialRead)
+@router.patch(
+    "/{material_id}",
+    response_model=PurchaseMaterialRead,
+    summary="编辑申购计划",
+)
 async def update_material(
     material_id: int,
     data: PurchaseMaterialUpdate,
@@ -454,7 +486,11 @@ async def update_material(
     return await material_service.purchase_read(session, item)
 
 
-@router.delete("/{material_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{material_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除申购计划",
+)
 async def delete_material(
     material_id: int,
     session: DbSession,
@@ -465,7 +501,11 @@ async def delete_material(
     await material_service.delete_purchase_material(session, item, if_match)
 
 
-@router.post("/{material_id}/link-stock-material", response_model=PurchaseMaterialRead)
+@router.post(
+    "/{material_id}/link-stock-material",
+    response_model=PurchaseMaterialRead,
+    summary="关联二级库物资",
+)
 async def link_stock_material(
     material_id: int,
     data: LinkStockMaterialRequest,
@@ -482,7 +522,11 @@ async def link_stock_material(
     return await material_service.purchase_read(session, item)
 
 
-@router.post("/{material_id}/move-to-record", response_model=PurchaseRecordRead)
+@router.post(
+    "/{material_id}/move-to-record",
+    response_model=PurchaseRecordRead,
+    summary="转入申购记录",
+)
 async def move_to_record(
     material_id: int,
     data: MovePurchasePlanRequest,

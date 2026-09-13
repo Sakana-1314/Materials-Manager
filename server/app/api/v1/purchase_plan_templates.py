@@ -20,7 +20,11 @@ from app.services import purchase_plan_template_service as service
 router = APIRouter(prefix="/purchase-plan-templates", tags=["周期性计划"])
 
 
-@router.get("", response_model=Page[PurchasePlanTemplateRead])
+@router.get(
+    "",
+    response_model=Page[PurchasePlanTemplateRead],
+    summary="模板列表",
+)
 async def list_templates(
     session: DbSession,
     user: CurrentUser,
@@ -56,7 +60,11 @@ async def list_templates(
     )
 
 
-@router.get("/filter-options", response_model=PurchasePlanTemplateFilterOptions)
+@router.get(
+    "/filter-options",
+    response_model=PurchasePlanTemplateFilterOptions,
+    summary="筛选选项",
+)
 async def filter_options(
     session: DbSession, user: CurrentUser
 ) -> PurchasePlanTemplateFilterOptions:
@@ -72,21 +80,34 @@ async def filter_options(
     )
 
 
-@router.post("", response_model=PurchasePlanTemplateRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=PurchasePlanTemplateRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增模板",
+)
 async def create_template(
     data: PurchasePlanTemplateCreate, session: DbSession, user: PurchaseWriter
 ) -> PurchasePlanTemplateRead:
     return service.template_read(await service.create_template(session, data))
 
 
-@router.get("/{template_id}", response_model=PurchasePlanTemplateRead)
+@router.get(
+    "/{template_id}",
+    response_model=PurchasePlanTemplateRead,
+    summary="模板详情",
+)
 async def template_detail(
     template_id: int, session: DbSession, user: CurrentUser
 ) -> PurchasePlanTemplateRead:
     return service.template_read(await service.get_template(session, template_id))
 
 
-@router.patch("/{template_id}", response_model=PurchasePlanTemplateRead)
+@router.patch(
+    "/{template_id}",
+    response_model=PurchasePlanTemplateRead,
+    summary="编辑模板",
+)
 async def update_template(
     template_id: int,
     data: PurchasePlanTemplateUpdate,
@@ -98,7 +119,11 @@ async def update_template(
     return service.template_read(template)
 
 
-@router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{template_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除模板",
+)
 async def delete_template(
     template_id: int,
     session: DbSession,
@@ -109,7 +134,11 @@ async def delete_template(
     await service.delete_template(session, template, if_match)
 
 
-@router.post("/{template_id}/generate", response_model=PurchaseMaterialRead)
+@router.post(
+    "/{template_id}/generate",
+    response_model=PurchaseMaterialRead,
+    summary="生成申购计划",
+)
 async def generate_purchase_plan(
     template_id: int,
     session: DbSession,

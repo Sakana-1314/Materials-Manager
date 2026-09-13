@@ -25,7 +25,11 @@ router = APIRouter(prefix="/material-code-library", tags=["物料编码库"])
 JOB_TYPE = "MATERIAL_CODE_LIBRARY"
 
 
-@router.get("", response_model=Page[MaterialCodeLibraryRead])
+@router.get(
+    "",
+    response_model=Page[MaterialCodeLibraryRead],
+    summary="物料编码列表",
+)
 async def list_material_codes(
     session: DbSession,
     user: CurrentUser,
@@ -48,7 +52,11 @@ async def list_material_codes(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/last-import", response_model=LastImportRead)
+@router.get(
+    "/last-import",
+    response_model=LastImportRead,
+    summary="上次导入",
+)
 async def last_import(
     session: DbSession,
     user: CurrentUser,
@@ -59,7 +67,11 @@ async def last_import(
     return LastImportRead(last_import_at=last_import_at)
 
 
-@router.get("/exists", response_model=MaterialCodeExistsRead)
+@router.get(
+    "/exists",
+    response_model=MaterialCodeExistsRead,
+    summary="编码是否存在",
+)
 async def material_code_exists(
     session: DbSession,
     user: CurrentUser,
@@ -72,7 +84,12 @@ async def material_code_exists(
     return MaterialCodeExistsRead(material_code=material_code.strip(), exists=exists)
 
 
-@router.post("/import", response_model=ExcelImportJobRead, status_code=202)
+@router.post(
+    "/import",
+    response_model=ExcelImportJobRead,
+    status_code=202,
+    summary="导入物料编码",
+)
 async def import_material_codes(
     file: Annotated[UploadFile, File(...)],
     user: PurchaseWriter,
@@ -100,7 +117,11 @@ async def import_material_codes(
         await file.close()
 
 
-@router.get("/import-jobs/{job_id}", response_model=ExcelImportJobRead)
+@router.get(
+    "/import-jobs/{job_id}",
+    response_model=ExcelImportJobRead,
+    summary="导入进度",
+)
 async def get_import_job(
     session: DbSession,
     user: CurrentUser,

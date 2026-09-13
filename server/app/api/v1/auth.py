@@ -22,7 +22,11 @@ from app.schemas import (
 router = APIRouter(prefix="/auth", tags=["认证"])
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post(
+    "/login",
+    response_model=LoginResponse,
+    summary="登录",
+)
 async def login(data: LoginRequest, session: DbSession) -> LoginResponse:
     user = await session.scalar(select(User).where(User.username == data.username))
     if user is None or not user.enabled or not verify_password(data.password, user.password_hash):
@@ -34,7 +38,11 @@ async def login(data: LoginRequest, session: DbSession) -> LoginResponse:
     )
 
 
-@router.post("/refresh", response_model=TokenPairResponse)
+@router.post(
+    "/refresh",
+    response_model=TokenPairResponse,
+    summary="刷新登录凭证",
+)
 async def refresh(data: RefreshTokenRequest, session: DbSession) -> TokenPairResponse:
     try:
         payload = decode_access_token(data.refresh_token)
@@ -54,6 +62,10 @@ async def refresh(data: RefreshTokenRequest, session: DbSession) -> TokenPairRes
     )
 
 
-@router.get("/me", response_model=UserRead)
+@router.get(
+    "/me",
+    response_model=UserRead,
+    summary="当前用户信息",
+)
 async def me(user: CurrentUser) -> UserRead:
     return UserRead.model_validate(user)

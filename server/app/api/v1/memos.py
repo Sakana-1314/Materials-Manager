@@ -17,12 +17,21 @@ from app.services import memo_service
 router = APIRouter(prefix="/memos", tags=["备忘录"])
 
 
-@router.get("", response_model=list[MemoRead])
+@router.get(
+    "",
+    response_model=list[MemoRead],
+    summary="备忘录列表",
+)
 async def list_memos(session: DbSession, user: CurrentUser) -> list[Memo]:
     return await memo_service.list_memos(session, user.id)
 
 
-@router.post("", response_model=MemoRead, status_code=201)
+@router.post(
+    "",
+    response_model=MemoRead,
+    status_code=201,
+    summary="新增备忘录",
+)
 async def create_memo(
     data: MemoCreate,
     session: DbSession,
@@ -31,7 +40,11 @@ async def create_memo(
     return await memo_service.create_memo(session, user.id, data)
 
 
-@router.patch("/{memo_id}", response_model=MemoRead)
+@router.patch(
+    "/{memo_id}",
+    response_model=MemoRead,
+    summary="编辑备忘录",
+)
 async def update_memo(
     memo_id: int,
     data: MemoUpdate,
@@ -41,6 +54,10 @@ async def update_memo(
     return await memo_service.update_memo(session, memo_id, user.id, data)
 
 
-@router.delete("/{memo_id}", status_code=204)
+@router.delete(
+    "/{memo_id}",
+    status_code=204,
+    summary="删除备忘录",
+)
 async def delete_memo(memo_id: int, session: DbSession, user: CurrentUser) -> None:
     await memo_service.delete_memo(session, memo_id, user.id)

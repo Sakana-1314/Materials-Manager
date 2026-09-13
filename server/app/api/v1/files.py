@@ -17,12 +17,21 @@ FileWriter = Annotated[
 ]
 
 
-@router.post("", response_model=FileObjectRead, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "",
+    response_model=FileObjectRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="上传图片",
+)
 async def upload(file: UploadFile, session: DbSession, user: FileWriter) -> FileObjectRead:
     return await file_service.save_image(session, file)
 
 
-@router.get("/orphans", response_model=OrphanFileReportRead)
+@router.get(
+    "/orphans",
+    response_model=OrphanFileReportRead,
+    summary="悬空图片报告",
+)
 async def orphan_report(
     session: DbSession,
     user: SuperAdmin,
@@ -31,7 +40,11 @@ async def orphan_report(
     return await file_service.inspect_orphans(session, older_than_hours)
 
 
-@router.delete("/orphans", response_model=OrphanFileCleanupRead)
+@router.delete(
+    "/orphans",
+    response_model=OrphanFileCleanupRead,
+    summary="清理悬空图片",
+)
 async def remove_orphans(
     session: DbSession,
     user: SuperAdmin,
@@ -40,7 +53,10 @@ async def remove_orphans(
     return await file_service.cleanup_orphans(session, older_than_hours)
 
 
-@router.get("/{file_id}")
+@router.get(
+    "/{file_id}",
+    summary="读取图片",
+)
 async def read_image(
     file_id: FileId,
     session: DbSession,
@@ -66,7 +82,11 @@ async def read_image(
     )
 
 
-@router.delete("/{file_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/{file_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除图片",
+)
 async def remove(file_id: FileId, session: DbSession, user: FileWriter) -> Response:
     await file_service.delete_image(session, file_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

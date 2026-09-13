@@ -38,14 +38,22 @@ def _query_time(value: str | None) -> datetime | None:
     return parsed.astimezone(UTC).replace(tzinfo=None)
 
 
-@router.get("/inventory/replenishment-defaults", response_model=ReplenishmentDefaultsRead)
+@router.get(
+    "/inventory/replenishment-defaults",
+    response_model=ReplenishmentDefaultsRead,
+    summary="补库默认值",
+)
 async def replenishment_defaults(
     session: DbSession, user: CurrentUser
 ) -> ReplenishmentDefaultsRead:
     return await replenishment_service.replenishment_defaults(session)
 
 
-@router.get("/inventory/balances", response_model=Page[InventoryBalanceRead])
+@router.get(
+    "/inventory/balances",
+    response_model=Page[InventoryBalanceRead],
+    summary="库存余额列表",
+)
 async def balances(
     session: DbSession,
     user: CurrentUser,
@@ -68,7 +76,11 @@ async def balances(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/inventory/low-stock", response_model=Page[InventoryBalanceRead])
+@router.get(
+    "/inventory/low-stock",
+    response_model=Page[InventoryBalanceRead],
+    summary="低库存列表",
+)
 async def low_stock(
     session: DbSession,
     user: CurrentUser,
@@ -88,7 +100,11 @@ async def low_stock(
     return Page(items=items, page=page, page_size=page_size, total=total)
 
 
-@router.get("/inventory/balances/{material_id}", response_model=InventoryBalanceRead)
+@router.get(
+    "/inventory/balances/{material_id}",
+    response_model=InventoryBalanceRead,
+    summary="库存余额详情",
+)
 async def balance_detail(
     material_id: int, session: DbSession, user: CurrentUser
 ) -> InventoryBalanceRead:
@@ -108,7 +124,10 @@ async def balance_detail(
 
 
 @router.post(
-    "/inventory/inbounds", response_model=StockOperationRead, status_code=status.HTTP_201_CREATED
+    "/inventory/inbounds",
+    response_model=StockOperationRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增入库",
 )
 async def inbound(
     data: OperationCreate,
@@ -121,7 +140,10 @@ async def inbound(
 
 
 @router.post(
-    "/inventory/outbounds", response_model=StockOperationRead, status_code=status.HTTP_201_CREATED
+    "/inventory/outbounds",
+    response_model=StockOperationRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增出库",
 )
 async def outbound(
     data: OperationCreate,
@@ -133,7 +155,11 @@ async def outbound(
     return await inventory_service.operation_read(session, item)
 
 
-@router.get("/inventory/operations", response_model=Page[StockOperationRead])
+@router.get(
+    "/inventory/operations",
+    response_model=Page[StockOperationRead],
+    summary="流水列表",
+)
 async def operations(
     session: DbSession,
     user: CurrentUser,
@@ -169,7 +195,11 @@ async def operations(
     )
 
 
-@router.get("/inventory/operations/{operation_id}", response_model=StockOperationRead)
+@router.get(
+    "/inventory/operations/{operation_id}",
+    response_model=StockOperationRead,
+    summary="流水详情",
+)
 async def operation_detail(
     operation_id: int, session: DbSession, user: CurrentUser
 ) -> StockOperationRead:
@@ -178,7 +208,11 @@ async def operation_detail(
     )
 
 
-@router.patch("/inventory/operations/{operation_id}", response_model=StockOperationRead)
+@router.patch(
+    "/inventory/operations/{operation_id}",
+    response_model=StockOperationRead,
+    summary="修改流水",
+)
 async def edit_operation(
     operation_id: int,
     data: OperationUpdate,
@@ -191,7 +225,11 @@ async def edit_operation(
     return await inventory_service.operation_read(session, item)
 
 
-@router.post("/inventory/operations/{operation_id}/reverse", response_model=StockOperationRead)
+@router.post(
+    "/inventory/operations/{operation_id}/reverse",
+    response_model=StockOperationRead,
+    summary="冲销流水",
+)
 async def reverse_operation(
     operation_id: int,
     data: ReverseOperationRequest,
@@ -207,6 +245,7 @@ async def reverse_operation(
 @router.post(
     "/inventory/low-stock/{material_id}/create-replenishment-draft",
     response_model=ReplenishmentDraftRead,
+    summary="生成补库草稿",
 )
 async def replenish(
     material_id: int,
@@ -218,6 +257,10 @@ async def replenish(
     return await replenishment_service.create_replenishment_draft(session, material_id, data)
 
 
-@router.get("/dashboard/summary", response_model=DashboardSummaryRead)
+@router.get(
+    "/dashboard/summary",
+    response_model=DashboardSummaryRead,
+    summary="工作台概览",
+)
 async def summary(session: DbSession, user: CurrentUser) -> DashboardSummaryRead:
     return await dashboard_service.dashboard_summary(session)

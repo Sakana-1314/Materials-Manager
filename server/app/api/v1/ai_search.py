@@ -15,7 +15,11 @@ from app.services import ai_search_service
 router = APIRouter(prefix="/ai-search", tags=["AI 搜索"])
 
 
-@router.post("/expand", response_model=AiSearchExpandRead)
+@router.post(
+    "/expand",
+    response_model=AiSearchExpandRead,
+    summary="查询词扩展",
+)
 async def expand(
     data: AiSearchExpandRequest, session: DbSession, user: CurrentUser
 ) -> AiSearchExpandRead:
@@ -23,17 +27,29 @@ async def expand(
     return AiSearchExpandRead(original=data.value, expanded=expanded or data.value)
 
 
-@router.get("/status", response_model=AiSearchStatusRead)
+@router.get(
+    "/status",
+    response_model=AiSearchStatusRead,
+    summary="服务状态",
+)
 async def status(session: DbSession, user: CurrentUser) -> AiSearchStatusRead:
     return AiSearchStatusRead(available=await ai_search_service.is_available(session))
 
 
-@router.get("/settings", response_model=AiSearchSettingsRead)
+@router.get(
+    "/settings",
+    response_model=AiSearchSettingsRead,
+    summary="读取配置",
+)
 async def get_settings(session: DbSession, user: SuperAdmin) -> AiSearchSettingsRead:
     return ai_search_service.setting_read(await ai_search_service.get_setting(session))
 
 
-@router.put("/settings", response_model=AiSearchSettingsRead)
+@router.put(
+    "/settings",
+    response_model=AiSearchSettingsRead,
+    summary="保存配置",
+)
 async def update_settings(
     data: AiSearchSettingsUpdate, session: DbSession, user: SuperAdmin
 ) -> AiSearchSettingsRead:
@@ -41,7 +57,11 @@ async def update_settings(
     return ai_search_service.setting_read(setting)
 
 
-@router.post("/settings/test", response_model=AiSearchTestRead)
+@router.post(
+    "/settings/test",
+    response_model=AiSearchTestRead,
+    summary="测试连接",
+)
 async def test_settings(data: AiSearchTestRequest, user: SuperAdmin) -> AiSearchTestRead:
     original = "电机"
     expanded = await ai_search_service.test_search_value(data, original)

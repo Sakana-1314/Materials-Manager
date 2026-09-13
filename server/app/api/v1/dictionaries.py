@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, status
 
 from app.api.deps import PageNo, PageSize
@@ -15,7 +14,11 @@ from app.services import dictionary_service
 router = APIRouter(tags=["基础数据"])
 
 
-@router.get("/users", response_model=Page[UserApiTokenRead])
+@router.get(
+    "/users",
+    response_model=Page[UserApiTokenRead],
+    summary="用户列表",
+)
 async def users(
     session: DbSession,
     user: SuperAdmin,
@@ -32,14 +35,21 @@ async def users(
     )
 
 
-@router.post("/users", response_model=UserApiTokenRead, status_code=status.HTTP_201_CREATED)
-async def add_user(
-    data: UserCreate, session: DbSession, user: SuperAdmin
-) -> UserApiTokenRead:
+@router.post(
+    "/users",
+    response_model=UserApiTokenRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="新增用户",
+)
+async def add_user(data: UserCreate, session: DbSession, user: SuperAdmin) -> UserApiTokenRead:
     return UserApiTokenRead.model_validate(await dictionary_service.create_user(session, data))
 
 
-@router.patch("/users/{item_id}", response_model=UserApiTokenRead)
+@router.patch(
+    "/users/{item_id}",
+    response_model=UserApiTokenRead,
+    summary="编辑用户",
+)
 async def edit_user(
     item_id: int, data: UserUpdate, session: DbSession, user: SuperAdmin
 ) -> UserApiTokenRead:
@@ -48,7 +58,11 @@ async def edit_user(
     )
 
 
-@router.post("/users/{item_id}/api-token/regenerate", response_model=UserApiTokenRead)
+@router.post(
+    "/users/{item_id}/api-token/regenerate",
+    response_model=UserApiTokenRead,
+    summary="重置接口令牌",
+)
 async def regenerate_user_api_token(
     item_id: int,
     data: UserApiTokenRegenerate,
@@ -60,6 +74,10 @@ async def regenerate_user_api_token(
     )
 
 
-@router.delete("/users/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/users/{item_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="删除用户",
+)
 async def remove_user(item_id: int, session: DbSession, user: SuperAdmin) -> None:
     await dictionary_service.delete_user(session, item_id, user.id)

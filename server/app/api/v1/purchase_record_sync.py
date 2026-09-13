@@ -14,7 +14,11 @@ from app.services import purchase_record_sync_service as service
 router = APIRouter(tags=["申购记录同步"])
 
 
-@router.get("/purchase-record-sync/targets", response_model=PurchaseRecordSyncTargetsRead)
+@router.get(
+    "/purchase-record-sync/targets",
+    response_model=PurchaseRecordSyncTargetsRead,
+    summary="同步目标",
+)
 async def sync_targets(
     session: DbSession,
     user: PurchaseWriter,
@@ -31,13 +35,18 @@ async def sync_targets(
     ),
 ) -> PurchaseRecordSyncTargetsRead:
     return await service.list_sync_targets(
-        session, limit=limit, cursor=cursor, fields=fields,
+        session,
+        limit=limit,
+        cursor=cursor,
+        fields=fields,
         min_purchase_order_no=min_purchase_order_no,
     )
 
 
 @router.post(
-    "/purchase-record-sync/trace/{trace_no}", response_model=PurchaseRecordSyncResultRead
+    "/purchase-record-sync/trace/{trace_no}",
+    response_model=PurchaseRecordSyncResultRead,
+    summary="按追溯号同步",
 )
 async def sync_trace(
     trace_no: str,
@@ -51,6 +60,7 @@ async def sync_trace(
 @router.get(
     "/purchase-record-sync/order-targets",
     response_model=PurchaseRecordSyncOrderTargetsRead,
+    summary="整单同步目标",
 )
 async def sync_order_targets(
     session: DbSession,
@@ -69,7 +79,10 @@ async def sync_order_targets(
 ) -> PurchaseRecordSyncOrderTargetsRead:
     """按申购单号列出待同步整单目标（整单一次平台查询、整单批量回写）。"""
     return await service.list_sync_order_targets(
-        session, limit=limit, cursor=cursor, fields=fields,
+        session,
+        limit=limit,
+        cursor=cursor,
+        fields=fields,
         min_purchase_order_no=min_purchase_order_no,
     )
 
@@ -77,6 +90,7 @@ async def sync_order_targets(
 @router.post(
     "/purchase-record-sync/orders/{purchase_order_no}/apply",
     response_model=PurchaseRecordSyncOrderApplyRead,
+    summary="整单同步回写",
 )
 async def sync_order_apply(
     purchase_order_no: str,

@@ -7,7 +7,7 @@ paths:
     post:
       tags:
       - 认证
-      summary: Login
+      summary: 登录
       operationId: login_api_v1_auth_login_post
       requestBody:
         content:
@@ -56,7 +56,7 @@ paths:
     post:
       tags:
       - 认证
-      summary: Refresh
+      summary: 刷新登录凭证
       operationId: refresh_api_v1_auth_refresh_post
       requestBody:
         content:
@@ -105,7 +105,7 @@ paths:
     get:
       tags:
       - 认证
-      summary: Me
+      summary: 当前用户信息
       operationId: me_api_v1_auth_me_get
       responses:
         '200':
@@ -151,7 +151,7 @@ paths:
     post:
       tags:
       - AI 搜索
-      summary: Expand
+      summary: 查询词扩展
       operationId: expand_api_v1_ai_search_expand_post
       requestBody:
         content:
@@ -203,7 +203,7 @@ paths:
     get:
       tags:
       - AI 搜索
-      summary: Status
+      summary: 服务状态
       operationId: status_api_v1_ai_search_status_get
       responses:
         '200':
@@ -249,7 +249,7 @@ paths:
     get:
       tags:
       - AI 搜索
-      summary: Get Settings
+      summary: 读取配置
       operationId: get_settings_api_v1_ai_search_settings_get
       responses:
         '200':
@@ -294,7 +294,7 @@ paths:
     put:
       tags:
       - AI 搜索
-      summary: Update Settings
+      summary: 保存配置
       operationId: update_settings_api_v1_ai_search_settings_put
       requestBody:
         content:
@@ -346,7 +346,7 @@ paths:
     post:
       tags:
       - AI 搜索
-      summary: Test Settings
+      summary: 测试连接
       operationId: test_settings_api_v1_ai_search_settings_test_post
       requestBody:
         content:
@@ -398,7 +398,7 @@ paths:
     get:
       tags:
       - 系统设置
-      summary: Image Acceleration Settings
+      summary: 图片加速设置
       operationId: image_acceleration_settings_api_v1_system_settings_image_acceleration_get
       responses:
         '200':
@@ -441,7 +441,7 @@ paths:
     get:
       tags:
       - 系统设置
-      summary: Mini Program Features
+      summary: 小程序功能配置
       operationId: mini_program_features_api_v1_system_settings_mini_program_features_get
       responses:
         '200':
@@ -484,7 +484,7 @@ paths:
     get:
       tags:
       - 系统设置
-      summary: Webhook Channels
+      summary: Webhook 配置
       operationId: webhook_channels_api_v1_system_settings_webhooks_get
       responses:
         '200':
@@ -533,7 +533,7 @@ paths:
     put:
       tags:
       - 系统设置
-      summary: Update Webhook Channel
+      summary: 保存 Webhook 配置
       operationId: update_webhook_channel_api_v1_system_settings_webhooks__platform__put
       security:
       - HTTPBearer: []
@@ -591,7 +591,7 @@ paths:
     post:
       tags:
       - 系统设置
-      summary: Test Webhook Channel
+      summary: 测试 Webhook
       operationId: test_webhook_channel_api_v1_system_settings_webhooks__platform__test_post
       security:
       - HTTPBearer: []
@@ -649,7 +649,7 @@ paths:
     get:
       tags:
       - 二级库物资
-      summary: List Materials
+      summary: 物资列表
       operationId: list_materials_api_v1_stock_materials_get
       security:
       - HTTPBearer: []
@@ -720,7 +720,7 @@ paths:
     post:
       tags:
       - 二级库物资
-      summary: Create Material
+      summary: 新增物资
       operationId: create_material_api_v1_stock_materials_post
       security:
       - HTTPBearer: []
@@ -772,7 +772,7 @@ paths:
     get:
       tags:
       - 二级库物资
-      summary: Material Detail
+      summary: 物资详情
       operationId: material_detail_api_v1_stock_materials__material_id__get
       security:
       - HTTPBearer: []
@@ -824,7 +824,7 @@ paths:
     patch:
       tags:
       - 二级库物资
-      summary: Update Material
+      summary: 编辑物资
       operationId: update_material_api_v1_stock_materials__material_id__patch
       security:
       - HTTPBearer: []
@@ -882,7 +882,7 @@ paths:
     delete:
       tags:
       - 二级库物资
-      summary: Delete Material
+      summary: 删除物资
       operationId: delete_material_api_v1_stock_materials__material_id__delete
       security:
       - HTTPBearer: []
@@ -939,7 +939,7 @@ paths:
     get:
       tags:
       - 二级库物资
-      summary: Material Mini Program Code
+      summary: 生成小程序码
       operationId: material_mini_program_code_api_v1_stock_materials_mini_program_codes__material_uuid__get
       security:
       - HTTPBearer: []
@@ -1004,7 +1004,7 @@ paths:
     get:
       tags:
       - 二级库物资
-      summary: Material Mini Program Code Redirect
+      summary: 小程序码跳转
       operationId: material_mini_program_code_redirect_api_v1_stock_materials__material_id__mini_program_code_get
       security:
       - HTTPBearer: []
@@ -1053,7 +1053,7 @@ paths:
     put:
       tags:
       - 二级库物资
-      summary: Save Policy
+      summary: 保存补库策略
       operationId: save_policy_api_v1_stock_materials__material_id__replenishment_policy_put
       security:
       - HTTPBearer: []
@@ -1112,7 +1112,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Replenishment Defaults
+      summary: 补库默认值
       operationId: replenishment_defaults_api_v1_inventory_replenishment_defaults_get
       responses:
         '200':
@@ -1158,7 +1158,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Balances
+      summary: 库存余额列表
       operationId: balances_api_v1_inventory_balances_get
       security:
       - HTTPBearer: []
@@ -1257,7 +1257,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Low Stock
+      summary: 低库存列表
       operationId: low_stock_api_v1_inventory_low_stock_get
       security:
       - HTTPBearer: []
@@ -1329,7 +1329,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Balance Detail
+      summary: 库存余额详情
       operationId: balance_detail_api_v1_inventory_balances__material_id__get
       security:
       - HTTPBearer: []
@@ -1382,7 +1382,7 @@ paths:
     post:
       tags:
       - 库存
-      summary: Inbound
+      summary: 新增入库
       operationId: inbound_api_v1_inventory_inbounds_post
       requestBody:
         content:
@@ -1434,7 +1434,7 @@ paths:
     post:
       tags:
       - 库存
-      summary: Outbound
+      summary: 新增出库
       operationId: outbound_api_v1_inventory_outbounds_post
       requestBody:
         content:
@@ -1486,7 +1486,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Operations
+      summary: 流水列表
       operationId: operations_api_v1_inventory_operations_get
       security:
       - HTTPBearer: []
@@ -1598,7 +1598,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Operation Detail
+      summary: 流水详情
       operationId: operation_detail_api_v1_inventory_operations__operation_id__get
       security:
       - HTTPBearer: []
@@ -1650,7 +1650,7 @@ paths:
     patch:
       tags:
       - 库存
-      summary: Edit Operation
+      summary: 修改流水
       operationId: edit_operation_api_v1_inventory_operations__operation_id__patch
       security:
       - HTTPBearer: []
@@ -1709,7 +1709,7 @@ paths:
     post:
       tags:
       - 库存
-      summary: Reverse Operation
+      summary: 冲销流水
       operationId: reverse_operation_api_v1_inventory_operations__operation_id__reverse_post
       security:
       - HTTPBearer: []
@@ -1768,7 +1768,7 @@ paths:
     post:
       tags:
       - 库存
-      summary: Replenish
+      summary: 生成补库草稿
       operationId: replenish_api_v1_inventory_low_stock__material_id__create_replenishment_draft_post
       security:
       - HTTPBearer: []
@@ -1827,7 +1827,7 @@ paths:
     get:
       tags:
       - 库存
-      summary: Summary
+      summary: 工作台概览
       operationId: summary_api_v1_dashboard_summary_get
       responses:
         '200':
@@ -1873,7 +1873,7 @@ paths:
     get:
       tags:
       - 物料编码库
-      summary: List Material Codes
+      summary: 物料编码列表
       operationId: list_material_codes_api_v1_material_code_library_get
       security:
       - HTTPBearer: []
@@ -1973,7 +1973,7 @@ paths:
     get:
       tags:
       - 物料编码库
-      summary: Last Import
+      summary: 上次导入
       operationId: last_import_api_v1_material_code_library_last_import_get
       responses:
         '200':
@@ -2019,7 +2019,7 @@ paths:
     get:
       tags:
       - 物料编码库
-      summary: Material Code Exists
+      summary: 编码是否存在
       description: 软校验：编码是否已收录于物料编码库（不阻断业务，仅提示）。
       operationId: material_code_exists_api_v1_material_code_library_exists_get
       security:
@@ -2075,7 +2075,7 @@ paths:
     post:
       tags:
       - 物料编码库
-      summary: Import Material Codes
+      summary: 导入物料编码
       operationId: import_material_codes_api_v1_material_code_library_import_post
       requestBody:
         content:
@@ -2127,7 +2127,7 @@ paths:
     get:
       tags:
       - 物料编码库
-      summary: Get Import Job
+      summary: 导入进度
       operationId: get_import_job_api_v1_material_code_library_import_jobs__job_id__get
       security:
       - HTTPBearer: []
@@ -2181,7 +2181,7 @@ paths:
     get:
       tags:
       - 备忘录
-      summary: List Memos
+      summary: 备忘录列表
       operationId: list_memos_api_v1_memos_get
       responses:
         '200':
@@ -2229,7 +2229,7 @@ paths:
     post:
       tags:
       - 备忘录
-      summary: Create Memo
+      summary: 新增备忘录
       operationId: create_memo_api_v1_memos_post
       requestBody:
         content:
@@ -2281,7 +2281,7 @@ paths:
     patch:
       tags:
       - 备忘录
-      summary: Update Memo
+      summary: 编辑备忘录
       operationId: update_memo_api_v1_memos__memo_id__patch
       security:
       - HTTPBearer: []
@@ -2339,7 +2339,7 @@ paths:
     delete:
       tags:
       - 备忘录
-      summary: Delete Memo
+      summary: 删除备忘录
       operationId: delete_memo_api_v1_memos__memo_id__delete
       security:
       - HTTPBearer: []
@@ -2388,7 +2388,7 @@ paths:
     get:
       tags:
       - 华星库存
-      summary: List Huaxing Inventory
+      summary: 华星库存列表
       description: 华星总库存列表查询（文本字段内多关键词按 | 分隔做 OR；申购部门/申购人为精确多值筛选）。
       operationId: list_huaxing_inventory_api_v1_huaxing_inventory_get
       security:
@@ -2498,7 +2498,7 @@ paths:
     get:
       tags:
       - 华星库存
-      summary: Filter Options
+      summary: 筛选选项
       description: 华星库存筛选下拉选项（申购部门/申购人 distinct 值）。
       operationId: filter_options_api_v1_huaxing_inventory_filter_options_get
       responses:
@@ -2545,7 +2545,7 @@ paths:
     get:
       tags:
       - 华星库存
-      summary: Last Import
+      summary: 上次导入
       operationId: last_import_api_v1_huaxing_inventory_last_import_get
       responses:
         '200':
@@ -2591,7 +2591,7 @@ paths:
     post:
       tags:
       - 华星库存
-      summary: Import Huaxing Inventory
+      summary: 导入华星库存
       operationId: import_huaxing_inventory_api_v1_huaxing_inventory_import_post
       requestBody:
         content:
@@ -2643,7 +2643,7 @@ paths:
     get:
       tags:
       - 华星库存
-      summary: Get Import Job
+      summary: 导入进度
       operationId: get_import_job_api_v1_huaxing_inventory_import_jobs__job_id__get
       security:
       - HTTPBearer: []
@@ -2697,7 +2697,7 @@ paths:
     get:
       tags:
       - 二级库
-      summary: List Lite Inventory
+      summary: 精简库存列表
       description: 精简二级库列表查询（物资名称/型号独立筛选，各字段内多关键词按 | 分隔做 OR 匹配）。
       operationId: list_lite_inventory_api_v1_secondary_warehouse_get
       security:
@@ -2780,7 +2780,7 @@ paths:
     get:
       tags:
       - 二级库
-      summary: Last Import
+      summary: 上次导入
       operationId: last_import_api_v1_secondary_warehouse_last_import_get
       responses:
         '200':
@@ -2826,7 +2826,7 @@ paths:
     post:
       tags:
       - 二级库
-      summary: Import Lite Inventory
+      summary: 导入精简库存
       operationId: import_lite_inventory_api_v1_secondary_warehouse_import_post
       requestBody:
         content:
@@ -2878,7 +2878,7 @@ paths:
     get:
       tags:
       - 二级库
-      summary: Get Import Job
+      summary: 导入进度
       operationId: get_import_job_api_v1_secondary_warehouse_import_jobs__job_id__get
       security:
       - HTTPBearer: []
@@ -2932,7 +2932,7 @@ paths:
     get:
       tags:
       - 小程序用户管理
-      summary: List Mini Program Users
+      summary: 小程序用户列表
       operationId: list_mini_program_users_api_v1_mini_program_users_get
       security:
       - HTTPBearer: []
@@ -3005,7 +3005,7 @@ paths:
     patch:
       tags:
       - 小程序用户管理
-      summary: Update Mini Program User
+      summary: 编辑小程序用户
       operationId: update_mini_program_user_api_v1_mini_program_users__user_id__patch
       security:
       - HTTPBearer: []
@@ -3063,7 +3063,7 @@ paths:
     delete:
       tags:
       - 小程序用户管理
-      summary: Delete Mini Program User
+      summary: 删除小程序用户
       operationId: delete_mini_program_user_api_v1_mini_program_users__user_id__delete
       security:
       - HTTPBearer: []
@@ -3120,7 +3120,7 @@ paths:
     post:
       tags:
       - 小程序用户管理
-      summary: Merge Mini Program Users
+      summary: 合并小程序用户
       operationId: merge_mini_program_users_api_v1_mini_program_users__target_user_id__merge_post
       security:
       - HTTPBearer: []
@@ -3179,7 +3179,7 @@ paths:
     post:
       tags:
       - 小程序
-      summary: Mini Program Wechat Login
+      summary: 微信登录
       operationId: mini_program_wechat_login_api_v1_mini_program_auth_wx_login_post
       requestBody:
         content:
@@ -3228,7 +3228,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Me
+      summary: 我的信息
       operationId: mini_program_me_api_v1_mini_program_me_get
       responses:
         '200':
@@ -3273,7 +3273,7 @@ paths:
     post:
       tags:
       - 小程序
-      summary: Create Mini Program Profile
+      summary: 补充个人信息
       operationId: create_mini_program_profile_api_v1_mini_program_profile_post
       requestBody:
         content:
@@ -3324,7 +3324,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Scan Material
+      summary: 扫码查物资
       operationId: scan_material_api_v1_mini_program_materials__material_uuid__get
       security:
       - HTTPBearer: []
@@ -3385,7 +3385,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Inventory
+      summary: 库存列表
       operationId: mini_program_inventory_api_v1_mini_program_inventory_get
       security:
       - HTTPBearer: []
@@ -3473,7 +3473,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Lite Inventory
+      summary: 精简库存
       description: 精简二级库（仅查看）。小程序端按二级库模式调用本接口或 /inventory。
       operationId: mini_program_lite_inventory_api_v1_mini_program_lite_inventory_get
       security:
@@ -3546,7 +3546,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Lite Inventory Last Import
+      summary: 上次导入精简
       operationId: mini_program_lite_inventory_last_import_api_v1_mini_program_lite_inventory_last_import_get
       responses:
         '200':
@@ -3591,7 +3591,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Plans
+      summary: 申购计划
       operationId: mini_program_purchase_plans_api_v1_mini_program_purchase_plans_get
       security:
       - HTTPBearer: []
@@ -3683,7 +3683,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Plan Filter Options
+      summary: 申购计划筛选
       operationId: mini_program_purchase_plan_filter_options_api_v1_mini_program_purchase_plans_filter_options_get
       responses:
         '200':
@@ -3728,7 +3728,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Records
+      summary: 申购记录
       operationId: mini_program_purchase_records_api_v1_mini_program_purchase_records_get
       security:
       - HTTPBearer: []
@@ -3818,7 +3818,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Record Filter Options
+      summary: 申购记录筛选
       operationId: mini_program_purchase_record_filter_options_api_v1_mini_program_purchase_records_filter_options_get
       responses:
         '200':
@@ -3863,7 +3863,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Record Detail
+      summary: 申购记录详情
       operationId: mini_program_purchase_record_detail_api_v1_mini_program_purchase_records__line_id__get
       security:
       - HTTPBearer: []
@@ -3915,7 +3915,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Material Codes
+      summary: 物料编码
       operationId: mini_program_material_codes_api_v1_mini_program_material_codes_get
       security:
       - HTTPBearer: []
@@ -3987,7 +3987,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Huaxing Inventory
+      summary: 华星库存
       operationId: mini_program_huaxing_inventory_api_v1_mini_program_huaxing_inventory_get
       security:
       - HTTPBearer: []
@@ -4059,7 +4059,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Material Codes Last Import
+      summary: 上次导入编码
       operationId: mini_program_material_codes_last_import_api_v1_mini_program_material_codes_last_import_get
       responses:
         '200':
@@ -4104,7 +4104,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Huaxing Inventory Last Import
+      summary: 上次导入华星
       operationId: mini_program_huaxing_inventory_last_import_api_v1_mini_program_huaxing_inventory_last_import_get
       responses:
         '200':
@@ -4149,7 +4149,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Purchase Plan Detail
+      summary: 申购计划详情
       operationId: mini_program_purchase_plan_detail_api_v1_mini_program_purchase_plans__material_id__get
       security:
       - HTTPBearer: []
@@ -4201,7 +4201,7 @@ paths:
     post:
       tags:
       - 小程序
-      summary: Mini Program Outbound
+      summary: 扫码出库
       operationId: mini_program_outbound_api_v1_mini_program_outbound_post
       requestBody:
         content:
@@ -4252,7 +4252,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Outbound Reasons
+      summary: 出库用途选项
       operationId: mini_program_outbound_reasons_api_v1_mini_program_outbound_reasons_get
       responses:
         '200':
@@ -4297,7 +4297,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Operations
+      summary: 操作记录
       description: 按当前用户姓名匹配查询出入库记录（含管理端操作）。
       operationId: mini_program_operations_api_v1_mini_program_operations_get
       security:
@@ -4361,7 +4361,7 @@ paths:
     get:
       tags:
       - 小程序
-      summary: Mini Program Outbound By No
+      summary: 出库详情
       description: 按流水号查询小程序出库明细（分享结果页恢复数据用）。
       operationId: mini_program_outbound_by_no_api_v1_mini_program_outbound__operation_no__get
       security:
@@ -4414,7 +4414,7 @@ paths:
     get:
       tags:
       - 申购计划
-      summary: List Materials
+      summary: 申购计划列表
       operationId: list_materials_api_v1_purchase_materials_get
       security:
       - HTTPBearer: []
@@ -4661,7 +4661,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Create Material
+      summary: 新增申购计划
       operationId: create_material_api_v1_purchase_materials_post
       security:
       - HTTPBearer: []
@@ -4713,7 +4713,7 @@ paths:
     get:
       tags:
       - 申购计划
-      summary: Filter Options
+      summary: 筛选选项
       operationId: filter_options_api_v1_purchase_materials_filter_options_get
       security:
       - HTTPBearer: []
@@ -4768,7 +4768,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Export Material Results
+      summary: 导出申购计划
       description: 查询结果导出（含图片，耗时较长）：202 秒回任务，渲染在后台异步执行。
       operationId: export_material_results_api_v1_purchase_materials_export_results_post
       requestBody:
@@ -4821,7 +4821,7 @@ paths:
     get:
       tags:
       - 申购计划
-      summary: Export Uncoded Materials
+      summary: 导出未编码物资
       operationId: export_uncoded_materials_api_v1_purchase_materials_export_uncoded_get
       security:
       - HTTPBearer: []
@@ -4875,7 +4875,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Export Purchase Application
+      summary: 导出采购申请表
       operationId: export_purchase_application_api_v1_purchase_materials_export_purchase_application_post
       requestBody:
         content:
@@ -4926,7 +4926,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Export Purchase Approval
+      summary: 导出申购审批表
       operationId: export_purchase_approval_api_v1_purchase_materials_export_purchase_approval_post
       requestBody:
         content:
@@ -4977,7 +4977,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Batch Move To Record
+      summary: 批量转入申购记录
       operationId: batch_move_to_record_api_v1_purchase_materials_batch_move_to_record_post
       requestBody:
         content:
@@ -5033,7 +5033,7 @@ paths:
     patch:
       tags:
       - 申购计划
-      summary: Batch Update Materials
+      summary: 批量编辑申购计划
       operationId: batch_update_materials_api_v1_purchase_materials_batch_patch
       requestBody:
         content:
@@ -5089,7 +5089,7 @@ paths:
     get:
       tags:
       - 申购计划
-      summary: Material Detail
+      summary: 申购计划详情
       operationId: material_detail_api_v1_purchase_materials__material_id__get
       security:
       - HTTPBearer: []
@@ -5141,7 +5141,7 @@ paths:
     patch:
       tags:
       - 申购计划
-      summary: Update Material
+      summary: 编辑申购计划
       operationId: update_material_api_v1_purchase_materials__material_id__patch
       security:
       - HTTPBearer: []
@@ -5199,7 +5199,7 @@ paths:
     delete:
       tags:
       - 申购计划
-      summary: Delete Material
+      summary: 删除申购计划
       operationId: delete_material_api_v1_purchase_materials__material_id__delete
       security:
       - HTTPBearer: []
@@ -5256,7 +5256,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Link Stock Material
+      summary: 关联二级库物资
       operationId: link_stock_material_api_v1_purchase_materials__material_id__link_stock_material_post
       security:
       - HTTPBearer: []
@@ -5315,7 +5315,7 @@ paths:
     post:
       tags:
       - 申购计划
-      summary: Move To Record
+      summary: 转入申购记录
       operationId: move_to_record_api_v1_purchase_materials__material_id__move_to_record_post
       security:
       - HTTPBearer: []
@@ -5374,7 +5374,7 @@ paths:
     get:
       tags:
       - 周期性计划
-      summary: List Templates
+      summary: 模板列表
       operationId: list_templates_api_v1_purchase_plan_templates_get
       security:
       - HTTPBearer: []
@@ -5518,7 +5518,7 @@ paths:
     post:
       tags:
       - 周期性计划
-      summary: Create Template
+      summary: 新增模板
       operationId: create_template_api_v1_purchase_plan_templates_post
       security:
       - HTTPBearer: []
@@ -5570,7 +5570,7 @@ paths:
     get:
       tags:
       - 周期性计划
-      summary: Filter Options
+      summary: 筛选选项
       operationId: filter_options_api_v1_purchase_plan_templates_filter_options_get
       responses:
         '200':
@@ -5616,7 +5616,7 @@ paths:
     get:
       tags:
       - 周期性计划
-      summary: Template Detail
+      summary: 模板详情
       operationId: template_detail_api_v1_purchase_plan_templates__template_id__get
       security:
       - HTTPBearer: []
@@ -5668,7 +5668,7 @@ paths:
     patch:
       tags:
       - 周期性计划
-      summary: Update Template
+      summary: 编辑模板
       operationId: update_template_api_v1_purchase_plan_templates__template_id__patch
       security:
       - HTTPBearer: []
@@ -5726,7 +5726,7 @@ paths:
     delete:
       tags:
       - 周期性计划
-      summary: Delete Template
+      summary: 删除模板
       operationId: delete_template_api_v1_purchase_plan_templates__template_id__delete
       security:
       - HTTPBearer: []
@@ -5783,7 +5783,7 @@ paths:
     post:
       tags:
       - 周期性计划
-      summary: Generate Purchase Plan
+      summary: 生成申购计划
       description: 把模板完整复制为一条今天的申购计划（plan_date=生成当天），模板本身不删除。
       operationId: generate_purchase_plan_api_v1_purchase_plan_templates__template_id__generate_post
       security:
@@ -5837,7 +5837,7 @@ paths:
     get:
       tags:
       - 申购记录同步
-      summary: Sync Targets
+      summary: 同步目标
       operationId: sync_targets_api_v1_purchase_record_sync_targets_get
       security:
       - HTTPBearer: []
@@ -5922,7 +5922,7 @@ paths:
     post:
       tags:
       - 申购记录同步
-      summary: Sync Trace
+      summary: 按追溯号同步
       operationId: sync_trace_api_v1_purchase_record_sync_trace__trace_no__post
       security:
       - HTTPBearer: []
@@ -5981,7 +5981,7 @@ paths:
     get:
       tags:
       - 申购记录同步
-      summary: Sync Order Targets
+      summary: 整单同步目标
       description: 按申购单号列出待同步整单目标（整单一次平台查询、整单批量回写）。
       operationId: sync_order_targets_api_v1_purchase_record_sync_order_targets_get
       security:
@@ -6067,7 +6067,7 @@ paths:
     post:
       tags:
       - 申购记录同步
-      summary: Sync Order Apply
+      summary: 整单同步回写
       description: 整单批量回写：把一个申购单下多个追溯号的结果一次写回。
       operationId: sync_order_apply_api_v1_purchase_record_sync_orders__purchase_order_no__apply_post
       security:
@@ -6127,7 +6127,7 @@ paths:
     get:
       tags:
       - 申购记录
-      summary: Purchase Records
+      summary: 申购记录列表
       operationId: purchase_records_api_v1_purchase_records_get
       security:
       - HTTPBearer: []
@@ -6411,7 +6411,7 @@ paths:
     get:
       tags:
       - 申购记录
-      summary: Purchase Record Filter Options
+      summary: 筛选选项
       operationId: purchase_record_filter_options_api_v1_purchase_records_filter_options_get
       responses:
         '200':
@@ -6457,7 +6457,7 @@ paths:
     post:
       tags:
       - 申购记录
-      summary: Export Purchase Record Results
+      summary: 导出申购记录
       description: 查询结果导出（含图片，耗时较长）：202 秒回任务，渲染在后台异步执行。
       operationId: export_purchase_record_results_api_v1_purchase_records_export_results_post
       requestBody:
@@ -6510,7 +6510,7 @@ paths:
     patch:
       tags:
       - 申购记录
-      summary: Batch Edit Purchase Records
+      summary: 批量编辑申购记录
       operationId: batch_edit_purchase_records_api_v1_purchase_records_batch_patch
       requestBody:
         content:
@@ -6566,7 +6566,7 @@ paths:
     get:
       tags:
       - 申购记录
-      summary: Purchase Record
+      summary: 申购记录详情
       operationId: purchase_record_api_v1_purchase_records__line_id__get
       security:
       - HTTPBearer: []
@@ -6618,7 +6618,7 @@ paths:
     patch:
       tags:
       - 申购记录
-      summary: Edit Purchase Record
+      summary: 编辑申购记录
       operationId: edit_purchase_record_api_v1_purchase_records__line_id__patch
       security:
       - HTTPBearer: []
@@ -6677,7 +6677,7 @@ paths:
     post:
       tags:
       - 申购记录
-      summary: Restore Purchase Record To Plan
+      summary: 退回申购计划
       operationId: restore_purchase_record_to_plan_api_v1_purchase_records__line_id__restore_to_plan_post
       security:
       - HTTPBearer: []
@@ -6738,7 +6738,7 @@ paths:
     get:
       tags:
       - 链接分享
-      summary: List Shares
+      summary: 分享链接列表
       description: 管理端「分享链接」列表：普通用户只看自己创建的，超管看全部。
       operationId: list_shares_api_v1_shares_get
       security:
@@ -6802,7 +6802,7 @@ paths:
     post:
       tags:
       - 链接分享
-      summary: Create Share
+      summary: 新增分享链接
       description: '创建匿名分享链接：把勾选的申购计划/申购记录分享为无鉴权页面。
 
 
@@ -6860,7 +6860,7 @@ paths:
     get:
       tags:
       - 链接分享
-      summary: Get Share
+      summary: 分享链接详情
       operationId: get_share_api_v1_shares__token__get
       parameters:
       - name: token
@@ -6910,7 +6910,7 @@ paths:
     patch:
       tags:
       - 链接分享
-      summary: Update Share
+      summary: 编辑分享链接
       description: 更新分享链接：展示列与到期时间；仅创建者本人或超级管理员可执行。
       operationId: update_share_api_v1_shares__token__patch
       security:
@@ -6970,7 +6970,7 @@ paths:
     delete:
       tags:
       - 链接分享
-      summary: Revoke Share
+      summary: 作废分享链接
       description: 撤回分享：仅创建者本人或超级管理员可执行，撤回后匿名读取立即失效。
       operationId: revoke_share_api_v1_shares__token__delete
       security:
@@ -7021,7 +7021,7 @@ paths:
     get:
       tags:
       - 基础数据
-      summary: Users
+      summary: 用户列表
       operationId: users_api_v1_users_get
       security:
       - HTTPBearer: []
@@ -7092,7 +7092,7 @@ paths:
     post:
       tags:
       - 基础数据
-      summary: Add User
+      summary: 新增用户
       operationId: add_user_api_v1_users_post
       security:
       - HTTPBearer: []
@@ -7144,7 +7144,7 @@ paths:
     patch:
       tags:
       - 基础数据
-      summary: Edit User
+      summary: 编辑用户
       operationId: edit_user_api_v1_users__item_id__patch
       security:
       - HTTPBearer: []
@@ -7202,7 +7202,7 @@ paths:
     delete:
       tags:
       - 基础数据
-      summary: Remove User
+      summary: 删除用户
       operationId: remove_user_api_v1_users__item_id__delete
       security:
       - HTTPBearer: []
@@ -7251,7 +7251,7 @@ paths:
     post:
       tags:
       - 基础数据
-      summary: Regenerate User Api Token
+      summary: 重置接口令牌
       operationId: regenerate_user_api_token_api_v1_users__item_id__api_token_regenerate_post
       security:
       - HTTPBearer: []
@@ -7310,7 +7310,7 @@ paths:
     get:
       tags:
       - 导出任务
-      summary: Get Export Job
+      summary: 导出进度
       operationId: get_export_job_api_v1_excel_export_jobs__job_id__get
       security:
       - HTTPBearer: []
@@ -7364,7 +7364,7 @@ paths:
     get:
       tags:
       - 导出任务
-      summary: Download Export File By Uuid
+      summary: 下载导出文件
       operationId: download_export_file_by_uuid_api_v1_excel_export_jobs_files__file_uuid__get
       parameters:
       - name: file_uuid
@@ -7411,7 +7411,7 @@ paths:
     post:
       tags:
       - 图片
-      summary: Upload
+      summary: 上传图片
       operationId: upload_api_v1_files_images_post
       requestBody:
         content:
@@ -7463,7 +7463,7 @@ paths:
     get:
       tags:
       - 图片
-      summary: Orphan Report
+      summary: 悬空图片报告
       operationId: orphan_report_api_v1_files_images_orphans_get
       security:
       - HTTPBearer: []
@@ -7518,7 +7518,7 @@ paths:
     delete:
       tags:
       - 图片
-      summary: Remove Orphans
+      summary: 清理悬空图片
       operationId: remove_orphans_api_v1_files_images_orphans_delete
       security:
       - HTTPBearer: []
@@ -7574,7 +7574,7 @@ paths:
     get:
       tags:
       - 图片
-      summary: Read Image
+      summary: 读取图片
       operationId: read_image_api_v1_files_images__file_id__get
       parameters:
       - name: file_id
@@ -7633,7 +7633,7 @@ paths:
     delete:
       tags:
       - 图片
-      summary: Remove
+      summary: 删除图片
       operationId: remove_api_v1_files_images__file_id__delete
       security:
       - HTTPBearer: []
