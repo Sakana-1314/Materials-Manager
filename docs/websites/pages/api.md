@@ -52,12 +52,14 @@
 | Apifox Mock | `VITE_API_BASE_URL=https://m1.apifoxmock.com/m1/•••/api/v1` | 直连 Mock 环境，读写都作用于 Mock |
 | 线上后端 | `VITE_API_BASE_URL=https://api.example.com` | 只填域名时自动补 `/api/v1` |
 
-**Apifox 的 Mock 取值优先级与仓库的关系**（Apifox 官方规则：高级 Mock 期望 > 响应示例 > 智能 Mock）：
+**为什么示例必须写成响应示例**（Apifox 官方取值优先级：高级 Mock 期望 > 响应示例 > 智能 Mock）：
 
-| 情况 | Apifox 返回什么 | 仓库要做什么 |
-| --- | --- | --- |
-| 默认「智能 Mock 优先」 | 按字段名用内置规则自己编（会出现 `"name":"没问连住道"` 这类乱码数据） | 无 |
-| 切成「响应示例优先」 | 契约里的响应示例，即本文档演示站的业务台账 | 一次性设置：Apifox「项目设置 → 功能设置 → Mock 设置 → 响应示例优先」 |
+| 接口情况 | Apifox Mock 返回什么 |
+| --- | --- |
+| 契约里有响应示例 | 原样返回这份业务台账（演示站当前的数据） |
+| 契约里没有响应示例 | 降级到智能 Mock，按字段名用内置规则自己编，会出现 `"name":"没问连住道"`、`"current_qty":"+03392027477.657"` 这类看上去像乱码的数据 |
+
+所以「每个接口都写响应示例」是这份契约的硬要求，`server/tests/test_openapi_examples.py` 会校验。
 
 响应示例写在 `docs/openapi.yaml` 的 `paths.*.*.responses.*.content.application/json.example`，
 由 `server/scripts/openapi_examples.py` 从一套华星镍业电气自动化车间的业务台账生成（二级库物资、

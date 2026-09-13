@@ -1,9 +1,9 @@
 name: 同步接口文档到 Apifox
 
 # 把仓库里的 OpenAPI 契约同步到 Apifox 项目，作为团队查看 / Mock 的唯一来源。
-# 演示站的 Mock 数据来自契约里的响应示例（schema examples + responses.*.example，由
-# server/scripts/openapi_examples.py 生成）：Apifox 项目需把「项目设置 → 功能设置 → Mock 设置」
-# 设为「响应示例优先」，否则走智能 Mock 会按字段名自己编数据。
+# 演示站的 Mock 数据来自契约里的响应示例（responses.*.content.application/json.example，由
+# server/scripts/openapi_examples.py 生成）：没有响应示例的接口，Apifox 会降级到智能 Mock
+# 按字段名自己编数据，因此每个接口都要带响应示例。
 # 令牌与项目 ID 分别来自仓库 Secret（APIFOX_ACCESS_TOKEN）与变量（APIFOX_PROJECT_ID）。
 on:
   push:
