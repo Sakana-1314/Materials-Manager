@@ -10,6 +10,12 @@
 平台回写的字段。物资数量、流水前后库存、低库存判定、筛选项、分页 `total`、工作台统计全部由
 `_MATERIALS` 与 `_OPERATIONS` 推导，不存在两处对不上的假数据。
 
+示例分两层落地到契约：
+- `components.schemas.*.examples[0]`：数据模型示例（文档与前端类型注释用）；
+- `paths.*.*.responses.*.content.application/json.example`：接口响应示例，Apifox 的
+  「功能设置 → Mock 设置 → 响应示例优先」直接用它作为 Mock 返回值（默认的「智能 Mock 优先」
+  会按字段名自己编数据，看不到这里写的内容）。
+
 生成规则（按优先级）：
 1. `_SCHEMA_EXAMPLES`：手写的业务示例（关键 schema），字段之间保证自洽；
 2. schema 自身的 enum，或 `$ref` 指向的枚举 → 取第一个取值；
@@ -1042,7 +1048,7 @@ def _build_schema_examples() -> dict[str, Any]:
             "token_type": "bearer",
         },
         # —— 用户与小程序用户 ——
-        "UserRead": _USER_ROWS[1],
+        "UserRead": _USER_ROWS[0],
         "UserCreate": {
             "username": "warehouse",
             "password": "123456",
@@ -2243,6 +2249,73 @@ def _object_example(spec: dict[str, Any], depth: int, schemas: dict[str, Any]) -
 
 
 _SCHEMA_EXAMPLES: dict[str, Any] = _build_schema_examples()
+
+
+# 错误响应用哪条真实错误码（与 docs/websites/pages/api-error-codes.md 的分类一致）
+_ERROR_BY_STATUS: dict[str, tuple[str, str]] = {
+    "400": ("NOT_FOUND", "二级库物资不存在"),
+    "401": ("UNAUTHORIZED", "请先登录"),
+    "403": ("FORBIDDEN", "没有执行此操作的权限"),
+    "409": ("VERSION_CONFLICT", "数据已被其他用户修改，请刷新后重试"),
+    "422": ("VALIDATION_ERROR", "请求字段或筛选参数不合法"),
+}
+
+_OPERATION_METHODS = {"get", "post", "put", "patch", "delete"}
+
+
+def _api_error_example(code: str, message: str) -> dict[str, Any]:
+    return {
+        "code": code,
+        "message": message,
+        "details": {},
+        "request_id": _uuid(f"error:{code}"),
+    }
+
+
+def _resolve_placeholders(node: Any, schemas: dict[str, Any]) -> Any:
+    """把 `__ref__` 占位换成被引用 schema 的示例（这些示例此时已经解析完毕）。"""
+    if isinstance(node, dict):
+        if "__ref__" in node and len(node) == 1:
+            name = node["__ref__"].rsplit("/", 1)[-1]
+            examples = (schemas.get(name) or {}).get("examples") or []
+            return deepcopy(examples[0]) if examples else {}
+        return {key: _resolve_placeholders(value, schemas) for key, value in node.items()}
+    if isinstance(node, list):
+        return [_resolve_placeholders(item, schemas) for item in node]
+    return node
+
+
+def _response_example(status: str, schema: dict[str, Any], schemas: dict[str, Any]) -> Any:
+    """接口响应示例：错误响应给真实错误码，成功响应给对应 schema 的业务示例。"""
+    if status in _ERROR_BY_STATUS:
+        return _api_error_example(*_ERROR_BY_STATUS[status])
+    name = schema.get("$ref", "").rsplit("/", 1)[-1]
+    examples = (schemas.get(name) or {}).get("examples") or []
+    if examples:
+        return deepcopy(examples[0])
+    # 数组 / 未引用命名的响应：就地生成并展开占位引用
+    return _resolve_placeholders(_example_from_schema(schema, "response", 1, schemas), schemas)
+
+
+def add_response_examples(document: dict[str, Any]) -> int:
+    """为每个接口的 JSON 响应写 `example`，返回处理的响应数。"""
+    schemas = document.get("components", {}).get("schemas", {})
+    handled = 0
+    for operations in document.get("paths", {}).values():
+        for method, operation in operations.items():
+            if method not in _OPERATION_METHODS or not isinstance(operation, dict):
+                continue
+            for status, response in (operation.get("responses") or {}).items():
+                media = (response.get("content") or {}).get("application/json")
+                if not isinstance(media, dict) or "example" in media:
+                    continue
+                schema = media.get("schema") or {}
+                # 文件流响应（Excel / 图片）没有 schema，写 JSON 示例反而误导，跳过。
+                if not schema:
+                    continue
+                media["example"] = deepcopy(_response_example(status, schema, schemas))
+                handled += 1
+    return handled
 
 
 def add_examples(document: dict[str, Any]) -> int:

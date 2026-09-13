@@ -1,13 +1,17 @@
 """示例数据（Apifox Mock）的守卫测试。
 
-`docs/openapi.yaml` 里的 `examples` 是 Apifox「Mock 环境」与文档站演示的全部数据来源，
-一旦写成占位符或前后对不上，演示、联调都会直接呈现假数据。这里把几条硬要求固定下来：
+`docs/openapi.yaml` 里的示例是 Apifox「Mock 环境」与文档站演示的全部数据来源：数据模型示例
+（`components.schemas.*.examples`）供文档与前端类型注释使用，接口响应示例
+（`paths.*.*.responses.*.content.application/json.example`）是 Apifox「响应示例优先」下真正
+返回给演示站的 Mock 数据。一旦写成占位符或前后对不上，演示与联调都会直接呈现假数据。
+这里把几条硬要求固定下来：
 
 1. 不出现生成器的兜底占位符（`xxx-示例`）——出现即说明有新字段没登记示例；
 2. 必填字段在示例里必须存在且不为 null（否则 Mock 数据会让前端直接报错）；
 3. 带 `enum` 的字段（含 `$ref` 指向的枚举）取值必须落在枚举里；
 4. 分页 schema 的 `total` 必须等于 `items` 长度，且不超过 `page_size`；
-5. 出入库明细的 `before_qty ± quantity == after_qty`。
+5. 出入库明细的 `before_qty ± quantity == after_qty`；
+6. 每个 JSON 响应都有示例，且错误响应用的是真实错误码与对应文案。
 """
 
 from __future__ import annotations
@@ -16,17 +20,41 @@ from decimal import Decimal
 from typing import Any
 
 from app.main import app
-from scripts.openapi_examples import add_examples, resolve_refs
+from scripts.openapi_examples import (
+    _ERROR_BY_STATUS,
+    add_examples,
+    add_response_examples,
+    resolve_refs,
+)
 
 PLACEHOLDER_SUFFIX = "-示例"
 OPERATION_TYPES = {"INBOUND": Decimal(1), "OUTBOUND": Decimal(-1)}
+OPERATION_METHODS = ("get", "post", "put", "patch", "delete")
 
 
 def _document() -> dict[str, Any]:
     document = app.openapi()
     add_examples(document)
     resolve_refs(document)
+    add_response_examples(document)
     return document
+
+
+def _json_responses() -> list[tuple[str, str, str, dict[str, Any]]]:
+    """(method, path, status, media) —— 契约里所有带 schema 的 JSON 响应。
+
+    文件流响应（Excel 导出、图片读取）在契约里是空 schema，它们不写 JSON 示例。
+    """
+    rows = []
+    for path, operations in _document()["paths"].items():
+        for method, operation in operations.items():
+            if method not in OPERATION_METHODS:
+                continue
+            for status, response in (operation.get("responses") or {}).items():
+                media = (response.get("content") or {}).get("application/json")
+                if isinstance(media, dict) and media.get("schema"):
+                    rows.append((method.upper(), path, status, media))
+    return rows
 
 
 def _walk(document: dict[str, Any], spec: dict[str, Any], value: Any, path: str) -> list[str]:
@@ -152,3 +180,36 @@ def test_api_error_example_uses_a_real_error_code() -> None:
     error_example = _examples()["ApiError"]
     assert error_example["code"] == "NOT_FOUND"
     assert error_example["message"] == "二级库物资不存在"
+
+
+def test_every_json_response_has_example() -> None:
+    """接口响应示例是 Apifox「响应示例优先」下的 Mock 返回值，一个都不能少。"""
+    missing = [
+        f"{method} {path} {status}"
+        for method, path, status, media in _json_responses()
+        if "example" not in media
+    ]
+    assert missing == [], f"这些响应没有示例：{missing[:5]}"
+
+
+def test_response_examples_match_their_schema() -> None:
+    """响应示例同样要满足必填、枚举与占位符要求。"""
+    document = _document()
+    problems: list[str] = []
+    for method, path, status, media in _json_responses():
+        label = f"{method} {path} {status}"
+        problems.extend(_walk(document, media["schema"], media["example"], label))
+    assert problems == []
+
+
+def test_error_response_examples_use_real_error_codes() -> None:
+    """错误响应示例要给真实错误码 + 对应文案，不能是 code/message 打架的假数据。"""
+    offenders = []
+    for method, path, status, media in _json_responses():
+        expected = _ERROR_BY_STATUS.get(status)
+        if expected is None:
+            continue
+        example = media["example"]
+        if (example.get("code"), example.get("message")) != expected:
+            offenders.append(f"{method} {path} {status}: {example.get('code')}")
+    assert offenders == []
