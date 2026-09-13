@@ -1,7 +1,7 @@
 """把演示站的深链回传脚本注入站点 404.html。
 
 为什么需要：演示站是本仓库里的单页应用，直接刷新它的深层路由（如
-/Electrical-Manager/demo/offline/warehouse/stock）时，静态托管找不到对应文件。
+/Electrical-Manager/demo/warehouse/stock）时，静态托管找不到对应文件。
 GitHub Pages 只回「站点根目录」的 404.html（子目录里的 404.html 不生效，已实测），
 所以 SPA 回退只能做在这一页：由它把原路径以 ?path= 回传给演示入口，
 演示入口自带的引导脚本（web/index.html）还原路径后再挂载 history 路由。
@@ -23,11 +23,11 @@ SCRIPT = (
     MARKER
     + """
 <script>
-  // 演示站（/demo/、/demo/offline/）是本仓库里的单页应用。刷新它们的深层路由时静态托管找不到
+  // 演示站（/demo/）是本仓库里的单页应用。刷新它们的深层路由时静态托管找不到
   // 对应文件而落到本页，这里把原路径回传给演示入口；入口自带的引导脚本还原路径后再挂载 history
   // 路由，因此不改路由配置，也不影响正常访问时的 URL。文档站与业务部署不受影响。
   ;(function () {
-    var bases = ['/Electrical-Manager/demo/offline/', '/Electrical-Manager/demo/']
+    var bases = ['/Electrical-Manager/demo/']
     var path = window.location.pathname
     for (var i = 0; i < bases.length; i++) {
       var base = bases[i]

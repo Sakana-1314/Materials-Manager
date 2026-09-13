@@ -3,7 +3,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid'
 
 /**
  * 站点源码在 pages/（srcDir），构建产物在 .vitepress/dist/。
- * base 必须与 GitHub Pages 的仓库路径一致：https://sakana-1314.github.io/Electrical-Manager/
+ * base 必须与 GitHub Pages 的仓库路径一致：https://Sakana-1314.github.io/Electrical-Manager/
  *
  * withMermaid 包装配置并注册 mermaid：文档里的 ```mermaid 代码块会渲染成图
  * （不包装时只会显示成带高亮的代码块）。开发资料各页的状态机、时序图、ER 图都依赖它。

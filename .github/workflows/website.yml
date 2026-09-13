@@ -1,7 +1,7 @@
 name: 构建并发布项目站点
 
 # 在 main 上构建 docs/websites 的 VitePress 站点，推送到 gh-pages 分支，由 GitHub Pages 发布。
-# 站点地址：https://sakana-1314.github.io/Electrical-Manager/
+# 站点地址：https://Sakana-1314.github.io/Electrical-Manager/
 # PR 上只做构建校验（不发布），避免主题/插件/文档配置的问题合并到 main 后才暴露。
 on:
   push:
@@ -54,14 +54,15 @@ jobs:
         working-directory: docs/websites
         run: npx vitepress build --outDir "$SITE_OUT_DIR"
 
-      # 演示：同一份网页端代码，用 --mode demo 产出 base=/Electrical-Manager/demo/、后端指向
-      # Apifox Mock 的产物，复制进站点输出目录的 demo/ 子目录，于是与站点同域、可被 iframe 内嵌。
+      # 演示：同一份网页端代码，用 --mode demo 产出 base=/Electrical-Manager/demo/、
+      # 后端直连 Apifox Mock 的产物（不装 service worker、不本地造假数据），
+      # 复制进站点输出的 demo/ 子目录，于是与站点同域、可被 iframe 内嵌。
       # 业务部署（base=/）不受影响。
       - name: 安装网页端依赖（演示构建用）
         working-directory: web
         run: npm ci
 
-      - name: 构建演示（Apifox Mock 后端）
+      - name: 构建演示（直连 Apifox Mock）
         working-directory: web
         run: npx vite build --mode demo
 
@@ -85,7 +86,7 @@ jobs:
           print("演示入口已标记 data-demo-base")
           PYEOF
 
-      - name: 把演示（Apifox Mock）放进站点输出的 demo/
+      - name: 把演示放进站点输出的 demo/
         run: |
           set -e
           rm -rf "$SITE_OUT_DIR/demo"
@@ -93,42 +94,7 @@ jobs:
           test -f "$SITE_OUT_DIR/demo/index.html"
           echo "demo/：$(find "$SITE_OUT_DIR/demo" -type f | wc -l) 个文件"
 
-      # 第二份演示：同一份代码换成前端自带的 MSW 契约模拟（web/src/mocks/），
-      # 数据是真实感的固定数据、断网可用，适合做文档里的交互演示。
-      - name: 构建离线演示（MSW，不连外部后端）
-        working-directory: web
-        run: npx vite build --mode demo-offline
-
-      # 演示站要处理「深层路由被直接刷新」：站点 404 页把原路径回传，入口自带的引导脚本据此还原
-      # 路径。该属性只在演示产物里注入；业务构建没有它，引导脚本直接 return，行为完全不变。
-      - name: 给离线演示入口标记 base（启用深链回退）
-        run: |
-          set -e
-          python3 - <<'PYEOF'
-          import pathlib
-
-          path = pathlib.Path("web/dist/index.html")
-          html = path.read_text(encoding="utf-8")
-          html = html.replace(
-              "<html lang=\"zh-CN\">",
-              '<html lang="zh-CN" data-demo-base="/Electrical-Manager/demo/offline/">',
-              1,
-          )
-          assert 'data-demo-base="/Electrical-Manager/demo/offline/"' in html
-          path.write_text(html, encoding="utf-8")
-          print("离线演示入口已标记 data-demo-base")
-          PYEOF
-
-      - name: 把离线演示放进站点输出的 demo/offline/
-        run: |
-          set -e
-          rm -rf "$SITE_OUT_DIR/demo/offline"
-          cp -a web/dist "$SITE_OUT_DIR/demo/offline"
-          test -f "$SITE_OUT_DIR/demo/offline/index.html"
-          test -f "$SITE_OUT_DIR/demo/offline/mockServiceWorker.js"
-          echo "demo/offline/：$(find "$SITE_OUT_DIR/demo/offline" -type f | wc -l) 个文件"
-
-      # 站点与两份演示都是「index.html 引用带 hash 的资源」，hash 不匹配时页面会白屏而
+      # 站点与演示都是「index.html 引用带 hash 的资源」，hash 不匹配时页面会白屏而
       # 构建仍然成功（曾因此误判过线上状态）。这里在发布前把每个 HTML 引用的本地资源逐个校验。
       # 站点的二级 tab 是自定义组件，只认 <Tabs>/<TabsContent>；写成 VitePress 的 ::: tabs 容器语法
       # 不会报错，但会把内容当普通文本渲染出来（曾线上出现过）。这里做一次静态检查。

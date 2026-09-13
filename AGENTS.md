@@ -32,6 +32,7 @@
 - 站点源码在 `docs/websites/`：`pages/` 是内容（VitePress `srcDir`），`.vitepress/config.ts` 是配置，`package.json` 管理依赖。
 - 已发布的文档（开发方案、UI 规范、API 约定、前后端分离部署、人工测试方案）都在 `pages/` 下，**不要再放回 `docs/` 根目录**；`docs/` 根只保留 `openapi.yaml`、`env/`、`references/` 与 `websites/`。
 - `base` 必须与仓库路径一致（`/Electrical-Manager/`）；**仓库改名后要同步改** `.vitepress/config.ts` 的 `base` 与 README／AGENTS 里的站点地址。
+- 站点地址统一写作 `https://Sakana-1314.github.io/Electrical-Manager/`（大小写按账号名书写；域名解析本身不区分大小写，但文档里保持一致更易读）。
 - 发布由 `.github/workflows/website.yml` 在 `main` 变更时自动完成：构建 `docs/websites` 后推送到 `gh-pages` 分支，由 GitHub Pages 发布；不要手工提交构建产物。
 - 本地预览：`cd docs/websites && npm install && npm run dev`；提交前跑一次 `npm run build` 确认能构建。
 - **长页面必须拆成二级 tab**：用站点自带的 `<Tabs>` / `<TabsContent>` 组件（见 `.vitepress/theme/components/`），
@@ -59,7 +60,8 @@
 - **演示站的深链刷新靠站点 404 页回退**：GitHub Pages 只回站点根目录的 `404.html`（子目录内的
   `404.html` 不生效，已实测），所以回传脚本由 `docs/websites/scripts/inject_demo_fallback.py`
   注入到站点 404 产物；演示入口的还原脚本在 `web/index.html`，只在带
-  `data-demo-base` 标记的演示产物里生效（业务构建直接 return）。改这条链路时两边要一起改。
+  `data-demo-base` 标记的演示产物里生效（业务构建直接 return）。演示后端直连 Apifox Mock
+  （`web/.env.demo` 的 `VITE_API_BASE_URL`），**不使用 service worker 转发**；改这条链路时两边要一起改。
 
 ## 验证命令（提交前必须通过）
 

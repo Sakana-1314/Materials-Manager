@@ -1,50 +1,43 @@
 # 在线演示
 
-下面的窗口就是本系统的网页端，可以随便点。后端为前端自带的契约模拟（MSW），数据固定、
-断网可用、不写任何真实数据。
+下面嵌入的是本系统网页端的完整体验环境，可直接操作。演示后端为
+[Apifox Mock 服务](/api)，所有读写均为模拟数据，不影响任何真实业务数据。
 
 <iframe
-  src="/Electrical-Manager/demo/offline/"
+  src="/Electrical-Manager/demo/"
   title="HXNI 电气无忧 在线演示"
-  width="100%"
-  height="820"
-  style="border:1px solid var(--vp-c-divider);border-radius:12px;background:#fff"
+  width="390"
+  height="844"
+  style="display:block;margin:16px auto;border:1px solid var(--vp-c-divider);border-radius:24px;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.08)"
   loading="lazy"
   referrerpolicy="no-referrer"
 ></iframe>
 
-<p style="text-align:right;margin-top:8px">
-  <a href="/Electrical-Manager/demo/offline/" target="_blank" rel="noopener">在新窗口打开 ↗</a>
+<p style="text-align:center;margin-top:8px">
+  <a href="/Electrical-Manager/demo/" target="_blank" rel="noopener">在新窗口打开演示 ↗</a>
 </p>
 
-## 演示里能做什么
+## 可用功能
 
-| 可以做 | 说明 |
+| 项 | 说明 |
 | --- | --- |
-| 登录 | 四个初始账号 `admin` / `warehouse` / `purchase` / `readonly`，密码均为 `123456` |
-| 浏览各模块 | 工作台、二级库物资、库存余额与流水、申购计划、申购记录、物料编码库、华星库存、周期性计划、精简库存、备忘录 |
-| 真实交互 | 新增 / 编辑 / 删除、入出库、冲销流水、筛选分页排序都能操作；数据在浏览器内维护，刷新后回到初始状态 |
-| 权限差异 | 换不同账号登录，可见菜单与按钮不同（写操作按角色隐藏） |
+| 登录账号 | `admin` / `warehouse` / `purchase` / `readonly`，密码均为 `123456` |
+| 覆盖模块 | 工作台、二级库物资、库存余额与流水、申购计划、申购记录、物料编码库、华星库存、周期性计划、精简库存、备忘录 |
+| 可交互操作 | 新增、编辑、删除、出入库、冲销流水、筛选与分页排序；写入仅作用于 Mock 服务，刷新后恢复默认响应 |
+| 角色差异 | 不同账号登录后可见菜单与操作按钮不同，写操作按角色隐藏 |
 
-数据来自 `web/src/mocks/`（与契约对齐的 83 个接口），不依赖外部服务。
-
-## 两份演示
-
-| 演示 | 地址 | 后端 | 适合 |
-| --- | --- | --- | --- |
-| 离线演示（本页嵌的） | `/demo/offline/` | 前端 MSW，固定数据 | 看功能与交互 |
-| Mock 演示 | `/demo/` | [Apifox Mock](/api) | 验证契约与联调链路（数据为随机生成） |
+演示为手机端比例的窗口，与系统在移动端的呈现一致；宽屏下建议点「在新窗口打开演示」。
 
 ## 构建与发布
 
 | 产物 | 构建命令 | base | 部署位置 |
 | --- | --- | --- | --- |
-| 业务网页端 | `npm run build` | `/` | 自己的服务器 / 镜像 |
-| 离线演示 | `vite build --mode demo-offline` | `/Electrical-Manager/demo/offline/` | 本站 `/demo/offline/` |
-| Mock 演示 | `vite build --mode demo` | `/Electrical-Manager/demo/` | 本站 `/demo/` |
+| 业务网页端 | `npm run build` | `/` | 自有服务器 / 容器镜像 |
+| 在线演示 | `vite build --mode demo` | `/Electrical-Manager/demo/` | 本站在 `/demo/` |
 
-各模式的参数见 `web/.env.demo`、`web/.env.demo-offline`；发布由 `.github/workflows/website.yml`
-在站点构建后依次构建并复制到站点输出的 `demo/` 下，与站点同域，可直接 iframe 引用。
+演示的构建参数在 `web/.env.demo`（子路径与 Mock 地址），后端由 `VITE_API_BASE_URL` 指向
+Apifox Mock，**不使用本地 service worker 转发**。发布由 `.github/workflows/website.yml`
+在站点构建完成后构建演示并复制到站点输出的 `demo/` 目录，因此与文档站同域，可直接 iframe 嵌入。
 
 ## 深链刷新
 
@@ -52,8 +45,8 @@
 
 | 步骤 | 行为 |
 | --- | --- |
-| 1 | 刷新 `/demo/offline/warehouse/stock` 时静态托管找不到文件，落到站点 404 页 |
-| 2 | 站点 404 页认出这是演示路径，带原路径跳回演示入口（`?path=…`） |
-| 3 | 演示入口自带的引导脚本在路由挂载前还原真实路径，页面正常渲染 |
+| 1 | 刷新 `/demo/warehouse/stock` 时静态托管找不到文件，落到站点 404 页 |
+| 2 | 站点 404 页识别为演示路径，带原路径跳回演示入口（`?path=…`） |
+| 3 | 演示入口的引导脚本在路由挂载前还原真实路径，页面正常渲染 |
 
 只影响演示产物与站点 404 页：业务构建不带该标记，行为不变；路由配置未改，正常访问时 URL 也不变。
