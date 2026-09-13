@@ -65,6 +65,7 @@ features:
 
 ## 相关文档
 
+- [在线演示](/demo)：直接在本页 iframe 里体验网页端（后端为 Apifox Mock，不写真实数据）。
 - [使用与部署指南](/guide)：Docker Compose 部署、本地开发、环境变量与数据库初始化。
 - [系统概述](/dev-overview)：角色权限矩阵、术语表与目录结构；[数据模型](/dev-data-model)、[状态机](/dev-state-machines)、[核心数据流](/dev-flows)、[后端架构](/dev-backend)、[前端架构](/dev-frontend)、[测试与质量](/dev-testing)。
 - [接口文档与 Mock](/api)：契约生成流程、Apifox 用法与令牌说明。

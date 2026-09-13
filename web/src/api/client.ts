@@ -6,6 +6,12 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & { _authRetry?: boolea
 
 let refreshRequest: Promise<string> | null = null
 
+/** 未登录时跳登录页：路径带 vite base 前缀（子路径部署时也能跳对）。 */
+function redirectToLogin() {
+  const loginPath = `${import.meta.env.BASE_URL}login`.replace(/\/{2,}/g, '/')
+  if (location.pathname !== loginPath) location.assign(loginPath)
+}
+
 function clearSession() {
   localStorage.removeItem('access_token')
   localStorage.removeItem('refresh_token')
@@ -73,11 +79,11 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch {
         clearSession()
-        if (location.pathname !== '/login') location.assign('/login')
+        redirectToLogin()
       }
     } else if (error.response?.status === 401) {
       clearSession()
-      if (location.pathname !== '/login') location.assign('/login')
+      redirectToLogin()
     }
     const payload = error.response?.data
     const fallback: ApiError = error.response
