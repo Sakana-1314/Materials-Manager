@@ -2,9 +2,14 @@ name: 构建并发布项目站点
 
 # 在 main 上构建 docs/websites 的 VitePress 站点，推送到 gh-pages 分支，由 GitHub Pages 发布。
 # 站点地址：https://sakana-1314.github.io/Electrical-Manager/
+# PR 上只做构建校验（不发布），避免主题/插件/文档配置的问题合并到 main 后才暴露。
 on:
   push:
     branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/website.yml"
+  pull_request:
     paths:
       - "docs/**"
       - ".github/workflows/website.yml"
@@ -46,6 +51,7 @@ jobs:
         run: npx vitepress build --outDir "$SITE_OUT_DIR"
 
       - name: 发布到 gh-pages 分支
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
