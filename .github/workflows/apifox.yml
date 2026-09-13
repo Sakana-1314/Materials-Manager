@@ -51,15 +51,16 @@ jobs:
           APIFOX_PROJECT_ID: ${{ vars.APIFOX_PROJECT_ID }}
         run: |
           set -e
-          # 传入 OpenAPI 文档内容 + 覆盖策略，接口与数据模型按 title/路径自动合并，
-          # 不动 Apifox 里手写的测试用例与 Mock 期望。
+          # 传入 OpenAPI 文档内容 + 覆盖策略：契约是唯一来源，所以用覆盖式导入——
+          # AUTO_MERGE 会保留 Apifox 侧已有的「返回示例」，导致契约里改了示例、演示站仍用旧值。
+          # 接口与数据模型都覆盖；接口用例与 Mock 期望不在覆盖范围内。
           BODY="$(jq -n --rawfile spec docs/openapi.yaml '{
             input: $spec,
             options: {
               targetEndpointFolderId: 0,
               targetSchemaFolderId: 0,
-              endpointOverwriteBehavior: "AUTO_MERGE",
-              schemaOverwriteBehavior: "AUTO_MERGE",
+              endpointOverwriteBehavior: "OVERWRITE_EXISTING",
+              schemaOverwriteBehavior: "OVERWRITE_EXISTING",
               updateFolderOfChangedEndpoint: false,
               prependBasePath: false
             }
