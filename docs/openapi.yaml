@@ -7738,6 +7738,9 @@ components:
       - original
       - expanded
       title: AiSearchExpandRead
+      examples:
+      - original: original-示例
+        expanded: expanded-示例
     AiSearchExpandRequest:
       properties:
         value:
@@ -7750,6 +7753,8 @@ components:
       required:
       - value
       title: AiSearchExpandRequest
+      examples:
+      - value: value-示例
     AiSearchSettingsRead:
       properties:
         endpoint:
@@ -7824,6 +7829,26 @@ components:
       - secondary_warehouse_mode
       - version
       title: AiSearchSettingsRead
+      examples:
+      - endpoint: endpoint-示例
+        api_key: sk-example-key
+        model: model-示例
+        enabled: true
+        mini_program_code_env: mini_program_code_env-示例
+        mini_program_code_app_id: 1
+        mini_program_app_ids:
+        - mini_program_app_ids_item-示例
+        mini_program_registration_enabled: true
+        mini_program_new_user_enabled: true
+        image_acceleration_server_url: https://example.com/hook/token
+        inventory_mode: inventory_mode-示例
+        huaxing_inventory_mode: huaxing_inventory_mode-示例
+        purchase_plans_mode: purchase_plans_mode-示例
+        purchase_records_mode: purchase_records_mode-示例
+        material_codes_mode: material_codes_mode-示例
+        secondary_warehouse_mode: secondary_warehouse_mode-示例
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     AiSearchSettingsUpdate:
       properties:
         endpoint:
@@ -7893,6 +7918,23 @@ components:
       required:
       - version
       title: AiSearchSettingsUpdate
+      examples:
+      - endpoint: endpoint-示例
+        api_key: sk-example-key
+        model: model-示例
+        enabled: true
+        mini_program_code_env: mini_program_code_env-示例
+        mini_program_code_app_id: 1
+        mini_program_registration_enabled: true
+        mini_program_new_user_enabled: true
+        image_acceleration_server_url: https://example.com/hook/token
+        inventory_mode: inventory_mode-示例
+        huaxing_inventory_mode: huaxing_inventory_mode-示例
+        purchase_plans_mode: purchase_plans_mode-示例
+        purchase_records_mode: purchase_records_mode-示例
+        material_codes_mode: material_codes_mode-示例
+        secondary_warehouse_mode: secondary_warehouse_mode-示例
+        version: 1
     AiSearchStatusRead:
       properties:
         available:
@@ -7902,6 +7944,8 @@ components:
       required:
       - available
       title: AiSearchStatusRead
+      examples:
+      - available: true
     AiSearchTestRead:
       properties:
         original:
@@ -7915,6 +7959,9 @@ components:
       - original
       - expanded
       title: AiSearchTestRead
+      examples:
+      - original: original-示例
+        expanded: expanded-示例
     AiSearchTestRequest:
       properties:
         endpoint:
@@ -7936,6 +7983,10 @@ components:
       - api_key
       - model
       title: AiSearchTestRequest
+      examples:
+      - endpoint: endpoint-示例
+        api_key: sk-example-key
+        model: model-示例
     ApiError:
       properties:
         code:
@@ -7957,6 +8008,11 @@ components:
       - message
       - request_id
       title: ApiError
+      examples:
+      - code: NOT_FOUND
+        message: 操作成功
+        details: {}
+        request_id: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
     BatchMovePurchasePlansRequest:
       properties:
         purchase_order_no:
@@ -8043,6 +8099,21 @@ components:
       - purchase_date
       - material_ids
       title: BatchMovePurchasePlansRequest
+      examples:
+      - purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_date: '2026-09-13'
+        consolidation_port: Morowali
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        purchase_date: '2026-09-13'
+        salesperson: 李四
+        status: 正常
+        record_remark: record_remark-示例
+        material_ids:
+        - 1
     BatchUpdatePurchasePlansRequest:
       properties:
         materials:
@@ -8116,6 +8187,19 @@ components:
       required:
       - materials
       title: BatchUpdatePurchasePlansRequest
+      examples:
+      - materials:
+        - id: 1
+          version: 1
+        plan_date: '2026-09-13'
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        subitem_no: '01'
+        usage: 设备检修更换
+        status: 正常
     BatchUpdatePurchaseRecordsRequest:
       properties:
         records:
@@ -8224,6 +8308,25 @@ components:
       required:
       - records
       title: BatchUpdatePurchaseRecordsRequest
+      examples:
+      - records:
+        - line_id: 1
+          version: 1
+        plan_date: '2026-09-13'
+        purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_date: '2026-09-13'
+        consolidation_port: Morowali
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        purchase_date: '2026-09-13'
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        salesperson: 李四
+        status: 正常
+        record_remark: record_remark-示例
     Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post:
       properties:
         file:
@@ -8234,6 +8337,8 @@ components:
       required:
       - file
       title: Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post
+      examples:
+      - file: file-示例
     Body_import_lite_inventory_api_v1_secondary_warehouse_import_post:
       properties:
         file:
@@ -8244,6 +8349,8 @@ components:
       required:
       - file
       title: Body_import_lite_inventory_api_v1_secondary_warehouse_import_post
+      examples:
+      - file: file-示例
     Body_import_material_codes_api_v1_material_code_library_import_post:
       properties:
         file:
@@ -8254,6 +8361,8 @@ components:
       required:
       - file
       title: Body_import_material_codes_api_v1_material_code_library_import_post
+      examples:
+      - file: file-示例
     Body_upload_api_v1_files_images_post:
       properties:
         file:
@@ -8264,6 +8373,8 @@ components:
       required:
       - file
       title: Body_upload_api_v1_files_images_post
+      examples:
+      - file: file-示例
     DashboardSummaryRead:
       properties:
         stock_material_count:
@@ -8285,6 +8396,11 @@ components:
       - uncoded_purchase_material_count
       - purchase_record_count
       title: DashboardSummaryRead
+      examples:
+      - stock_material_count: 3
+        low_stock_count: 3
+        uncoded_purchase_material_count: 3
+        purchase_record_count: 3
     ExcelExportJobRead:
       properties:
         id:
@@ -8350,6 +8466,19 @@ components:
       - status
       - created_at
       title: ExcelExportJobRead
+      examples:
+      - id: 1
+        export_type: export_type-示例
+        status: 正常
+        download_filename: download_filename-示例
+        file_uuid: file_uuid-示例
+        params: {}
+        result: {}
+        error_code: DQ-000123
+        error_message: error_message-示例
+        created_at: '2026-09-13T10:30:00+08:00'
+        started_at: '2026-09-13T10:30:00+08:00'
+        finished_at: '2026-09-13T10:30:00+08:00'
     ExcelExportJobStatus:
       type: string
       enum:
@@ -8411,6 +8540,17 @@ components:
       - original_filename
       - created_at
       title: ExcelImportJobRead
+      examples:
+      - id: 1
+        import_type: import_type-示例
+        status: 正常
+        original_filename: original_filename-示例
+        result: {}
+        error_code: DQ-000123
+        error_message: error_message-示例
+        created_at: '2026-09-13T10:30:00+08:00'
+        started_at: '2026-09-13T10:30:00+08:00'
+        finished_at: '2026-09-13T10:30:00+08:00'
     ExcelImportJobStatus:
       type: string
       enum:
@@ -8450,6 +8590,13 @@ components:
       - width
       - height
       title: FileObjectRead
+      examples:
+      - id: 1
+        original_name: stock-material-20260913.png
+        mime_type: image/png
+        size_bytes: 204800
+        width: 800
+        height: 600
     HuaXingFilterOptions:
       properties:
         purchase_departments:
@@ -8467,6 +8614,11 @@ components:
       - purchase_departments
       - purchasers
       title: HuaXingFilterOptions
+      examples:
+      - purchase_departments:
+        - purchase_departments_item-示例
+        purchasers:
+        - purchasers_item-示例
     HuaXingInventoryRead:
       properties:
         id:
@@ -8528,6 +8680,18 @@ components:
       required:
       - id
       title: HuaXingInventoryRead
+      examples:
+      - id: 1
+        first_inbound_date: '2026-09-13'
+        warehouse: warehouse-示例
+        material_code: DQ-000123
+        name: 二级库物资
+        model_spec: CJX2-2510
+        quantity: '10.000'
+        unit_name: 个
+        purchaser: purchaser-示例
+        purchase_department: purchase_department-示例
+        subitem_no_name: 低压电器
     ImageAccelerationSettingsRead:
       properties:
         image_acceleration_server_url:
@@ -8537,6 +8701,8 @@ components:
       required:
       - image_acceleration_server_url
       title: ImageAccelerationSettingsRead
+      examples:
+      - image_acceleration_server_url: https://example.com/hook/token
     InventoryBalanceRead:
       properties:
         stock_material_id:
@@ -8588,6 +8754,17 @@ components:
       - suggested_purchase_qty
       - updated_at
       title: InventoryBalanceRead
+      examples:
+      - stock_material_id: 1
+        name: 二级库物资
+        alias: 接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        current_qty: '42.000'
+        minimum_qty: '5.000'
+        is_low_stock: true
+        suggested_purchase_qty: '10.000'
+        updated_at: '2026-09-13T10:30:00+08:00'
     LastImportRead:
       properties:
         last_import_at:
@@ -8598,6 +8775,8 @@ components:
           title: Last Import At
       type: object
       title: LastImportRead
+      examples:
+      - last_import_at: '2026-09-13T10:30:00+08:00'
     LinkStockMaterialRequest:
       properties:
         stock_material_id:
@@ -8613,6 +8792,9 @@ components:
       required:
       - stock_material_id
       title: LinkStockMaterialRequest
+      examples:
+      - stock_material_id: 1
+        version: 1
     LiteInventoryRead:
       properties:
         id:
@@ -8648,6 +8830,13 @@ components:
       - name
       title: LiteInventoryRead
       description: 管理端精简二级库行（Excel 一次性导入 + 只读查询）。
+      examples:
+      - id: 1
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        quantity: '10.000'
+        remark: 无
     LoginRequest:
       properties:
         username:
@@ -8665,6 +8854,9 @@ components:
       - username
       - password
       title: LoginRequest
+      examples:
+      - username: warehouse
+        password: password-示例
     LoginResponse:
       properties:
         access_token:
@@ -8686,6 +8878,11 @@ components:
       - refresh_token
       - user
       title: LoginResponse
+      examples:
+      - access_token: api-token-example
+        refresh_token: api-token-example
+        token_type: bearer
+        user: user-示例
     MaterialCodeExistsRead:
       properties:
         material_code:
@@ -8699,6 +8896,9 @@ components:
       - material_code
       - exists
       title: MaterialCodeExistsRead
+      examples:
+      - material_code: DQ-000123
+        exists: true
     MaterialCodeLibraryRead:
       properties:
         id:
@@ -8728,6 +8928,12 @@ components:
       - model_spec
       - unit_name
       title: MaterialCodeLibraryRead
+      examples:
+      - id: 1
+        material_code: DQ-000123
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
     MemoCreate:
       properties:
         title:
@@ -8743,6 +8949,9 @@ components:
       additionalProperties: false
       type: object
       title: MemoCreate
+      examples:
+      - title: title-示例
+        content: content-示例
     MemoRead:
       properties:
         id:
@@ -8775,6 +8984,13 @@ components:
       - version
       title: MemoRead
       description: 管理端个人备忘录（纯文本）：一级 tab 快捷切换多条，按创建人隔离。
+      examples:
+      - id: 1
+        title: title-示例
+        content: content-示例
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     MemoUpdate:
       properties:
         title:
@@ -8797,6 +9013,10 @@ components:
       required:
       - version
       title: MemoUpdate
+      examples:
+      - title: title-示例
+        content: content-示例
+        version: 1
     MiniProgramCodeEnv:
       type: string
       enum:
@@ -8833,6 +9053,13 @@ components:
       - material_codes_mode
       - secondary_warehouse_mode
       title: MiniProgramFeaturesRead
+      examples:
+      - inventory_mode: inventory_mode-示例
+        huaxing_inventory_mode: huaxing_inventory_mode-示例
+        purchase_plans_mode: purchase_plans_mode-示例
+        purchase_records_mode: purchase_records_mode-示例
+        material_codes_mode: material_codes_mode-示例
+        secondary_warehouse_mode: secondary_warehouse_mode-示例
     MiniProgramHuaXingInventoryRead:
       properties:
         id:
@@ -8894,6 +9121,18 @@ components:
       required:
       - id
       title: MiniProgramHuaXingInventoryRead
+      examples:
+      - id: 1
+        first_inbound_date: '2026-09-13'
+        warehouse: warehouse-示例
+        material_code: DQ-000123
+        name: 二级库物资
+        model_spec: CJX2-2510
+        quantity: '10.000'
+        unit_name: 个
+        purchaser: purchaser-示例
+        purchase_department: purchase_department-示例
+        subitem_no_name: 低压电器
     MiniProgramIdentityRead:
       properties:
         id:
@@ -8916,6 +9155,11 @@ components:
       - wechat_openid
       - created_at
       title: MiniProgramIdentityRead
+      examples:
+      - id: 1
+        app_id: 1
+        wechat_openid: wechat_openid-示例
+        created_at: '2026-09-13T10:30:00+08:00'
     MiniProgramInventoryItemRead:
       properties:
         uuid:
@@ -8946,6 +9190,13 @@ components:
       - current_qty
       - stock_status
       title: MiniProgramInventoryItemRead
+      examples:
+      - uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        current_qty: '42.000'
+        stock_status: stock_status-示例
     MiniProgramLiteInventoryItemRead:
       properties:
         id:
@@ -8976,6 +9227,12 @@ components:
       - name
       title: MiniProgramLiteInventoryItemRead
       description: 小程序端精简二级库行（无出入库，仅查看）。
+      examples:
+      - id: 1
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        quantity: '10.000'
     MiniProgramLoginResponse:
       properties:
         access_token:
@@ -9004,6 +9261,24 @@ components:
       required:
       - requires_profile
       title: MiniProgramLoginResponse
+      examples:
+      - access_token: api-token-example
+        registration_token: api-token-example
+        token_type: bearer
+        user:
+          id: 1
+          display_name: 张三
+          department_name: 低压电器
+          enabled: true
+          identities:
+          - id: 1
+            app_id: 1
+            wechat_openid: wechat_openid-示例
+            created_at: '2026-09-13T10:30:00+08:00'
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        requires_profile: true
     MiniProgramMaterialCodeRead:
       properties:
         id:
@@ -9031,6 +9306,12 @@ components:
       - material_code
       - unit_name
       title: MiniProgramMaterialCodeRead
+      examples:
+      - id: 1
+        material_code: DQ-000123
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
     MiniProgramMaterialRead:
       properties:
         uuid:
@@ -9077,6 +9358,22 @@ components:
       - current_qty
       - stock_status
       title: MiniProgramMaterialRead
+      examples:
+      - uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        current_qty: '42.000'
+        stock_status: stock_status-示例
+        minimum_qty: '5.000'
+        remark: 无
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
     MiniProgramOperationRead:
       properties:
         operation_id:
@@ -9153,6 +9450,22 @@ components:
 
 
         兼容入库/出库、小程序/管理端来源；多行操作按行展平为多条记录。'
+      examples:
+      - operation_id: 1
+        operation_no: CL-20260913-0001
+        operation_type: operation_type-示例
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        quantity: '10.000'
+        before_qty: '45.000'
+        after_qty: '42.000'
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        receiver_name: 低压电器
+        subitem_no: '01'
+        executed_by: executed_by-示例
     MiniProgramOutboundCreate:
       properties:
         client_request_id:
@@ -9200,6 +9513,14 @@ components:
       - business_reason
       - subitem_no
       title: MiniProgramOutboundCreate
+      examples:
+      - client_request_id: 8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d
+        material_uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        quantity: '10.000'
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        subitem_no: '01'
     MiniProgramOutboundRead:
       properties:
         operation_id:
@@ -9272,6 +9593,22 @@ components:
       - receiver_name
       - executed_by
       title: MiniProgramOutboundRead
+      examples:
+      - operation_id: 1
+        operation_no: CL-20260913-0001
+        material_uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        quantity: '10.000'
+        before_qty: '45.000'
+        after_qty: '42.000'
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        receiver_name: 低压电器
+        subitem_no: '01'
+        executed_by: executed_by-示例
     MiniProgramOutboundReason:
       properties:
         subitem_no:
@@ -9286,6 +9623,9 @@ components:
       required:
       - reason
       title: MiniProgramOutboundReason
+      examples:
+      - subitem_no: '01'
+        reason: reason-示例
     MiniProgramOutboundReasonOptions:
       properties:
         personal_reasons:
@@ -9303,6 +9643,13 @@ components:
       - personal_reasons
       - system_reasons
       title: MiniProgramOutboundReasonOptions
+      examples:
+      - personal_reasons:
+        - subitem_no: '01'
+          reason: reason-示例
+        system_reasons:
+        - subitem_no: '01'
+          reason: reason-示例
     MiniProgramProfileUpdate:
       properties:
         display_name:
@@ -9321,6 +9668,9 @@ components:
       - display_name
       - department_name
       title: MiniProgramProfileUpdate
+      examples:
+      - display_name: 张三
+        department_name: 低压电器
     MiniProgramPurchasePlanDetailRead:
       properties:
         id:
@@ -9406,6 +9756,31 @@ components:
       - demand_department
       - usage
       title: MiniProgramPurchasePlanDetailRead
+      examples:
+      - id: 1
+        plan_no: CL-20260913-0001
+        plan_date: '2026-09-13'
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        planned_qty: '10.000'
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        urgency: 正常
+        material_code: DQ-000123
+        category: 低压电器
+        demand_department: 电气自动化车间
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
+        next_id: 1
     MiniProgramPurchasePlanFilterOptions:
       properties:
         actual_demand_persons:
@@ -9423,6 +9798,11 @@ components:
       - actual_demand_persons
       - subitem_nos
       title: MiniProgramPurchasePlanFilterOptions
+      examples:
+      - actual_demand_persons:
+        - actual_demand_persons_item-示例
+        subitem_nos:
+        - subitem_nos_item-示例
     MiniProgramPurchasePlanItemRead:
       properties:
         id:
@@ -9470,6 +9850,17 @@ components:
       - purchase_responsible
       - urgency
       title: MiniProgramPurchasePlanItemRead
+      examples:
+      - id: 1
+        plan_no: CL-20260913-0001
+        plan_date: '2026-09-13'
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        planned_qty: '10.000'
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        urgency: 正常
     MiniProgramPurchaseRecordFilterOptions:
       properties:
         statuses:
@@ -9487,6 +9878,11 @@ components:
       - statuses
       - subitem_nos
       title: MiniProgramPurchaseRecordFilterOptions
+      examples:
+      - statuses:
+        - statuses_item-示例
+        subitem_nos:
+        - subitem_nos_item-示例
     MiniProgramPurchaseRecordItemRead:
       properties:
         line_id:
@@ -9588,6 +9984,34 @@ components:
       - purchase_responsible
       - usage
       title: MiniProgramPurchaseRecordItemRead
+      examples:
+      - line_id: 1
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        status: 正常
+        unit_name: 个
+        purchase_qty: '10.000'
+        plan_date: '2026-09-13'
+        subitem_no: '01'
+        material_code: DQ-000123
+        category: 低压电器
+        plan_no: CL-20260913-0001
+        demand_department: 电气自动化车间
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        usage: 设备检修更换
+        remark: 无
+        purchase_date: '2026-09-13'
+        salesperson: 李四
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
     MiniProgramStockStatus:
       type: string
       enum:
@@ -9614,6 +10038,10 @@ components:
       - source_version
       - target_version
       title: MiniProgramUserMergeRequest
+      examples:
+      - source_user_id: 1
+        source_version: 1
+        target_version: 1
     MiniProgramUserRead:
       properties:
         id:
@@ -9655,6 +10083,19 @@ components:
       - updated_at
       - version
       title: MiniProgramUserRead
+      examples:
+      - id: 1
+        display_name: 张三
+        department_name: 低压电器
+        enabled: true
+        identities:
+        - id: 1
+          app_id: 1
+          wechat_openid: wechat_openid-示例
+          created_at: '2026-09-13T10:30:00+08:00'
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     MiniProgramUserUpdate:
       properties:
         display_name:
@@ -9684,6 +10125,11 @@ components:
       required:
       - version
       title: MiniProgramUserUpdate
+      examples:
+      - display_name: 张三
+        department_name: 低压电器
+        enabled: true
+        version: 1
     MiniProgramWechatLoginRequest:
       properties:
         code:
@@ -9703,6 +10149,9 @@ components:
       required:
       - code
       title: MiniProgramWechatLoginRequest
+      examples:
+      - code: NOT_FOUND
+        app_id: 1
     MovePurchasePlanRequest:
       properties:
         purchase_order_no:
@@ -9781,6 +10230,19 @@ components:
       required:
       - purchase_date
       title: MovePurchasePlanRequest
+      examples:
+      - purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_date: '2026-09-13'
+        consolidation_port: Morowali
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        purchase_date: '2026-09-13'
+        salesperson: 李四
+        status: 正常
+        record_remark: record_remark-示例
     OperationCreate:
       properties:
         client_request_id:
@@ -9834,6 +10296,17 @@ components:
       - source_type
       - lines
       title: OperationCreate
+      examples:
+      - client_request_id: 8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        source_type: source_type-示例
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        receiver_name: 低压电器
+        subitem_no: '01'
+        lines:
+        - stock_material_id: 1
+          quantity: '10.000'
     OperationLineWrite:
       properties:
         stock_material_id:
@@ -9852,6 +10325,9 @@ components:
       - stock_material_id
       - quantity
       title: OperationLineWrite
+      examples:
+      - stock_material_id: 1
+        quantity: '10.000'
     OperationType:
       type: string
       enum:
@@ -9912,6 +10388,18 @@ components:
       - source_type
       - lines
       title: OperationUpdate
+      examples:
+      - version: 1
+        operation_type: operation_type-示例
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        source_type: source_type-示例
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        receiver_name: 低压电器
+        subitem_no: '01'
+        lines:
+        - stock_material_id: 1
+          quantity: '10.000'
     OrphanFileCleanupRead:
       properties:
         cutoff:
@@ -9935,6 +10423,12 @@ components:
       - deleted_record_ids
       - deleted_file_names
       title: OrphanFileCleanupRead
+      examples:
+      - cutoff: '2026-09-13T10:30:00+08:00'
+        deleted_record_ids:
+        - deleted_record_ids_item-示例
+        deleted_file_names:
+        - deleted_file_names_item-示例
     OrphanFileRead:
       properties:
         id:
@@ -9962,6 +10456,12 @@ components:
       - created_at
       - file_exists
       title: OrphanFileRead
+      examples:
+      - id: 1
+        original_name: stock-material-20260913.png
+        size_bytes: 204800
+        created_at: '2026-09-13T10:30:00+08:00'
+        file_exists: true
     OrphanFileReportRead:
       properties:
         cutoff:
@@ -9991,6 +10491,18 @@ components:
       - untracked_file_names
       - missing_file_ids
       title: OrphanFileReportRead
+      examples:
+      - cutoff: '2026-09-13T10:30:00+08:00'
+        unreferenced_records:
+        - id: 1
+          original_name: stock-material-20260913.png
+          size_bytes: 204800
+          created_at: '2026-09-13T10:30:00+08:00'
+          file_exists: true
+        untracked_file_names:
+        - untracked_file_names_item-示例
+        missing_file_ids:
+        - missing_file_ids_item-示例
     Page_HuaXingInventoryRead_:
       properties:
         items:
@@ -10014,6 +10526,22 @@ components:
       - page_size
       - total
       title: Page[HuaXingInventoryRead]
+      examples:
+      - items:
+        - id: 1
+          first_inbound_date: '2026-09-13'
+          warehouse: warehouse-示例
+          material_code: DQ-000123
+          name: 二级库物资
+          model_spec: CJX2-2510
+          quantity: '10.000'
+          unit_name: 个
+          purchaser: purchaser-示例
+          purchase_department: purchase_department-示例
+          subitem_no_name: 低压电器
+        page: 1
+        page_size: 20
+        total: 128
     Page_InventoryBalanceRead_:
       properties:
         items:
@@ -10037,6 +10565,21 @@ components:
       - page_size
       - total
       title: Page[InventoryBalanceRead]
+      examples:
+      - items:
+        - stock_material_id: 1
+          name: 二级库物资
+          alias: 接触器
+          model_spec: CJX2-2510
+          unit_name: 个
+          current_qty: '42.000'
+          minimum_qty: '5.000'
+          is_low_stock: true
+          suggested_purchase_qty: '10.000'
+          updated_at: '2026-09-13T10:30:00+08:00'
+        page: 1
+        page_size: 20
+        total: 128
     Page_LiteInventoryRead_:
       properties:
         items:
@@ -10060,6 +10603,17 @@ components:
       - page_size
       - total
       title: Page[LiteInventoryRead]
+      examples:
+      - items:
+        - id: 1
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          quantity: '10.000'
+          remark: 无
+        page: 1
+        page_size: 20
+        total: 128
     Page_MaterialCodeLibraryRead_:
       properties:
         items:
@@ -10083,6 +10637,16 @@ components:
       - page_size
       - total
       title: Page[MaterialCodeLibraryRead]
+      examples:
+      - items:
+        - id: 1
+          material_code: DQ-000123
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramHuaXingInventoryRead_:
       properties:
         items:
@@ -10106,6 +10670,22 @@ components:
       - page_size
       - total
       title: Page[MiniProgramHuaXingInventoryRead]
+      examples:
+      - items:
+        - id: 1
+          first_inbound_date: '2026-09-13'
+          warehouse: warehouse-示例
+          material_code: DQ-000123
+          name: 二级库物资
+          model_spec: CJX2-2510
+          quantity: '10.000'
+          unit_name: 个
+          purchaser: purchaser-示例
+          purchase_department: purchase_department-示例
+          subitem_no_name: 低压电器
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramInventoryItemRead_:
       properties:
         items:
@@ -10129,6 +10709,17 @@ components:
       - page_size
       - total
       title: Page[MiniProgramInventoryItemRead]
+      examples:
+      - items:
+        - uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          current_qty: '42.000'
+          stock_status: stock_status-示例
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramLiteInventoryItemRead_:
       properties:
         items:
@@ -10152,6 +10743,16 @@ components:
       - page_size
       - total
       title: Page[MiniProgramLiteInventoryItemRead]
+      examples:
+      - items:
+        - id: 1
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          quantity: '10.000'
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramMaterialCodeRead_:
       properties:
         items:
@@ -10175,6 +10776,16 @@ components:
       - page_size
       - total
       title: Page[MiniProgramMaterialCodeRead]
+      examples:
+      - items:
+        - id: 1
+          material_code: DQ-000123
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramOperationRead_:
       properties:
         items:
@@ -10198,6 +10809,26 @@ components:
       - page_size
       - total
       title: Page[MiniProgramOperationRead]
+      examples:
+      - items:
+        - operation_id: 1
+          operation_no: CL-20260913-0001
+          operation_type: operation_type-示例
+          material_name: 交流接触器
+          model_spec: CJX2-2510
+          unit_name: 个
+          quantity: '10.000'
+          before_qty: '45.000'
+          after_qty: '42.000'
+          occurred_at: '2026-09-13T10:30:00+08:00'
+          business_reason: 盘点差异修正
+          receiver_unit: receiver_unit-示例
+          receiver_name: 低压电器
+          subitem_no: '01'
+          executed_by: executed_by-示例
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramPurchasePlanItemRead_:
       properties:
         items:
@@ -10221,6 +10852,21 @@ components:
       - page_size
       - total
       title: Page[MiniProgramPurchasePlanItemRead]
+      examples:
+      - items:
+        - id: 1
+          plan_no: CL-20260913-0001
+          plan_date: '2026-09-13'
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          planned_qty: '10.000'
+          actual_demand_person: 赵六
+          purchase_responsible: 王五
+          urgency: 正常
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramPurchaseRecordItemRead_:
       properties:
         items:
@@ -10244,6 +10890,38 @@ components:
       - page_size
       - total
       title: Page[MiniProgramPurchaseRecordItemRead]
+      examples:
+      - items:
+        - line_id: 1
+          material_name: 交流接触器
+          model_spec: CJX2-2510
+          purchase_order_no: 申购单-2026年09月13日
+          trace_no: HX2026080001
+          status: 正常
+          unit_name: 个
+          purchase_qty: '10.000'
+          plan_date: '2026-09-13'
+          subitem_no: '01'
+          material_code: DQ-000123
+          category: 低压电器
+          plan_no: CL-20260913-0001
+          demand_department: 电气自动化车间
+          actual_demand_person: 赵六
+          purchase_responsible: 王五
+          usage: 设备检修更换
+          remark: 无
+          purchase_date: '2026-09-13'
+          salesperson: 李四
+          images:
+          - id: 1
+            original_name: stock-material-20260913.png
+            mime_type: image/png
+            size_bytes: 204800
+            width: 800
+            height: 600
+        page: 1
+        page_size: 20
+        total: 128
     Page_MiniProgramUserRead_:
       properties:
         items:
@@ -10267,6 +10945,23 @@ components:
       - page_size
       - total
       title: Page[MiniProgramUserRead]
+      examples:
+      - items:
+        - id: 1
+          display_name: 张三
+          department_name: 低压电器
+          enabled: true
+          identities:
+          - id: null
+            app_id: null
+            wechat_openid: null
+            created_at: null
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_PurchaseMaterialRead_:
       properties:
         items:
@@ -10290,6 +10985,41 @@ components:
       - page_size
       - total
       title: Page[PurchaseMaterialRead]
+      examples:
+      - items:
+        - id: 1
+          plan_no: CL-20260913-0001
+          plan_date: '2026-09-13'
+          material_code: DQ-000123
+          category: 低压电器
+          urgency: 正常
+          demand_department: 电气自动化车间
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          actual_demand_person: 赵六
+          purchase_responsible: 王五
+          planned_qty: '10.000'
+          usage: 设备检修更换
+          subitem_no: '01'
+          remark: 无
+          stock_material_id: 1
+          stock_material_name: 低压电器
+          status: 正常
+          moved_to_record: true
+          images:
+          - id: null
+            original_name: null
+            mime_type: null
+            size_bytes: null
+            width: null
+            height: null
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_PurchasePlanTemplateRead_:
       properties:
         items:
@@ -10313,6 +11043,37 @@ components:
       - page_size
       - total
       title: Page[PurchasePlanTemplateRead]
+      examples:
+      - items:
+        - id: 1
+          material_code: DQ-000123
+          category: 低压电器
+          urgency: 正常
+          demand_department: 电气自动化车间
+          name: 二级库物资
+          model_spec: CJX2-2510
+          unit_name: 个
+          actual_demand_person: 赵六
+          purchase_responsible: 王五
+          planned_qty: '10.000'
+          usage: 设备检修更换
+          subitem_no: '01'
+          remark: 无
+          stock_material_id: 1
+          stock_material_name: 低压电器
+          images:
+          - id: null
+            original_name: null
+            mime_type: null
+            size_bytes: null
+            width: null
+            height: null
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_PurchaseRecordRead_:
       properties:
         items:
@@ -10336,6 +11097,51 @@ components:
       - page_size
       - total
       title: Page[PurchaseRecordRead]
+      examples:
+      - items:
+        - line_id: 1
+          purchase_request_id: 1
+          purchase_material_id: 1
+          plan_no: CL-20260913-0001
+          plan_date: '2026-09-13'
+          purchase_order_no: 申购单-2026年09月13日
+          trace_no: HX2026080001
+          contract_no: HT-2026-0001
+          vessel_no: MV HX 001
+          consolidation_date: '2026-09-13'
+          consolidation_port: Morowali
+          sailing_date: '2026-09-13'
+          contract_sign_date: '2026-09-13'
+          status: 正常
+          material_code: DQ-000123
+          category: 低压电器
+          demand_department: 电气自动化车间
+          material_name: 交流接触器
+          model_spec: CJX2-2510
+          unit_name: 个
+          purchase_qty: '10.000'
+          actual_demand_person: 赵六
+          purchase_responsible: 王五
+          salesperson: 李四
+          plan_remark: plan_remark-示例
+          record_remark: record_remark-示例
+          usage: 设备检修更换
+          subitem_no: '01'
+          images:
+          - id: null
+            original_name: null
+            mime_type: null
+            size_bytes: null
+            width: null
+            height: null
+          stock_material_id: 1
+          purchase_date: '2026-09-13'
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_ShareListRead_:
       properties:
         items:
@@ -10359,6 +11165,22 @@ components:
       - page_size
       - total
       title: Page[ShareListRead]
+      examples:
+      - items:
+        - token: token-示例
+          share_type: share_type-示例
+          item_count: 3
+          expires_at: '2026-09-13T10:30:00+08:00'
+          created_at: '2026-09-13T10:30:00+08:00'
+          created_by: 1
+          created_by_name: 低压电器
+          columns:
+          - material_code
+          - name
+          - quantity
+        page: 1
+        page_size: 20
+        total: 128
     Page_StockMaterialRead_:
       properties:
         items:
@@ -10382,6 +11204,35 @@ components:
       - page_size
       - total
       title: Page[StockMaterialRead]
+      examples:
+      - items:
+        - id: 1
+          uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+          name: 二级库物资
+          name_id: 1
+          alias: 接触器
+          model_spec: CJX2-2510
+          unit_name: 个
+          remark: 无
+          current_qty: '42.000'
+          images:
+          - id: null
+            original_name: null
+            mime_type: null
+            size_bytes: null
+            width: null
+            height: null
+          replenishment_policy:
+            minimum_qty: '5.000'
+            enabled: true
+            version: 1
+          has_operation_records: true
+          created_at: '2026-09-13T10:30:00+08:00'
+          updated_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_StockOperationRead_:
       properties:
         items:
@@ -10405,6 +11256,36 @@ components:
       - page_size
       - total
       title: Page[StockOperationRead]
+      examples:
+      - items:
+        - id: 1
+          operation_no: CL-20260913-0001
+          operation_type: operation_type-示例
+          occurred_at: '2026-09-13T10:30:00+08:00'
+          business_reason: 盘点差异修正
+          receiver_unit: receiver_unit-示例
+          receiver_name: 低压电器
+          subitem_no: '01'
+          source_type: source_type-示例
+          reversal_of_id: 1
+          is_reversed: false
+          client_request_id: 8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d
+          mini_program_user_name: 低压电器
+          lines:
+          - id: null
+            stock_material_id: null
+            material_name: null
+            model_spec: null
+            unit_name: null
+            quantity: null
+            remaining_qty: null
+            before_qty: null
+            after_qty: null
+          created_at: '2026-09-13T10:30:00+08:00'
+          version: 1
+        page: 1
+        page_size: 20
+        total: 128
     Page_UserApiTokenRead_:
       properties:
         items:
@@ -10428,6 +11309,18 @@ components:
       - page_size
       - total
       title: Page[UserApiTokenRead]
+      examples:
+      - items:
+        - id: 1
+          username: warehouse
+          display_name: 张三
+          role: WAREHOUSE_ADMIN
+          enabled: true
+          version: 1
+          api_token: api-token-example
+        page: 1
+        page_size: 20
+        total: 128
     PurchaseFilterOptions:
       properties:
         actual_demand_persons:
@@ -10457,6 +11350,15 @@ components:
       - subitem_nos
       - categories
       title: PurchaseFilterOptions
+      examples:
+      - actual_demand_persons:
+        - actual_demand_persons_item-示例
+        purchase_responsibles:
+        - purchase_responsibles_item-示例
+        subitem_nos:
+        - subitem_nos_item-示例
+        categories:
+        - categories_item-示例
     PurchaseMaterialCreate:
       properties:
         plan_date:
@@ -10569,6 +11471,25 @@ components:
       - planned_qty
       - usage
       title: PurchaseMaterialCreate
+      examples:
+      - plan_date: '2026-09-13'
+        material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        image_ids:
+        - image_ids_item-示例
+        status: 正常
     PurchaseMaterialRead:
       properties:
         id:
@@ -10681,6 +11602,37 @@ components:
       - updated_at
       - version
       title: PurchaseMaterialRead
+      examples:
+      - id: 1
+        plan_no: CL-20260913-0001
+        plan_date: '2026-09-13'
+        material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        stock_material_name: 低压电器
+        status: 正常
+        moved_to_record: true
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     PurchaseMaterialUpdate:
       properties:
         plan_date:
@@ -10797,6 +11749,26 @@ components:
       - usage
       - version
       title: PurchaseMaterialUpdate
+      examples:
+      - plan_date: '2026-09-13'
+        material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        image_ids:
+        - image_ids_item-示例
+        status: 正常
+        version: 1
     PurchasePlanExportRequest:
       properties:
         material_ids:
@@ -10811,6 +11783,9 @@ components:
       required:
       - material_ids
       title: PurchasePlanExportRequest
+      examples:
+      - material_ids:
+        - 1
     PurchasePlanResultExportRequest:
       properties:
         columns:
@@ -10915,6 +11890,19 @@ components:
       required:
       - columns
       title: PurchasePlanResultExportRequest
+      examples:
+      - columns:
+        - plan_no
+        name: 二级库物资
+        model_spec: CJX2-2510
+        actual_demand_person: 赵六
+        empty_actual_demand_person: 张三
+        subitem_no: '01'
+        empty_subitem_no: CL-20260913-0001
+        status: 正常
+        category: 低压电器
+        sort_by: plan_no
+        sort_order: asc
     PurchasePlanStatus:
       type: string
       enum:
@@ -11025,6 +12013,23 @@ components:
       - planned_qty
       - usage
       title: PurchasePlanTemplateCreate
+      examples:
+      - material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        image_ids:
+        - image_ids_item-示例
     PurchasePlanTemplateFilterOptions:
       properties:
         actual_demand_persons:
@@ -11048,6 +12053,13 @@ components:
       - purchase_responsibles
       - categories
       title: PurchasePlanTemplateFilterOptions
+      examples:
+      - actual_demand_persons:
+        - actual_demand_persons_item-示例
+        purchase_responsibles:
+        - purchase_responsibles_item-示例
+        categories:
+        - categories_item-示例
     PurchasePlanTemplateRead:
       properties:
         id:
@@ -11144,6 +12156,33 @@ components:
       - updated_at
       - version
       title: PurchasePlanTemplateRead
+      examples:
+      - id: 1
+        material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        stock_material_name: 低压电器
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     PurchasePlanTemplateUpdate:
       properties:
         material_code:
@@ -11251,6 +12290,24 @@ components:
       - usage
       - version
       title: PurchasePlanTemplateUpdate
+      examples:
+      - material_code: DQ-000123
+        category: 低压电器
+        urgency: 正常
+        demand_department: 电气自动化车间
+        name: 二级库物资
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        planned_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        remark: 无
+        stock_material_id: 1
+        image_ids:
+        - image_ids_item-示例
+        version: 1
     PurchasePlanVersion:
       properties:
         id:
@@ -11265,6 +12322,9 @@ components:
       - id
       - version
       title: PurchasePlanVersion
+      examples:
+      - id: 1
+        version: 1
     PurchaseRecordFilterOptions:
       properties:
         actual_demand_persons:
@@ -11306,6 +12366,19 @@ components:
       - salespersons
       - statuses
       title: PurchaseRecordFilterOptions
+      examples:
+      - actual_demand_persons:
+        - actual_demand_persons_item-示例
+        purchase_responsibles:
+        - purchase_responsibles_item-示例
+        subitem_nos:
+        - subitem_nos_item-示例
+        categories:
+        - categories_item-示例
+        salespersons:
+        - salespersons_item-示例
+        statuses:
+        - statuses_item-示例
     PurchaseRecordRead:
       properties:
         line_id:
@@ -11475,6 +12548,47 @@ components:
       - updated_at
       - version
       title: PurchaseRecordRead
+      examples:
+      - line_id: 1
+        purchase_request_id: 1
+        purchase_material_id: 1
+        plan_no: CL-20260913-0001
+        plan_date: '2026-09-13'
+        purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_date: '2026-09-13'
+        consolidation_port: Morowali
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        status: 正常
+        material_code: DQ-000123
+        category: 低压电器
+        demand_department: 电气自动化车间
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        purchase_qty: '10.000'
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        salesperson: 李四
+        plan_remark: plan_remark-示例
+        record_remark: record_remark-示例
+        usage: 设备检修更换
+        subitem_no: '01'
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
+        stock_material_id: 1
+        purchase_date: '2026-09-13'
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     PurchaseRecordResultExportRequest:
       properties:
         columns:
@@ -11617,6 +12731,23 @@ components:
       required:
       - columns
       title: PurchaseRecordResultExportRequest
+      examples:
+      - columns:
+        - purchase_qty
+        purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        category: 低压电器
+        name: 二级库物资
+        model_spec: CJX2-2510
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        salesperson: 李四
+        status: 正常
+        empty_status: true
+        subitem_no: '01'
+        empty_subitem_no: CL-20260913-0001
+        sort_by: purchase_qty
+        sort_order: asc
     PurchaseRecordSyncOrderApply:
       properties:
         items:
@@ -11631,6 +12762,17 @@ components:
       required:
       - items
       title: PurchaseRecordSyncOrderApply
+      examples:
+      - items:
+        - salesperson: 李四
+          contract_no: HT-2026-0001
+          vessel_no: MV HX 001
+          consolidation_port: Morowali
+          consolidation_date: '2026-09-13'
+          sailing_date: '2026-09-13'
+          contract_sign_date: '2026-09-13'
+          status: 正常
+          trace_no: HX2026080001
     PurchaseRecordSyncOrderApplyRead:
       properties:
         applied:
@@ -11652,6 +12794,11 @@ components:
       - affected_headers
       - affected_lines
       title: PurchaseRecordSyncOrderApplyRead
+      examples:
+      - applied: 1
+        not_found: 1
+        affected_headers: 1
+        affected_lines: 1
     PurchaseRecordSyncOrderTargetRead:
       properties:
         purchase_order_no:
@@ -11671,6 +12818,11 @@ components:
       - trace_nos
       - cursor_id
       title: PurchaseRecordSyncOrderTargetRead
+      examples:
+      - purchase_order_no: 申购单-2026年09月13日
+        trace_nos:
+        - trace_nos_item-示例
+        cursor_id: 1
     PurchaseRecordSyncOrderTargetsRead:
       properties:
         items:
@@ -11690,6 +12842,14 @@ components:
       - items
       - has_more
       title: PurchaseRecordSyncOrderTargetsRead
+      examples:
+      - items:
+        - purchase_order_no: 申购单-2026年09月13日
+          trace_nos:
+          - trace_nos_item-示例
+          cursor_id: 1
+        has_more: true
+        next_cursor: 1
     PurchaseRecordSyncOrderUpdateItem:
       properties:
         salesperson:
@@ -11751,6 +12911,16 @@ components:
       - trace_no
       title: PurchaseRecordSyncOrderUpdateItem
       description: 整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。
+      examples:
+      - salesperson: 李四
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_port: Morowali
+        consolidation_date: '2026-09-13'
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        status: 正常
+        trace_no: HX2026080001
     PurchaseRecordSyncResultRead:
       properties:
         affected_headers:
@@ -11764,6 +12934,9 @@ components:
       - affected_headers
       - affected_lines
       title: PurchaseRecordSyncResultRead
+      examples:
+      - affected_headers: 1
+        affected_lines: 1
     PurchaseRecordSyncTargetRead:
       properties:
         trace_no:
@@ -11781,6 +12954,10 @@ components:
       - target_count
       - cursor_id
       title: PurchaseRecordSyncTargetRead
+      examples:
+      - trace_no: HX2026080001
+        target_count: 3
+        cursor_id: 1
     PurchaseRecordSyncTargetsRead:
       properties:
         items:
@@ -11800,6 +12977,13 @@ components:
       - items
       - has_more
       title: PurchaseRecordSyncTargetsRead
+      examples:
+      - items:
+        - trace_no: HX2026080001
+          target_count: 3
+          cursor_id: 1
+        has_more: true
+        next_cursor: 1
     PurchaseRecordSyncTraceUpdate:
       properties:
         salesperson:
@@ -11853,6 +13037,15 @@ components:
       additionalProperties: false
       type: object
       title: PurchaseRecordSyncTraceUpdate
+      examples:
+      - salesperson: 李四
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_port: Morowali
+        consolidation_date: '2026-09-13'
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        status: 正常
     PurchaseRecordUpdate:
       properties:
         plan_date:
@@ -12030,6 +13223,36 @@ components:
       - status
       - version
       title: PurchaseRecordUpdate
+      examples:
+      - plan_date: '2026-09-13'
+        material_code: DQ-000123
+        category: 低压电器
+        demand_department: 电气自动化车间
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
+        purchase_qty: '10.000'
+        usage: 设备检修更换
+        subitem_no: '01'
+        plan_remark: plan_remark-示例
+        stock_material_id: 1
+        image_ids:
+        - image_ids_item-示例
+        purchase_order_no: 申购单-2026年09月13日
+        trace_no: HX2026080001
+        contract_no: HT-2026-0001
+        vessel_no: MV HX 001
+        consolidation_date: '2026-09-13'
+        consolidation_port: Morowali
+        sailing_date: '2026-09-13'
+        contract_sign_date: '2026-09-13'
+        purchase_date: '2026-09-13'
+        salesperson: 李四
+        status: 正常
+        record_remark: record_remark-示例
+        version: 1
     PurchaseRecordVersion:
       properties:
         line_id:
@@ -12044,6 +13267,9 @@ components:
       - line_id
       - version
       title: PurchaseRecordVersion
+      examples:
+      - line_id: 1
+        version: 1
     RefreshTokenRequest:
       properties:
         refresh_token:
@@ -12056,6 +13282,8 @@ components:
       required:
       - refresh_token
       title: RefreshTokenRequest
+      examples:
+      - refresh_token: api-token-example
     ReplenishmentDefaultsRead:
       properties:
         purchase_responsible:
@@ -12070,6 +13298,9 @@ components:
       - purchase_responsible
       - demand_date
       title: ReplenishmentDefaultsRead
+      examples:
+      - purchase_responsible: 王五
+        demand_date: '2026-09-13'
     ReplenishmentDraftCreate:
       properties:
         planned_qty:
@@ -12102,6 +13333,11 @@ components:
       - actual_demand_person
       - purchase_responsible
       title: ReplenishmentDraftCreate
+      examples:
+      - planned_qty: '10.000'
+        demand_date: '2026-09-13'
+        actual_demand_person: 赵六
+        purchase_responsible: 王五
     ReplenishmentDraftRead:
       properties:
         next:
@@ -12116,6 +13352,9 @@ components:
       - next
       - resource_id
       title: ReplenishmentDraftRead
+      examples:
+      - next: purchase_material
+        resource_id: 1
     ReplenishmentPolicyRead:
       properties:
         minimum_qty:
@@ -12134,6 +13373,10 @@ components:
       - minimum_qty
       - enabled
       title: ReplenishmentPolicyRead
+      examples:
+      - minimum_qty: '5.000'
+        enabled: true
+        version: 1
     ReplenishmentPolicyWrite:
       properties:
         minimum_qty:
@@ -12157,6 +13400,10 @@ components:
       required:
       - minimum_qty
       title: ReplenishmentPolicyWrite
+      examples:
+      - minimum_qty: '5.000'
+        enabled: true
+        version: 1
     ReverseOperationRequest:
       properties:
         client_request_id:
@@ -12182,6 +13429,12 @@ components:
       - reason
       - lines
       title: ReverseOperationRequest
+      examples:
+      - client_request_id: 8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d
+        reason: reason-示例
+        lines:
+        - stock_material_id: 1
+          quantity: '10.000'
     Role:
       type: string
       enum:
@@ -12225,6 +13478,15 @@ components:
       - expires_in
       title: ShareCreateRequest
       description: 创建匿名分享链接：把勾选的申购计划/申购记录分享为无鉴权页面。
+      examples:
+      - share_type: share_type-示例
+        item_ids:
+        - 1
+        expires_in: expires_in-示例
+        columns:
+        - material_code
+        - name
+        - quantity
     ShareExpiryOption:
       type: string
       enum:
@@ -12280,6 +13542,18 @@ components:
       - created_at
       title: ShareListRead
       description: 管理端「分享链接」列表项。
+      examples:
+      - token: token-示例
+        share_type: share_type-示例
+        item_count: 3
+        expires_at: '2026-09-13T10:30:00+08:00'
+        created_at: '2026-09-13T10:30:00+08:00'
+        created_by: 1
+        created_by_name: 低压电器
+        columns:
+        - material_code
+        - name
+        - quantity
     SharePublicView:
       properties:
         share_type:
@@ -12323,6 +13597,17 @@ components:
         当 columns 为 NULL 时 items 为完整类型行；否则 items 为仅含所选列（+行身份键）的字典行，
 
         隐藏列的数据不会随响应下发。'
+      examples:
+      - share_type: share_type-示例
+        item_count: 3
+        expires_at: '2026-09-13T10:30:00+08:00'
+        created_at: '2026-09-13T10:30:00+08:00'
+        columns:
+        - material_code
+        - name
+        - quantity
+        items:
+        - {}
     ShareRead:
       properties:
         token:
@@ -12357,6 +13642,16 @@ components:
       - item_count
       - created_at
       title: ShareRead
+      examples:
+      - token: token-示例
+        share_type: share_type-示例
+        item_count: 3
+        expires_at: '2026-09-13T10:30:00+08:00'
+        created_at: '2026-09-13T10:30:00+08:00'
+        columns:
+        - material_code
+        - name
+        - quantity
     ShareType:
       type: string
       enum:
@@ -12381,6 +13676,12 @@ components:
       type: object
       title: ShareUpdateRequest
       description: 更新分享链接：展示列 + 到期时间。缺省/为 None 表示对应项不修改。
+      examples:
+      - columns:
+        - material_code
+        - name
+        - quantity
+        expires_in: {}
     SourceType:
       type: string
       enum:
@@ -12438,6 +13739,15 @@ components:
       - model_spec
       - unit_name
       title: StockMaterialCreate
+      examples:
+      - name: 二级库物资
+        name_id: 1
+        alias: 接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        remark: 无
+        image_ids:
+        - image_ids_item-示例
     StockMaterialRead:
       properties:
         id:
@@ -12512,6 +13822,31 @@ components:
       - updated_at
       - version
       title: StockMaterialRead
+      examples:
+      - id: 1
+        uuid: 3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c
+        name: 二级库物资
+        name_id: 1
+        alias: 接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        remark: 无
+        current_qty: '42.000'
+        images:
+        - id: 1
+          original_name: stock-material-20260913.png
+          mime_type: image/png
+          size_bytes: 204800
+          width: 800
+          height: 600
+        replenishment_policy:
+          minimum_qty: '5.000'
+          enabled: true
+          version: 1
+        has_operation_records: true
+        created_at: '2026-09-13T10:30:00+08:00'
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     StockMaterialUpdate:
       properties:
         name:
@@ -12565,6 +13900,16 @@ components:
       - unit_name
       - version
       title: StockMaterialUpdate
+      examples:
+      - name: 二级库物资
+        name_id: 1
+        alias: 接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        remark: 无
+        image_ids:
+        - image_ids_item-示例
+        version: 1
     StockOperationLineRead:
       properties:
         id:
@@ -12610,6 +13955,16 @@ components:
       - before_qty
       - after_qty
       title: StockOperationLineRead
+      examples:
+      - id: 1
+        stock_material_id: 1
+        material_name: 交流接触器
+        model_spec: CJX2-2510
+        unit_name: 个
+        quantity: '10.000'
+        remaining_qty: '42.000'
+        before_qty: '45.000'
+        after_qty: '42.000'
     StockOperationRead:
       properties:
         id:
@@ -12686,6 +14041,32 @@ components:
       - created_at
       - version
       title: StockOperationRead
+      examples:
+      - id: 1
+        operation_no: CL-20260913-0001
+        operation_type: operation_type-示例
+        occurred_at: '2026-09-13T10:30:00+08:00'
+        business_reason: 盘点差异修正
+        receiver_unit: receiver_unit-示例
+        receiver_name: 低压电器
+        subitem_no: '01'
+        source_type: source_type-示例
+        reversal_of_id: 1
+        is_reversed: false
+        client_request_id: 8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d
+        mini_program_user_name: 低压电器
+        lines:
+        - id: 1
+          stock_material_id: 1
+          material_name: 交流接触器
+          model_spec: CJX2-2510
+          unit_name: 个
+          quantity: '10.000'
+          remaining_qty: '42.000'
+          before_qty: '45.000'
+          after_qty: '42.000'
+        created_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     TokenPairResponse:
       properties:
         access_token:
@@ -12704,6 +14085,10 @@ components:
       - access_token
       - refresh_token
       title: TokenPairResponse
+      examples:
+      - access_token: api-token-example
+        refresh_token: api-token-example
+        token_type: bearer
     UserApiTokenRead:
       properties:
         id:
@@ -12739,6 +14124,14 @@ components:
       - enabled
       - version
       title: UserApiTokenRead
+      examples:
+      - id: 1
+        username: warehouse
+        display_name: 张三
+        role: WAREHOUSE_ADMIN
+        enabled: true
+        version: 1
+        api_token: api-token-example
     UserApiTokenRegenerate:
       properties:
         version:
@@ -12749,6 +14142,8 @@ components:
       required:
       - version
       title: UserApiTokenRegenerate
+      examples:
+      - version: 1
     UserCreate:
       properties:
         username:
@@ -12780,6 +14175,12 @@ components:
       - display_name
       - role
       title: UserCreate
+      examples:
+      - username: warehouse
+        password: password-示例
+        display_name: 张三
+        role: WAREHOUSE_ADMIN
+        enabled: true
     UserRead:
       properties:
         id:
@@ -12808,6 +14209,13 @@ components:
       - enabled
       - version
       title: UserRead
+      examples:
+      - id: 1
+        username: warehouse
+        display_name: 张三
+        role: WAREHOUSE_ADMIN
+        enabled: true
+        version: 1
     UserUpdate:
       properties:
         username:
@@ -12848,6 +14256,13 @@ components:
       required:
       - version
       title: UserUpdate
+      examples:
+      - username: warehouse
+        display_name: 张三
+        password: password-示例
+        role: WAREHOUSE_ADMIN
+        enabled: true
+        version: 1
     VersionInfoRead:
       properties:
         app_name:
@@ -12871,6 +14286,11 @@ components:
       - app_name
       - version
       title: VersionInfoRead
+      examples:
+      - app_name: 低压电器
+        version: 1
+        commit: commit-示例
+        build_time: '2026-09-13T02:00:00+08:00'
     WebhookChannelRead:
       properties:
         platform:
@@ -12915,6 +14335,17 @@ components:
       - secret_configured
       - version
       title: WebhookChannelRead
+      examples:
+      - platform: FEISHU
+        enabled: true
+        subscribed_events:
+        - {}
+        webhook_url: https://example.com/hook/token
+        secret: secret-示例
+        webhook_configured: true
+        secret_configured: true
+        updated_at: '2026-09-13T10:30:00+08:00'
+        version: 1
     WebhookChannelUpdate:
       properties:
         enabled:
@@ -12946,6 +14377,13 @@ components:
       required:
       - version
       title: WebhookChannelUpdate
+      examples:
+      - enabled: true
+        webhook_url: https://example.com/hook/token
+        secret: secret-示例
+        subscribed_events:
+        - {}
+        version: 1
     WebhookEventType:
       type: string
       enum:
@@ -12975,6 +14413,10 @@ components:
       - success
       - message
       title: WebhookTestRead
+      examples:
+      - platform: FEISHU
+        success: true
+        message: 操作成功
     WebhookTestRequest:
       properties:
         webhook_url:
@@ -12991,6 +14433,9 @@ components:
       required:
       - webhook_url
       title: WebhookTestRequest
+      examples:
+      - webhook_url: https://example.com/hook/token
+        secret: secret-示例
   securitySchemes:
     HTTPBearer:
       type: http

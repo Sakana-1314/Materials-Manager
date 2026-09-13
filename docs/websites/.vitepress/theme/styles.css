@@ -1,0 +1,40 @@
+/* 页面内的二级 tab：与默认主题的配色/圆角保持一致。 */
+.tabs {
+  margin: 20px 0;
+}
+
+.tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.tabs-nav-button {
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.tabs-nav-button:hover {
+  color: var(--vp-c-text-1);
+  background-color: var(--vp-c-default-soft);
+}
+
+.tabs-nav-button.active {
+  color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}
+
+.tabs-panel > :first-child {
+  margin-top: 16px;
+}

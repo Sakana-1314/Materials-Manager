@@ -43,7 +43,7 @@ MCP 不接受 SQL、数据库表名或任意 URL，只能按 OpenAPI 中登记�
 仓库只保留 init.sql，不保存增量迁移脚本；已有数据库的结构调整由部署方自行完成（先备份，再参照
 init.sql 与 ORM 模型改库）。
 
-FastAPI + SQLAlchemy 2.x async + MySQL 8.0，按 [开发方案](../docs/websites/pages/development-plan.md) 实现。
+FastAPI + SQLAlchemy 2.x async + MySQL 8.0，实现细节见 [开发资料](../docs/websites/pages/dev-backend.md)。
 
 ## 接口性能响应头
 

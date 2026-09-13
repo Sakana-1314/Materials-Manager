@@ -1,6 +1,6 @@
 # HXNI 电气无忧 网页端
 
-按 [开发方案](../docs/websites/pages/development-plan.md) 实现的 Vue 3 + TypeScript 前端。默认启用 MSW 契约模拟数据，可在后端尚未启动时演示完整业务。
+按 [开发资料](../docs/websites/pages/dev-overview.md) 中的前端架构实现 Vue 3 + TypeScript 前端。默认启用 MSW 契约模拟数据，可在后端尚未启动时演示完整业务。
 
 ## 启动
 

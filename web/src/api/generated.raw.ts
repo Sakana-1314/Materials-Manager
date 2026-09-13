@@ -1852,19 +1852,54 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** AiSearchExpandRead */
+        /**
+         * AiSearchExpandRead
+         * @example {
+         *       "original": "original-示例",
+         *       "expanded": "expanded-示例"
+         *     }
+         */
         AiSearchExpandRead: {
             /** Original */
             original: string;
             /** Expanded */
             expanded: string;
         };
-        /** AiSearchExpandRequest */
+        /**
+         * AiSearchExpandRequest
+         * @example {
+         *       "value": "value-示例"
+         *     }
+         */
         AiSearchExpandRequest: {
             /** Value */
             value: string;
         };
-        /** AiSearchSettingsRead */
+        /**
+         * AiSearchSettingsRead
+         * @example {
+         *       "endpoint": "endpoint-示例",
+         *       "api_key": "sk-example-key",
+         *       "model": "model-示例",
+         *       "enabled": true,
+         *       "mini_program_code_env": "mini_program_code_env-示例",
+         *       "mini_program_code_app_id": 1,
+         *       "mini_program_app_ids": [
+         *         "mini_program_app_ids_item-示例"
+         *       ],
+         *       "mini_program_registration_enabled": true,
+         *       "mini_program_new_user_enabled": true,
+         *       "image_acceleration_server_url": "https://example.com/hook/token",
+         *       "inventory_mode": "inventory_mode-示例",
+         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
+         *       "purchase_plans_mode": "purchase_plans_mode-示例",
+         *       "purchase_records_mode": "purchase_records_mode-示例",
+         *       "material_codes_mode": "material_codes_mode-示例",
+         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         AiSearchSettingsRead: {
             /** Endpoint */
             endpoint: string;
@@ -1896,7 +1931,27 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** AiSearchSettingsUpdate */
+        /**
+         * AiSearchSettingsUpdate
+         * @example {
+         *       "endpoint": "endpoint-示例",
+         *       "api_key": "sk-example-key",
+         *       "model": "model-示例",
+         *       "enabled": true,
+         *       "mini_program_code_env": "mini_program_code_env-示例",
+         *       "mini_program_code_app_id": 1,
+         *       "mini_program_registration_enabled": true,
+         *       "mini_program_new_user_enabled": true,
+         *       "image_acceleration_server_url": "https://example.com/hook/token",
+         *       "inventory_mode": "inventory_mode-示例",
+         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
+         *       "purchase_plans_mode": "purchase_plans_mode-示例",
+         *       "purchase_records_mode": "purchase_records_mode-示例",
+         *       "material_codes_mode": "material_codes_mode-示例",
+         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例",
+         *       "version": 1
+         *     }
+         */
         AiSearchSettingsUpdate: {
             /**
              * Endpoint
@@ -1955,19 +2010,37 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** AiSearchStatusRead */
+        /**
+         * AiSearchStatusRead
+         * @example {
+         *       "available": true
+         *     }
+         */
         AiSearchStatusRead: {
             /** Available */
             available: boolean;
         };
-        /** AiSearchTestRead */
+        /**
+         * AiSearchTestRead
+         * @example {
+         *       "original": "original-示例",
+         *       "expanded": "expanded-示例"
+         *     }
+         */
         AiSearchTestRead: {
             /** Original */
             original: string;
             /** Expanded */
             expanded: string;
         };
-        /** AiSearchTestRequest */
+        /**
+         * AiSearchTestRequest
+         * @example {
+         *       "endpoint": "endpoint-示例",
+         *       "api_key": "sk-example-key",
+         *       "model": "model-示例"
+         *     }
+         */
         AiSearchTestRequest: {
             /** Endpoint */
             endpoint: string;
@@ -1976,7 +2049,15 @@ export interface components {
             /** Model */
             model: string;
         };
-        /** ApiError */
+        /**
+         * ApiError
+         * @example {
+         *       "code": "NOT_FOUND",
+         *       "message": "操作成功",
+         *       "details": {},
+         *       "request_id": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c"
+         *     }
+         */
         ApiError: {
             /** Code */
             code: string;
@@ -1989,7 +2070,26 @@ export interface components {
             /** Request Id */
             request_id: string;
         };
-        /** BatchMovePurchasePlansRequest */
+        /**
+         * BatchMovePurchasePlansRequest
+         * @example {
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_date": "2026-09-13",
+         *       "consolidation_port": "Morowali",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "purchase_date": "2026-09-13",
+         *       "salesperson": "李四",
+         *       "status": "正常",
+         *       "record_remark": "record_remark-示例",
+         *       "material_ids": [
+         *         1
+         *       ]
+         *     }
+         */
         BatchMovePurchasePlansRequest: {
             /** Purchase Order No */
             purchase_order_no?: string | null;
@@ -2024,7 +2124,26 @@ export interface components {
             /** Material Ids */
             material_ids: number[];
         };
-        /** BatchUpdatePurchasePlansRequest */
+        /**
+         * BatchUpdatePurchasePlansRequest
+         * @example {
+         *       "materials": [
+         *         {
+         *           "id": 1,
+         *           "version": 1
+         *         }
+         *       ],
+         *       "plan_date": "2026-09-13",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "subitem_no": "01",
+         *       "usage": "设备检修更换",
+         *       "status": "正常"
+         *     }
+         */
         BatchUpdatePurchasePlansRequest: {
             /** Materials */
             materials: components["schemas"]["PurchasePlanVersion"][];
@@ -2046,7 +2165,32 @@ export interface components {
             usage?: string | null;
             status?: components["schemas"]["PurchasePlanStatus"] | null;
         };
-        /** BatchUpdatePurchaseRecordsRequest */
+        /**
+         * BatchUpdatePurchaseRecordsRequest
+         * @example {
+         *       "records": [
+         *         {
+         *           "line_id": 1,
+         *           "version": 1
+         *         }
+         *       ],
+         *       "plan_date": "2026-09-13",
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_date": "2026-09-13",
+         *       "consolidation_port": "Morowali",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "purchase_date": "2026-09-13",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "salesperson": "李四",
+         *       "status": "正常",
+         *       "record_remark": "record_remark-示例"
+         *     }
+         */
         BatchUpdatePurchaseRecordsRequest: {
             /** Records */
             records: components["schemas"]["PurchaseRecordVersion"][];
@@ -2081,27 +2225,55 @@ export interface components {
             /** Record Remark */
             record_remark?: string | null;
         };
-        /** Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post */
+        /**
+         * Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post
+         * @example {
+         *       "file": "file-示例"
+         *     }
+         */
         Body_import_huaxing_inventory_api_v1_huaxing_inventory_import_post: {
             /** File */
             file: string;
         };
-        /** Body_import_lite_inventory_api_v1_secondary_warehouse_import_post */
+        /**
+         * Body_import_lite_inventory_api_v1_secondary_warehouse_import_post
+         * @example {
+         *       "file": "file-示例"
+         *     }
+         */
         Body_import_lite_inventory_api_v1_secondary_warehouse_import_post: {
             /** File */
             file: string;
         };
-        /** Body_import_material_codes_api_v1_material_code_library_import_post */
+        /**
+         * Body_import_material_codes_api_v1_material_code_library_import_post
+         * @example {
+         *       "file": "file-示例"
+         *     }
+         */
         Body_import_material_codes_api_v1_material_code_library_import_post: {
             /** File */
             file: string;
         };
-        /** Body_upload_api_v1_files_images_post */
+        /**
+         * Body_upload_api_v1_files_images_post
+         * @example {
+         *       "file": "file-示例"
+         *     }
+         */
         Body_upload_api_v1_files_images_post: {
             /** File */
             file: string;
         };
-        /** DashboardSummaryRead */
+        /**
+         * DashboardSummaryRead
+         * @example {
+         *       "stock_material_count": 3,
+         *       "low_stock_count": 3,
+         *       "uncoded_purchase_material_count": 3,
+         *       "purchase_record_count": 3
+         *     }
+         */
         DashboardSummaryRead: {
             /** Stock Material Count */
             stock_material_count: number;
@@ -2112,7 +2284,23 @@ export interface components {
             /** Purchase Record Count */
             purchase_record_count: number;
         };
-        /** ExcelExportJobRead */
+        /**
+         * ExcelExportJobRead
+         * @example {
+         *       "id": 1,
+         *       "export_type": "export_type-示例",
+         *       "status": "正常",
+         *       "download_filename": "download_filename-示例",
+         *       "file_uuid": "file_uuid-示例",
+         *       "params": {},
+         *       "result": {},
+         *       "error_code": "DQ-000123",
+         *       "error_message": "error_message-示例",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "started_at": "2026-09-13T10:30:00+08:00",
+         *       "finished_at": "2026-09-13T10:30:00+08:00"
+         *     }
+         */
         ExcelExportJobRead: {
             /** Id */
             id: number;
@@ -2150,7 +2338,21 @@ export interface components {
          * @enum {string}
          */
         ExcelExportJobStatus: "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED";
-        /** ExcelImportJobRead */
+        /**
+         * ExcelImportJobRead
+         * @example {
+         *       "id": 1,
+         *       "import_type": "import_type-示例",
+         *       "status": "正常",
+         *       "original_filename": "original_filename-示例",
+         *       "result": {},
+         *       "error_code": "DQ-000123",
+         *       "error_message": "error_message-示例",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "started_at": "2026-09-13T10:30:00+08:00",
+         *       "finished_at": "2026-09-13T10:30:00+08:00"
+         *     }
+         */
         ExcelImportJobRead: {
             /** Id */
             id: number;
@@ -2182,7 +2384,17 @@ export interface components {
          * @enum {string}
          */
         ExcelImportJobStatus: "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED";
-        /** FileObjectRead */
+        /**
+         * FileObjectRead
+         * @example {
+         *       "id": 1,
+         *       "original_name": "stock-material-20260913.png",
+         *       "mime_type": "image/png",
+         *       "size_bytes": 204800,
+         *       "width": 800,
+         *       "height": 600
+         *     }
+         */
         FileObjectRead: {
             /** Id */
             id: string;
@@ -2201,14 +2413,39 @@ export interface components {
             /** Height */
             height: number;
         };
-        /** HuaXingFilterOptions */
+        /**
+         * HuaXingFilterOptions
+         * @example {
+         *       "purchase_departments": [
+         *         "purchase_departments_item-示例"
+         *       ],
+         *       "purchasers": [
+         *         "purchasers_item-示例"
+         *       ]
+         *     }
+         */
         HuaXingFilterOptions: {
             /** Purchase Departments */
             purchase_departments: string[];
             /** Purchasers */
             purchasers: string[];
         };
-        /** HuaXingInventoryRead */
+        /**
+         * HuaXingInventoryRead
+         * @example {
+         *       "id": 1,
+         *       "first_inbound_date": "2026-09-13",
+         *       "warehouse": "warehouse-示例",
+         *       "material_code": "DQ-000123",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "quantity": "10.000",
+         *       "unit_name": "个",
+         *       "purchaser": "purchaser-示例",
+         *       "purchase_department": "purchase_department-示例",
+         *       "subitem_no_name": "低压电器"
+         *     }
+         */
         HuaXingInventoryRead: {
             /** Id */
             id: number;
@@ -2233,12 +2470,31 @@ export interface components {
             /** Subitem No Name */
             subitem_no_name?: string | null;
         };
-        /** ImageAccelerationSettingsRead */
+        /**
+         * ImageAccelerationSettingsRead
+         * @example {
+         *       "image_acceleration_server_url": "https://example.com/hook/token"
+         *     }
+         */
         ImageAccelerationSettingsRead: {
             /** Image Acceleration Server Url */
             image_acceleration_server_url: string;
         };
-        /** InventoryBalanceRead */
+        /**
+         * InventoryBalanceRead
+         * @example {
+         *       "stock_material_id": 1,
+         *       "name": "二级库物资",
+         *       "alias": "接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "current_qty": "42.000",
+         *       "minimum_qty": "5.000",
+         *       "is_low_stock": true,
+         *       "suggested_purchase_qty": "10.000",
+         *       "updated_at": "2026-09-13T10:30:00+08:00"
+         *     }
+         */
         InventoryBalanceRead: {
             /** Stock Material Id */
             stock_material_id: number;
@@ -2264,12 +2520,23 @@ export interface components {
              */
             updated_at: string;
         };
-        /** LastImportRead */
+        /**
+         * LastImportRead
+         * @example {
+         *       "last_import_at": "2026-09-13T10:30:00+08:00"
+         *     }
+         */
         LastImportRead: {
             /** Last Import At */
             last_import_at?: string | null;
         };
-        /** LinkStockMaterialRequest */
+        /**
+         * LinkStockMaterialRequest
+         * @example {
+         *       "stock_material_id": 1,
+         *       "version": 1
+         *     }
+         */
         LinkStockMaterialRequest: {
             /** Stock Material Id */
             stock_material_id: number;
@@ -2279,6 +2546,14 @@ export interface components {
         /**
          * LiteInventoryRead
          * @description 管理端精简二级库行（Excel 一次性导入 + 只读查询）。
+         * @example {
+         *       "id": 1,
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "quantity": "10.000",
+         *       "remark": "无"
+         *     }
          */
         LiteInventoryRead: {
             /** Id */
@@ -2294,14 +2569,28 @@ export interface components {
             /** Remark */
             remark?: string | null;
         };
-        /** LoginRequest */
+        /**
+         * LoginRequest
+         * @example {
+         *       "username": "warehouse",
+         *       "password": "password-示例"
+         *     }
+         */
         LoginRequest: {
             /** Username */
             username: string;
             /** Password */
             password: string;
         };
-        /** LoginResponse */
+        /**
+         * LoginResponse
+         * @example {
+         *       "access_token": "api-token-example",
+         *       "refresh_token": "api-token-example",
+         *       "token_type": "bearer",
+         *       "user": "user-示例"
+         *     }
+         */
         LoginResponse: {
             /** Access Token */
             access_token: string;
@@ -2315,14 +2604,29 @@ export interface components {
             token_type: "bearer";
             user: components["schemas"]["UserRead"];
         };
-        /** MaterialCodeExistsRead */
+        /**
+         * MaterialCodeExistsRead
+         * @example {
+         *       "material_code": "DQ-000123",
+         *       "exists": true
+         *     }
+         */
         MaterialCodeExistsRead: {
             /** Material Code */
             material_code: string;
             /** Exists */
             exists: boolean;
         };
-        /** MaterialCodeLibraryRead */
+        /**
+         * MaterialCodeLibraryRead
+         * @example {
+         *       "id": 1,
+         *       "material_code": "DQ-000123",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个"
+         *     }
+         */
         MaterialCodeLibraryRead: {
             /** Id */
             id: number;
@@ -2335,7 +2639,13 @@ export interface components {
             /** Unit Name */
             unit_name: string;
         };
-        /** MemoCreate */
+        /**
+         * MemoCreate
+         * @example {
+         *       "title": "title-示例",
+         *       "content": "content-示例"
+         *     }
+         */
         MemoCreate: {
             /**
              * Title
@@ -2351,6 +2661,14 @@ export interface components {
         /**
          * MemoRead
          * @description 管理端个人备忘录（纯文本）：一级 tab 快捷切换多条，按创建人隔离。
+         * @example {
+         *       "id": 1,
+         *       "title": "title-示例",
+         *       "content": "content-示例",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
          */
         MemoRead: {
             /** Id */
@@ -2372,7 +2690,14 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** MemoUpdate */
+        /**
+         * MemoUpdate
+         * @example {
+         *       "title": "title-示例",
+         *       "content": "content-示例",
+         *       "version": 1
+         *     }
+         */
         MemoUpdate: {
             /** Title */
             title?: string | null;
@@ -2391,7 +2716,17 @@ export interface components {
          * @enum {string}
          */
         MiniProgramFeatureMode: "disabled" | "query_only" | "read_write";
-        /** MiniProgramFeaturesRead */
+        /**
+         * MiniProgramFeaturesRead
+         * @example {
+         *       "inventory_mode": "inventory_mode-示例",
+         *       "huaxing_inventory_mode": "huaxing_inventory_mode-示例",
+         *       "purchase_plans_mode": "purchase_plans_mode-示例",
+         *       "purchase_records_mode": "purchase_records_mode-示例",
+         *       "material_codes_mode": "material_codes_mode-示例",
+         *       "secondary_warehouse_mode": "secondary_warehouse_mode-示例"
+         *     }
+         */
         MiniProgramFeaturesRead: {
             inventory_mode: components["schemas"]["MiniProgramFeatureMode"];
             huaxing_inventory_mode: components["schemas"]["MiniProgramFeatureMode"];
@@ -2400,7 +2735,22 @@ export interface components {
             material_codes_mode: components["schemas"]["MiniProgramFeatureMode"];
             secondary_warehouse_mode: components["schemas"]["SecondaryWarehouseMode"];
         };
-        /** MiniProgramHuaXingInventoryRead */
+        /**
+         * MiniProgramHuaXingInventoryRead
+         * @example {
+         *       "id": 1,
+         *       "first_inbound_date": "2026-09-13",
+         *       "warehouse": "warehouse-示例",
+         *       "material_code": "DQ-000123",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "quantity": "10.000",
+         *       "unit_name": "个",
+         *       "purchaser": "purchaser-示例",
+         *       "purchase_department": "purchase_department-示例",
+         *       "subitem_no_name": "低压电器"
+         *     }
+         */
         MiniProgramHuaXingInventoryRead: {
             /** Id */
             id: number;
@@ -2425,7 +2775,15 @@ export interface components {
             /** Subitem No Name */
             subitem_no_name?: string | null;
         };
-        /** MiniProgramIdentityRead */
+        /**
+         * MiniProgramIdentityRead
+         * @example {
+         *       "id": 1,
+         *       "app_id": 1,
+         *       "wechat_openid": "wechat_openid-示例",
+         *       "created_at": "2026-09-13T10:30:00+08:00"
+         *     }
+         */
         MiniProgramIdentityRead: {
             /** Id */
             id: number;
@@ -2439,7 +2797,17 @@ export interface components {
              */
             created_at: string;
         };
-        /** MiniProgramInventoryItemRead */
+        /**
+         * MiniProgramInventoryItemRead
+         * @example {
+         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "current_qty": "42.000",
+         *       "stock_status": "stock_status-示例"
+         *     }
+         */
         MiniProgramInventoryItemRead: {
             /**
              * Uuid
@@ -2459,6 +2827,13 @@ export interface components {
         /**
          * MiniProgramLiteInventoryItemRead
          * @description 小程序端精简二级库行（无出入库，仅查看）。
+         * @example {
+         *       "id": 1,
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "quantity": "10.000"
+         *     }
          */
         MiniProgramLiteInventoryItemRead: {
             /** Id */
@@ -2472,7 +2847,32 @@ export interface components {
             /** Quantity */
             quantity?: string | null;
         };
-        /** MiniProgramLoginResponse */
+        /**
+         * MiniProgramLoginResponse
+         * @example {
+         *       "access_token": "api-token-example",
+         *       "registration_token": "api-token-example",
+         *       "token_type": "bearer",
+         *       "user": {
+         *         "id": 1,
+         *         "display_name": "张三",
+         *         "department_name": "低压电器",
+         *         "enabled": true,
+         *         "identities": [
+         *           {
+         *             "id": 1,
+         *             "app_id": 1,
+         *             "wechat_openid": "wechat_openid-示例",
+         *             "created_at": "2026-09-13T10:30:00+08:00"
+         *           }
+         *         ],
+         *         "created_at": "2026-09-13T10:30:00+08:00",
+         *         "updated_at": "2026-09-13T10:30:00+08:00",
+         *         "version": 1
+         *       },
+         *       "requires_profile": true
+         *     }
+         */
         MiniProgramLoginResponse: {
             /** Access Token */
             access_token?: string | null;
@@ -2488,7 +2888,16 @@ export interface components {
             /** Requires Profile */
             requires_profile: boolean;
         };
-        /** MiniProgramMaterialCodeRead */
+        /**
+         * MiniProgramMaterialCodeRead
+         * @example {
+         *       "id": 1,
+         *       "material_code": "DQ-000123",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个"
+         *     }
+         */
         MiniProgramMaterialCodeRead: {
             /** Id */
             id: number;
@@ -2501,7 +2910,29 @@ export interface components {
             /** Unit Name */
             unit_name: string;
         };
-        /** MiniProgramMaterialRead */
+        /**
+         * MiniProgramMaterialRead
+         * @example {
+         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "current_qty": "42.000",
+         *       "stock_status": "stock_status-示例",
+         *       "minimum_qty": "5.000",
+         *       "remark": "无",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ]
+         *     }
+         */
         MiniProgramMaterialRead: {
             /**
              * Uuid
@@ -2529,6 +2960,23 @@ export interface components {
          * @description 小程序端出入库记录（按姓名匹配，行级展平）。
          *
          *     兼容入库/出库、小程序/管理端来源；多行操作按行展平为多条记录。
+         * @example {
+         *       "operation_id": 1,
+         *       "operation_no": "CL-20260913-0001",
+         *       "operation_type": "operation_type-示例",
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "quantity": "10.000",
+         *       "before_qty": "45.000",
+         *       "after_qty": "42.000",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "receiver_name": "低压电器",
+         *       "subitem_no": "01",
+         *       "executed_by": "executed_by-示例"
+         *     }
          */
         MiniProgramOperationRead: {
             /** Operation Id */
@@ -2564,7 +3012,18 @@ export interface components {
             /** Executed By */
             executed_by?: string | null;
         };
-        /** MiniProgramOutboundCreate */
+        /**
+         * MiniProgramOutboundCreate
+         * @example {
+         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
+         *       "material_uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "quantity": "10.000",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "subitem_no": "01"
+         *     }
+         */
         MiniProgramOutboundCreate: {
             /** Client Request Id */
             client_request_id: string;
@@ -2590,7 +3049,26 @@ export interface components {
             /** Subitem No */
             subitem_no: string;
         };
-        /** MiniProgramOutboundRead */
+        /**
+         * MiniProgramOutboundRead
+         * @example {
+         *       "operation_id": 1,
+         *       "operation_no": "CL-20260913-0001",
+         *       "material_uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "quantity": "10.000",
+         *       "before_qty": "45.000",
+         *       "after_qty": "42.000",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "receiver_name": "低压电器",
+         *       "subitem_no": "01",
+         *       "executed_by": "executed_by-示例"
+         *     }
+         */
         MiniProgramOutboundRead: {
             /** Operation Id */
             operation_id: number;
@@ -2629,28 +3107,87 @@ export interface components {
             /** Executed By */
             executed_by: string;
         };
-        /** MiniProgramOutboundReason */
+        /**
+         * MiniProgramOutboundReason
+         * @example {
+         *       "subitem_no": "01",
+         *       "reason": "reason-示例"
+         *     }
+         */
         MiniProgramOutboundReason: {
             /** Subitem No */
             subitem_no?: string | null;
             /** Reason */
             reason: string;
         };
-        /** MiniProgramOutboundReasonOptions */
+        /**
+         * MiniProgramOutboundReasonOptions
+         * @example {
+         *       "personal_reasons": [
+         *         {
+         *           "subitem_no": "01",
+         *           "reason": "reason-示例"
+         *         }
+         *       ],
+         *       "system_reasons": [
+         *         {
+         *           "subitem_no": "01",
+         *           "reason": "reason-示例"
+         *         }
+         *       ]
+         *     }
+         */
         MiniProgramOutboundReasonOptions: {
             /** Personal Reasons */
             personal_reasons: components["schemas"]["MiniProgramOutboundReason"][];
             /** System Reasons */
             system_reasons: components["schemas"]["MiniProgramOutboundReason"][];
         };
-        /** MiniProgramProfileUpdate */
+        /**
+         * MiniProgramProfileUpdate
+         * @example {
+         *       "display_name": "张三",
+         *       "department_name": "低压电器"
+         *     }
+         */
         MiniProgramProfileUpdate: {
             /** Display Name */
             display_name: string;
             /** Department Name */
             department_name: string;
         };
-        /** MiniProgramPurchasePlanDetailRead */
+        /**
+         * MiniProgramPurchasePlanDetailRead
+         * @example {
+         *       "id": 1,
+         *       "plan_no": "CL-20260913-0001",
+         *       "plan_date": "2026-09-13",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "planned_qty": "10.000",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "urgency": "正常",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "demand_department": "电气自动化车间",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ],
+         *       "next_id": 1
+         *     }
+         */
         MiniProgramPurchasePlanDetailRead: {
             /** Id */
             id: number;
@@ -2692,14 +3229,38 @@ export interface components {
             /** Next Id */
             next_id?: number | null;
         };
-        /** MiniProgramPurchasePlanFilterOptions */
+        /**
+         * MiniProgramPurchasePlanFilterOptions
+         * @example {
+         *       "actual_demand_persons": [
+         *         "actual_demand_persons_item-示例"
+         *       ],
+         *       "subitem_nos": [
+         *         "subitem_nos_item-示例"
+         *       ]
+         *     }
+         */
         MiniProgramPurchasePlanFilterOptions: {
             /** Actual Demand Persons */
             actual_demand_persons: string[];
             /** Subitem Nos */
             subitem_nos: string[];
         };
-        /** MiniProgramPurchasePlanItemRead */
+        /**
+         * MiniProgramPurchasePlanItemRead
+         * @example {
+         *       "id": 1,
+         *       "plan_no": "CL-20260913-0001",
+         *       "plan_date": "2026-09-13",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "planned_qty": "10.000",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "urgency": "正常"
+         *     }
+         */
         MiniProgramPurchasePlanItemRead: {
             /** Id */
             id: number;
@@ -2725,14 +3286,58 @@ export interface components {
             /** Urgency */
             urgency: string;
         };
-        /** MiniProgramPurchaseRecordFilterOptions */
+        /**
+         * MiniProgramPurchaseRecordFilterOptions
+         * @example {
+         *       "statuses": [
+         *         "statuses_item-示例"
+         *       ],
+         *       "subitem_nos": [
+         *         "subitem_nos_item-示例"
+         *       ]
+         *     }
+         */
         MiniProgramPurchaseRecordFilterOptions: {
             /** Statuses */
             statuses: string[];
             /** Subitem Nos */
             subitem_nos: string[];
         };
-        /** MiniProgramPurchaseRecordItemRead */
+        /**
+         * MiniProgramPurchaseRecordItemRead
+         * @example {
+         *       "line_id": 1,
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "status": "正常",
+         *       "unit_name": "个",
+         *       "purchase_qty": "10.000",
+         *       "plan_date": "2026-09-13",
+         *       "subitem_no": "01",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "plan_no": "CL-20260913-0001",
+         *       "demand_department": "电气自动化车间",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "usage": "设备检修更换",
+         *       "remark": "无",
+         *       "purchase_date": "2026-09-13",
+         *       "salesperson": "李四",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ]
+         *     }
+         */
         MiniProgramPurchaseRecordItemRead: {
             /** Line Id */
             line_id: number;
@@ -2785,7 +3390,14 @@ export interface components {
          * @enum {string}
          */
         MiniProgramStockStatus: "normal" | "out_of_stock" | "low_stock";
-        /** MiniProgramUserMergeRequest */
+        /**
+         * MiniProgramUserMergeRequest
+         * @example {
+         *       "source_user_id": 1,
+         *       "source_version": 1,
+         *       "target_version": 1
+         *     }
+         */
         MiniProgramUserMergeRequest: {
             /** Source User Id */
             source_user_id: number;
@@ -2794,7 +3406,26 @@ export interface components {
             /** Target Version */
             target_version: number;
         };
-        /** MiniProgramUserRead */
+        /**
+         * MiniProgramUserRead
+         * @example {
+         *       "id": 1,
+         *       "display_name": "张三",
+         *       "department_name": "低压电器",
+         *       "enabled": true,
+         *       "identities": [
+         *         {
+         *           "id": 1,
+         *           "app_id": 1,
+         *           "wechat_openid": "wechat_openid-示例",
+         *           "created_at": "2026-09-13T10:30:00+08:00"
+         *         }
+         *       ],
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         MiniProgramUserRead: {
             /** Id */
             id: number;
@@ -2819,7 +3450,15 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** MiniProgramUserUpdate */
+        /**
+         * MiniProgramUserUpdate
+         * @example {
+         *       "display_name": "张三",
+         *       "department_name": "低压电器",
+         *       "enabled": true,
+         *       "version": 1
+         *     }
+         */
         MiniProgramUserUpdate: {
             /** Display Name */
             display_name?: string | null;
@@ -2830,14 +3469,36 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** MiniProgramWechatLoginRequest */
+        /**
+         * MiniProgramWechatLoginRequest
+         * @example {
+         *       "code": "NOT_FOUND",
+         *       "app_id": 1
+         *     }
+         */
         MiniProgramWechatLoginRequest: {
             /** Code */
             code: string;
             /** App Id */
             app_id?: string | null;
         };
-        /** MovePurchasePlanRequest */
+        /**
+         * MovePurchasePlanRequest
+         * @example {
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_date": "2026-09-13",
+         *       "consolidation_port": "Morowali",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "purchase_date": "2026-09-13",
+         *       "salesperson": "李四",
+         *       "status": "正常",
+         *       "record_remark": "record_remark-示例"
+         *     }
+         */
         MovePurchasePlanRequest: {
             /** Purchase Order No */
             purchase_order_no?: string | null;
@@ -2870,7 +3531,24 @@ export interface components {
             /** Record Remark */
             record_remark?: string | null;
         };
-        /** OperationCreate */
+        /**
+         * OperationCreate
+         * @example {
+         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "source_type": "source_type-示例",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "receiver_name": "低压电器",
+         *       "subitem_no": "01",
+         *       "lines": [
+         *         {
+         *           "stock_material_id": 1,
+         *           "quantity": "10.000"
+         *         }
+         *       ]
+         *     }
+         */
         OperationCreate: {
             /** Client Request Id */
             client_request_id: string;
@@ -2894,7 +3572,13 @@ export interface components {
             /** Lines */
             lines: components["schemas"]["OperationLineWrite"][];
         };
-        /** OperationLineWrite */
+        /**
+         * OperationLineWrite
+         * @example {
+         *       "stock_material_id": 1,
+         *       "quantity": "10.000"
+         *     }
+         */
         OperationLineWrite: {
             /** Stock Material Id */
             stock_material_id: number;
@@ -2906,7 +3590,25 @@ export interface components {
          * @enum {string}
          */
         OperationType: "INBOUND" | "OUTBOUND";
-        /** OperationUpdate */
+        /**
+         * OperationUpdate
+         * @example {
+         *       "version": 1,
+         *       "operation_type": "operation_type-示例",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "source_type": "source_type-示例",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "receiver_name": "低压电器",
+         *       "subitem_no": "01",
+         *       "lines": [
+         *         {
+         *           "stock_material_id": 1,
+         *           "quantity": "10.000"
+         *         }
+         *       ]
+         *     }
+         */
         OperationUpdate: {
             /** Version */
             version: number;
@@ -2931,7 +3633,18 @@ export interface components {
             /** Lines */
             lines: components["schemas"]["OperationLineWrite"][];
         };
-        /** OrphanFileCleanupRead */
+        /**
+         * OrphanFileCleanupRead
+         * @example {
+         *       "cutoff": "2026-09-13T10:30:00+08:00",
+         *       "deleted_record_ids": [
+         *         "deleted_record_ids_item-示例"
+         *       ],
+         *       "deleted_file_names": [
+         *         "deleted_file_names_item-示例"
+         *       ]
+         *     }
+         */
         OrphanFileCleanupRead: {
             /**
              * Cutoff
@@ -2943,7 +3656,16 @@ export interface components {
             /** Deleted File Names */
             deleted_file_names: string[];
         };
-        /** OrphanFileRead */
+        /**
+         * OrphanFileRead
+         * @example {
+         *       "id": 1,
+         *       "original_name": "stock-material-20260913.png",
+         *       "size_bytes": 204800,
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "file_exists": true
+         *     }
+         */
         OrphanFileRead: {
             /** Id */
             id: string;
@@ -2959,7 +3681,27 @@ export interface components {
             /** File Exists */
             file_exists: boolean;
         };
-        /** OrphanFileReportRead */
+        /**
+         * OrphanFileReportRead
+         * @example {
+         *       "cutoff": "2026-09-13T10:30:00+08:00",
+         *       "unreferenced_records": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "size_bytes": 204800,
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "file_exists": true
+         *         }
+         *       ],
+         *       "untracked_file_names": [
+         *         "untracked_file_names_item-示例"
+         *       ],
+         *       "missing_file_ids": [
+         *         "missing_file_ids_item-示例"
+         *       ]
+         *     }
+         */
         OrphanFileReportRead: {
             /**
              * Cutoff
@@ -2973,7 +3715,29 @@ export interface components {
             /** Missing File Ids */
             missing_file_ids: string[];
         };
-        /** Page[HuaXingInventoryRead] */
+        /**
+         * Page[HuaXingInventoryRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "first_inbound_date": "2026-09-13",
+         *           "warehouse": "warehouse-示例",
+         *           "material_code": "DQ-000123",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "quantity": "10.000",
+         *           "unit_name": "个",
+         *           "purchaser": "purchaser-示例",
+         *           "purchase_department": "purchase_department-示例",
+         *           "subitem_no_name": "低压电器"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_HuaXingInventoryRead_: {
             /** Items */
             items: components["schemas"]["HuaXingInventoryRead"][];
@@ -2984,7 +3748,28 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[InventoryBalanceRead] */
+        /**
+         * Page[InventoryBalanceRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "stock_material_id": 1,
+         *           "name": "二级库物资",
+         *           "alias": "接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "current_qty": "42.000",
+         *           "minimum_qty": "5.000",
+         *           "is_low_stock": true,
+         *           "suggested_purchase_qty": "10.000",
+         *           "updated_at": "2026-09-13T10:30:00+08:00"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_InventoryBalanceRead_: {
             /** Items */
             items: components["schemas"]["InventoryBalanceRead"][];
@@ -2995,7 +3780,24 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[LiteInventoryRead] */
+        /**
+         * Page[LiteInventoryRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "quantity": "10.000",
+         *           "remark": "无"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_LiteInventoryRead_: {
             /** Items */
             items: components["schemas"]["LiteInventoryRead"][];
@@ -3006,7 +3808,23 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MaterialCodeLibraryRead] */
+        /**
+         * Page[MaterialCodeLibraryRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "material_code": "DQ-000123",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MaterialCodeLibraryRead_: {
             /** Items */
             items: components["schemas"]["MaterialCodeLibraryRead"][];
@@ -3017,7 +3835,29 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramHuaXingInventoryRead] */
+        /**
+         * Page[MiniProgramHuaXingInventoryRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "first_inbound_date": "2026-09-13",
+         *           "warehouse": "warehouse-示例",
+         *           "material_code": "DQ-000123",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "quantity": "10.000",
+         *           "unit_name": "个",
+         *           "purchaser": "purchaser-示例",
+         *           "purchase_department": "purchase_department-示例",
+         *           "subitem_no_name": "低压电器"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramHuaXingInventoryRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramHuaXingInventoryRead"][];
@@ -3028,7 +3868,24 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramInventoryItemRead] */
+        /**
+         * Page[MiniProgramInventoryItemRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "current_qty": "42.000",
+         *           "stock_status": "stock_status-示例"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramInventoryItemRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramInventoryItemRead"][];
@@ -3039,7 +3896,23 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramLiteInventoryItemRead] */
+        /**
+         * Page[MiniProgramLiteInventoryItemRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "quantity": "10.000"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramLiteInventoryItemRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramLiteInventoryItemRead"][];
@@ -3050,7 +3923,23 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramMaterialCodeRead] */
+        /**
+         * Page[MiniProgramMaterialCodeRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "material_code": "DQ-000123",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramMaterialCodeRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramMaterialCodeRead"][];
@@ -3061,7 +3950,33 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramOperationRead] */
+        /**
+         * Page[MiniProgramOperationRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "operation_id": 1,
+         *           "operation_no": "CL-20260913-0001",
+         *           "operation_type": "operation_type-示例",
+         *           "material_name": "交流接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "quantity": "10.000",
+         *           "before_qty": "45.000",
+         *           "after_qty": "42.000",
+         *           "occurred_at": "2026-09-13T10:30:00+08:00",
+         *           "business_reason": "盘点差异修正",
+         *           "receiver_unit": "receiver_unit-示例",
+         *           "receiver_name": "低压电器",
+         *           "subitem_no": "01",
+         *           "executed_by": "executed_by-示例"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramOperationRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramOperationRead"][];
@@ -3072,7 +3987,28 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramPurchasePlanItemRead] */
+        /**
+         * Page[MiniProgramPurchasePlanItemRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "plan_no": "CL-20260913-0001",
+         *           "plan_date": "2026-09-13",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "planned_qty": "10.000",
+         *           "actual_demand_person": "赵六",
+         *           "purchase_responsible": "王五",
+         *           "urgency": "正常"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramPurchasePlanItemRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramPurchasePlanItemRead"][];
@@ -3083,7 +4019,48 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramPurchaseRecordItemRead] */
+        /**
+         * Page[MiniProgramPurchaseRecordItemRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "line_id": 1,
+         *           "material_name": "交流接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "purchase_order_no": "申购单-2026年09月13日",
+         *           "trace_no": "HX2026080001",
+         *           "status": "正常",
+         *           "unit_name": "个",
+         *           "purchase_qty": "10.000",
+         *           "plan_date": "2026-09-13",
+         *           "subitem_no": "01",
+         *           "material_code": "DQ-000123",
+         *           "category": "低压电器",
+         *           "plan_no": "CL-20260913-0001",
+         *           "demand_department": "电气自动化车间",
+         *           "actual_demand_person": "赵六",
+         *           "purchase_responsible": "王五",
+         *           "usage": "设备检修更换",
+         *           "remark": "无",
+         *           "purchase_date": "2026-09-13",
+         *           "salesperson": "李四",
+         *           "images": [
+         *             {
+         *               "id": 1,
+         *               "original_name": "stock-material-20260913.png",
+         *               "mime_type": "image/png",
+         *               "size_bytes": 204800,
+         *               "width": 800,
+         *               "height": 600
+         *             }
+         *           ]
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramPurchaseRecordItemRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramPurchaseRecordItemRead"][];
@@ -3094,7 +4071,33 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[MiniProgramUserRead] */
+        /**
+         * Page[MiniProgramUserRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "display_name": "张三",
+         *           "department_name": "低压电器",
+         *           "enabled": true,
+         *           "identities": [
+         *             {
+         *               "id": null,
+         *               "app_id": null,
+         *               "wechat_openid": null,
+         *               "created_at": null
+         *             }
+         *           ],
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_MiniProgramUserRead_: {
             /** Items */
             items: components["schemas"]["MiniProgramUserRead"][];
@@ -3105,7 +4108,51 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[PurchaseMaterialRead] */
+        /**
+         * Page[PurchaseMaterialRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "plan_no": "CL-20260913-0001",
+         *           "plan_date": "2026-09-13",
+         *           "material_code": "DQ-000123",
+         *           "category": "低压电器",
+         *           "urgency": "正常",
+         *           "demand_department": "电气自动化车间",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "赵六",
+         *           "purchase_responsible": "王五",
+         *           "planned_qty": "10.000",
+         *           "usage": "设备检修更换",
+         *           "subitem_no": "01",
+         *           "remark": "无",
+         *           "stock_material_id": 1,
+         *           "stock_material_name": "低压电器",
+         *           "status": "正常",
+         *           "moved_to_record": true,
+         *           "images": [
+         *             {
+         *               "id": null,
+         *               "original_name": null,
+         *               "mime_type": null,
+         *               "size_bytes": null,
+         *               "width": null,
+         *               "height": null
+         *             }
+         *           ],
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_PurchaseMaterialRead_: {
             /** Items */
             items: components["schemas"]["PurchaseMaterialRead"][];
@@ -3116,7 +4163,47 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[PurchasePlanTemplateRead] */
+        /**
+         * Page[PurchasePlanTemplateRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "material_code": "DQ-000123",
+         *           "category": "低压电器",
+         *           "urgency": "正常",
+         *           "demand_department": "电气自动化车间",
+         *           "name": "二级库物资",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "actual_demand_person": "赵六",
+         *           "purchase_responsible": "王五",
+         *           "planned_qty": "10.000",
+         *           "usage": "设备检修更换",
+         *           "subitem_no": "01",
+         *           "remark": "无",
+         *           "stock_material_id": 1,
+         *           "stock_material_name": "低压电器",
+         *           "images": [
+         *             {
+         *               "id": null,
+         *               "original_name": null,
+         *               "mime_type": null,
+         *               "size_bytes": null,
+         *               "width": null,
+         *               "height": null
+         *             }
+         *           ],
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_PurchasePlanTemplateRead_: {
             /** Items */
             items: components["schemas"]["PurchasePlanTemplateRead"][];
@@ -3127,7 +4214,61 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[PurchaseRecordRead] */
+        /**
+         * Page[PurchaseRecordRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "line_id": 1,
+         *           "purchase_request_id": 1,
+         *           "purchase_material_id": 1,
+         *           "plan_no": "CL-20260913-0001",
+         *           "plan_date": "2026-09-13",
+         *           "purchase_order_no": "申购单-2026年09月13日",
+         *           "trace_no": "HX2026080001",
+         *           "contract_no": "HT-2026-0001",
+         *           "vessel_no": "MV HX 001",
+         *           "consolidation_date": "2026-09-13",
+         *           "consolidation_port": "Morowali",
+         *           "sailing_date": "2026-09-13",
+         *           "contract_sign_date": "2026-09-13",
+         *           "status": "正常",
+         *           "material_code": "DQ-000123",
+         *           "category": "低压电器",
+         *           "demand_department": "电气自动化车间",
+         *           "material_name": "交流接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "purchase_qty": "10.000",
+         *           "actual_demand_person": "赵六",
+         *           "purchase_responsible": "王五",
+         *           "salesperson": "李四",
+         *           "plan_remark": "plan_remark-示例",
+         *           "record_remark": "record_remark-示例",
+         *           "usage": "设备检修更换",
+         *           "subitem_no": "01",
+         *           "images": [
+         *             {
+         *               "id": null,
+         *               "original_name": null,
+         *               "mime_type": null,
+         *               "size_bytes": null,
+         *               "width": null,
+         *               "height": null
+         *             }
+         *           ],
+         *           "stock_material_id": 1,
+         *           "purchase_date": "2026-09-13",
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_PurchaseRecordRead_: {
             /** Items */
             items: components["schemas"]["PurchaseRecordRead"][];
@@ -3138,7 +4279,30 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[ShareListRead] */
+        /**
+         * Page[ShareListRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "token": "token-示例",
+         *           "share_type": "share_type-示例",
+         *           "item_count": 3,
+         *           "expires_at": "2026-09-13T10:30:00+08:00",
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "created_by": 1,
+         *           "created_by_name": "低压电器",
+         *           "columns": [
+         *             "material_code",
+         *             "name",
+         *             "quantity"
+         *           ]
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_ShareListRead_: {
             /** Items */
             items: components["schemas"]["ShareListRead"][];
@@ -3149,7 +4313,46 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[StockMaterialRead] */
+        /**
+         * Page[StockMaterialRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *           "name": "二级库物资",
+         *           "name_id": 1,
+         *           "alias": "接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "remark": "无",
+         *           "current_qty": "42.000",
+         *           "images": [
+         *             {
+         *               "id": null,
+         *               "original_name": null,
+         *               "mime_type": null,
+         *               "size_bytes": null,
+         *               "width": null,
+         *               "height": null
+         *             }
+         *           ],
+         *           "replenishment_policy": {
+         *             "minimum_qty": "5.000",
+         *             "enabled": true,
+         *             "version": 1
+         *           },
+         *           "has_operation_records": true,
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "updated_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_StockMaterialRead_: {
             /** Items */
             items: components["schemas"]["StockMaterialRead"][];
@@ -3160,7 +4363,46 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[StockOperationRead] */
+        /**
+         * Page[StockOperationRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "operation_no": "CL-20260913-0001",
+         *           "operation_type": "operation_type-示例",
+         *           "occurred_at": "2026-09-13T10:30:00+08:00",
+         *           "business_reason": "盘点差异修正",
+         *           "receiver_unit": "receiver_unit-示例",
+         *           "receiver_name": "低压电器",
+         *           "subitem_no": "01",
+         *           "source_type": "source_type-示例",
+         *           "reversal_of_id": 1,
+         *           "is_reversed": false,
+         *           "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
+         *           "mini_program_user_name": "低压电器",
+         *           "lines": [
+         *             {
+         *               "id": null,
+         *               "stock_material_id": null,
+         *               "material_name": null,
+         *               "model_spec": null,
+         *               "unit_name": null,
+         *               "quantity": null,
+         *               "remaining_qty": null,
+         *               "before_qty": null,
+         *               "after_qty": null
+         *             }
+         *           ],
+         *           "created_at": "2026-09-13T10:30:00+08:00",
+         *           "version": 1
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_StockOperationRead_: {
             /** Items */
             items: components["schemas"]["StockOperationRead"][];
@@ -3171,7 +4413,25 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** Page[UserApiTokenRead] */
+        /**
+         * Page[UserApiTokenRead]
+         * @example {
+         *       "items": [
+         *         {
+         *           "id": 1,
+         *           "username": "warehouse",
+         *           "display_name": "张三",
+         *           "role": "WAREHOUSE_ADMIN",
+         *           "enabled": true,
+         *           "version": 1,
+         *           "api_token": "api-token-example"
+         *         }
+         *       ],
+         *       "page": 1,
+         *       "page_size": 20,
+         *       "total": 128
+         *     }
+         */
         Page_UserApiTokenRead_: {
             /** Items */
             items: components["schemas"]["UserApiTokenRead"][];
@@ -3182,7 +4442,23 @@ export interface components {
             /** Total */
             total: number;
         };
-        /** PurchaseFilterOptions */
+        /**
+         * PurchaseFilterOptions
+         * @example {
+         *       "actual_demand_persons": [
+         *         "actual_demand_persons_item-示例"
+         *       ],
+         *       "purchase_responsibles": [
+         *         "purchase_responsibles_item-示例"
+         *       ],
+         *       "subitem_nos": [
+         *         "subitem_nos_item-示例"
+         *       ],
+         *       "categories": [
+         *         "categories_item-示例"
+         *       ]
+         *     }
+         */
         PurchaseFilterOptions: {
             /** Actual Demand Persons */
             actual_demand_persons: string[];
@@ -3193,7 +4469,30 @@ export interface components {
             /** Categories */
             categories: string[];
         };
-        /** PurchaseMaterialCreate */
+        /**
+         * PurchaseMaterialCreate
+         * @example {
+         *       "plan_date": "2026-09-13",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ],
+         *       "status": "正常"
+         *     }
+         */
         PurchaseMaterialCreate: {
             /** Plan Date */
             plan_date?: string | null;
@@ -3236,7 +4535,44 @@ export interface components {
             /** @default 正常 */
             status: components["schemas"]["PurchasePlanStatus"];
         };
-        /** PurchaseMaterialRead */
+        /**
+         * PurchaseMaterialRead
+         * @example {
+         *       "id": 1,
+         *       "plan_no": "CL-20260913-0001",
+         *       "plan_date": "2026-09-13",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "stock_material_name": "低压电器",
+         *       "status": "正常",
+         *       "moved_to_record": true,
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ],
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         PurchaseMaterialRead: {
             /** Id */
             id: number;
@@ -3295,7 +4631,31 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchaseMaterialUpdate */
+        /**
+         * PurchaseMaterialUpdate
+         * @example {
+         *       "plan_date": "2026-09-13",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ],
+         *       "status": "正常",
+         *       "version": 1
+         *     }
+         */
         PurchaseMaterialUpdate: {
             /** Plan Date */
             plan_date?: string | null;
@@ -3340,12 +4700,36 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchasePlanExportRequest */
+        /**
+         * PurchasePlanExportRequest
+         * @example {
+         *       "material_ids": [
+         *         1
+         *       ]
+         *     }
+         */
         PurchasePlanExportRequest: {
             /** Material Ids */
             material_ids: number[];
         };
-        /** PurchasePlanResultExportRequest */
+        /**
+         * PurchasePlanResultExportRequest
+         * @example {
+         *       "columns": [
+         *         "plan_no"
+         *       ],
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "actual_demand_person": "赵六",
+         *       "empty_actual_demand_person": "张三",
+         *       "subitem_no": "01",
+         *       "empty_subitem_no": "CL-20260913-0001",
+         *       "status": "正常",
+         *       "category": "低压电器",
+         *       "sort_by": "plan_no",
+         *       "sort_order": "asc"
+         *     }
+         */
         PurchasePlanResultExportRequest: {
             /** Columns */
             columns: ("plan_no" | "plan_date" | "material_code" | "category" | "urgency" | "demand_department" | "name" | "model_spec" | "planned_qty" | "unit_name" | "actual_demand_person" | "purchase_responsible" | "subitem_no" | "usage" | "images")[];
@@ -3385,7 +4769,28 @@ export interface components {
          * @enum {string}
          */
         PurchasePlanStatus: "正常" | "暂不申购" | "已归档";
-        /** PurchasePlanTemplateCreate */
+        /**
+         * PurchasePlanTemplateCreate
+         * @example {
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ]
+         *     }
+         */
         PurchasePlanTemplateCreate: {
             /** Material Code */
             material_code?: string | null;
@@ -3424,7 +4829,20 @@ export interface components {
             /** Image Ids */
             image_ids?: string[];
         };
-        /** PurchasePlanTemplateFilterOptions */
+        /**
+         * PurchasePlanTemplateFilterOptions
+         * @example {
+         *       "actual_demand_persons": [
+         *         "actual_demand_persons_item-示例"
+         *       ],
+         *       "purchase_responsibles": [
+         *         "purchase_responsibles_item-示例"
+         *       ],
+         *       "categories": [
+         *         "categories_item-示例"
+         *       ]
+         *     }
+         */
         PurchasePlanTemplateFilterOptions: {
             /** Actual Demand Persons */
             actual_demand_persons: string[];
@@ -3433,7 +4851,40 @@ export interface components {
             /** Categories */
             categories: string[];
         };
-        /** PurchasePlanTemplateRead */
+        /**
+         * PurchasePlanTemplateRead
+         * @example {
+         *       "id": 1,
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "stock_material_name": "低压电器",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ],
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         PurchasePlanTemplateRead: {
             /** Id */
             id: number;
@@ -3482,7 +4933,29 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchasePlanTemplateUpdate */
+        /**
+         * PurchasePlanTemplateUpdate
+         * @example {
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "urgency": "正常",
+         *       "demand_department": "电气自动化车间",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "planned_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "remark": "无",
+         *       "stock_material_id": 1,
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ],
+         *       "version": 1
+         *     }
+         */
         PurchasePlanTemplateUpdate: {
             /** Material Code */
             material_code?: string | null;
@@ -3523,14 +4996,42 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchasePlanVersion */
+        /**
+         * PurchasePlanVersion
+         * @example {
+         *       "id": 1,
+         *       "version": 1
+         *     }
+         */
         PurchasePlanVersion: {
             /** Id */
             id: number;
             /** Version */
             version: number;
         };
-        /** PurchaseRecordFilterOptions */
+        /**
+         * PurchaseRecordFilterOptions
+         * @example {
+         *       "actual_demand_persons": [
+         *         "actual_demand_persons_item-示例"
+         *       ],
+         *       "purchase_responsibles": [
+         *         "purchase_responsibles_item-示例"
+         *       ],
+         *       "subitem_nos": [
+         *         "subitem_nos_item-示例"
+         *       ],
+         *       "categories": [
+         *         "categories_item-示例"
+         *       ],
+         *       "salespersons": [
+         *         "salespersons_item-示例"
+         *       ],
+         *       "statuses": [
+         *         "statuses_item-示例"
+         *       ]
+         *     }
+         */
         PurchaseRecordFilterOptions: {
             /** Actual Demand Persons */
             actual_demand_persons: string[];
@@ -3545,7 +5046,54 @@ export interface components {
             /** Statuses */
             statuses: string[];
         };
-        /** PurchaseRecordRead */
+        /**
+         * PurchaseRecordRead
+         * @example {
+         *       "line_id": 1,
+         *       "purchase_request_id": 1,
+         *       "purchase_material_id": 1,
+         *       "plan_no": "CL-20260913-0001",
+         *       "plan_date": "2026-09-13",
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_date": "2026-09-13",
+         *       "consolidation_port": "Morowali",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "status": "正常",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "demand_department": "电气自动化车间",
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "purchase_qty": "10.000",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "salesperson": "李四",
+         *       "plan_remark": "plan_remark-示例",
+         *       "record_remark": "record_remark-示例",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ],
+         *       "stock_material_id": 1,
+         *       "purchase_date": "2026-09-13",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         PurchaseRecordRead: {
             /** Line Id */
             line_id: number;
@@ -3625,7 +5173,28 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchaseRecordResultExportRequest */
+        /**
+         * PurchaseRecordResultExportRequest
+         * @example {
+         *       "columns": [
+         *         "purchase_qty"
+         *       ],
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "category": "低压电器",
+         *       "name": "二级库物资",
+         *       "model_spec": "CJX2-2510",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "salesperson": "李四",
+         *       "status": "正常",
+         *       "empty_status": true,
+         *       "subitem_no": "01",
+         *       "empty_subitem_no": "CL-20260913-0001",
+         *       "sort_by": "purchase_qty",
+         *       "sort_order": "asc"
+         *     }
+         */
         PurchaseRecordResultExportRequest: {
             /** Columns */
             columns: ("purchase_qty" | "plan_date" | "purchase_order_no" | "trace_no" | "contract_no" | "vessel_no" | "consolidation_date" | "consolidation_port" | "sailing_date" | "contract_sign_date" | "category" | "demand_department" | "material_name" | "model_spec" | "material_code" | "actual_demand_person" | "usage" | "purchase_responsible" | "salesperson" | "status" | "purchase_date" | "images" | "subitem_no")[];
@@ -3668,12 +5237,37 @@ export interface components {
              */
             sort_order: "asc" | "desc";
         };
-        /** PurchaseRecordSyncOrderApply */
+        /**
+         * PurchaseRecordSyncOrderApply
+         * @example {
+         *       "items": [
+         *         {
+         *           "salesperson": "李四",
+         *           "contract_no": "HT-2026-0001",
+         *           "vessel_no": "MV HX 001",
+         *           "consolidation_port": "Morowali",
+         *           "consolidation_date": "2026-09-13",
+         *           "sailing_date": "2026-09-13",
+         *           "contract_sign_date": "2026-09-13",
+         *           "status": "正常",
+         *           "trace_no": "HX2026080001"
+         *         }
+         *       ]
+         *     }
+         */
         PurchaseRecordSyncOrderApply: {
             /** Items */
             items: components["schemas"]["PurchaseRecordSyncOrderUpdateItem"][];
         };
-        /** PurchaseRecordSyncOrderApplyRead */
+        /**
+         * PurchaseRecordSyncOrderApplyRead
+         * @example {
+         *       "applied": 1,
+         *       "not_found": 1,
+         *       "affected_headers": 1,
+         *       "affected_lines": 1
+         *     }
+         */
         PurchaseRecordSyncOrderApplyRead: {
             /** Applied */
             applied: number;
@@ -3684,7 +5278,16 @@ export interface components {
             /** Affected Lines */
             affected_lines: number;
         };
-        /** PurchaseRecordSyncOrderTargetRead */
+        /**
+         * PurchaseRecordSyncOrderTargetRead
+         * @example {
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_nos": [
+         *         "trace_nos_item-示例"
+         *       ],
+         *       "cursor_id": 1
+         *     }
+         */
         PurchaseRecordSyncOrderTargetRead: {
             /** Purchase Order No */
             purchase_order_no: string;
@@ -3693,7 +5296,22 @@ export interface components {
             /** Cursor Id */
             cursor_id: number;
         };
-        /** PurchaseRecordSyncOrderTargetsRead */
+        /**
+         * PurchaseRecordSyncOrderTargetsRead
+         * @example {
+         *       "items": [
+         *         {
+         *           "purchase_order_no": "申购单-2026年09月13日",
+         *           "trace_nos": [
+         *             "trace_nos_item-示例"
+         *           ],
+         *           "cursor_id": 1
+         *         }
+         *       ],
+         *       "has_more": true,
+         *       "next_cursor": 1
+         *     }
+         */
         PurchaseRecordSyncOrderTargetsRead: {
             /** Items */
             items: components["schemas"]["PurchaseRecordSyncOrderTargetRead"][];
@@ -3708,6 +5326,17 @@ export interface components {
         /**
          * PurchaseRecordSyncOrderUpdateItem
          * @description 整单回写里的一个追溯号结果（字段规则与单追溯号回写一致）。
+         * @example {
+         *       "salesperson": "李四",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_port": "Morowali",
+         *       "consolidation_date": "2026-09-13",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "status": "正常",
+         *       "trace_no": "HX2026080001"
+         *     }
          */
         PurchaseRecordSyncOrderUpdateItem: {
             /** Salesperson */
@@ -3729,14 +5358,27 @@ export interface components {
             /** Trace No */
             trace_no: string;
         };
-        /** PurchaseRecordSyncResultRead */
+        /**
+         * PurchaseRecordSyncResultRead
+         * @example {
+         *       "affected_headers": 1,
+         *       "affected_lines": 1
+         *     }
+         */
         PurchaseRecordSyncResultRead: {
             /** Affected Headers */
             affected_headers: number;
             /** Affected Lines */
             affected_lines: number;
         };
-        /** PurchaseRecordSyncTargetRead */
+        /**
+         * PurchaseRecordSyncTargetRead
+         * @example {
+         *       "trace_no": "HX2026080001",
+         *       "target_count": 3,
+         *       "cursor_id": 1
+         *     }
+         */
         PurchaseRecordSyncTargetRead: {
             /** Trace No */
             trace_no: string;
@@ -3745,7 +5387,20 @@ export interface components {
             /** Cursor Id */
             cursor_id: number;
         };
-        /** PurchaseRecordSyncTargetsRead */
+        /**
+         * PurchaseRecordSyncTargetsRead
+         * @example {
+         *       "items": [
+         *         {
+         *           "trace_no": "HX2026080001",
+         *           "target_count": 3,
+         *           "cursor_id": 1
+         *         }
+         *       ],
+         *       "has_more": true,
+         *       "next_cursor": 1
+         *     }
+         */
         PurchaseRecordSyncTargetsRead: {
             /** Items */
             items: components["schemas"]["PurchaseRecordSyncTargetRead"][];
@@ -3757,7 +5412,19 @@ export interface components {
              */
             next_cursor: number;
         };
-        /** PurchaseRecordSyncTraceUpdate */
+        /**
+         * PurchaseRecordSyncTraceUpdate
+         * @example {
+         *       "salesperson": "李四",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_port": "Morowali",
+         *       "consolidation_date": "2026-09-13",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "status": "正常"
+         *     }
+         */
         PurchaseRecordSyncTraceUpdate: {
             /** Salesperson */
             salesperson?: string | null;
@@ -3776,7 +5443,41 @@ export interface components {
             /** Status */
             status?: string | null;
         };
-        /** PurchaseRecordUpdate */
+        /**
+         * PurchaseRecordUpdate
+         * @example {
+         *       "plan_date": "2026-09-13",
+         *       "material_code": "DQ-000123",
+         *       "category": "低压电器",
+         *       "demand_department": "电气自动化车间",
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五",
+         *       "purchase_qty": "10.000",
+         *       "usage": "设备检修更换",
+         *       "subitem_no": "01",
+         *       "plan_remark": "plan_remark-示例",
+         *       "stock_material_id": 1,
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ],
+         *       "purchase_order_no": "申购单-2026年09月13日",
+         *       "trace_no": "HX2026080001",
+         *       "contract_no": "HT-2026-0001",
+         *       "vessel_no": "MV HX 001",
+         *       "consolidation_date": "2026-09-13",
+         *       "consolidation_port": "Morowali",
+         *       "sailing_date": "2026-09-13",
+         *       "contract_sign_date": "2026-09-13",
+         *       "purchase_date": "2026-09-13",
+         *       "salesperson": "李四",
+         *       "status": "正常",
+         *       "record_remark": "record_remark-示例",
+         *       "version": 1
+         *     }
+         */
         PurchaseRecordUpdate: {
             /**
              * Plan Date
@@ -3841,19 +5542,36 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** PurchaseRecordVersion */
+        /**
+         * PurchaseRecordVersion
+         * @example {
+         *       "line_id": 1,
+         *       "version": 1
+         *     }
+         */
         PurchaseRecordVersion: {
             /** Line Id */
             line_id: number;
             /** Version */
             version: number;
         };
-        /** RefreshTokenRequest */
+        /**
+         * RefreshTokenRequest
+         * @example {
+         *       "refresh_token": "api-token-example"
+         *     }
+         */
         RefreshTokenRequest: {
             /** Refresh Token */
             refresh_token: string;
         };
-        /** ReplenishmentDefaultsRead */
+        /**
+         * ReplenishmentDefaultsRead
+         * @example {
+         *       "purchase_responsible": "王五",
+         *       "demand_date": "2026-09-13"
+         *     }
+         */
         ReplenishmentDefaultsRead: {
             /** Purchase Responsible */
             purchase_responsible: string;
@@ -3863,7 +5581,15 @@ export interface components {
              */
             demand_date: string;
         };
-        /** ReplenishmentDraftCreate */
+        /**
+         * ReplenishmentDraftCreate
+         * @example {
+         *       "planned_qty": "10.000",
+         *       "demand_date": "2026-09-13",
+         *       "actual_demand_person": "赵六",
+         *       "purchase_responsible": "王五"
+         *     }
+         */
         ReplenishmentDraftCreate: {
             /** Planned Qty */
             planned_qty: number | string;
@@ -3874,7 +5600,13 @@ export interface components {
             /** Purchase Responsible */
             purchase_responsible: string;
         };
-        /** ReplenishmentDraftRead */
+        /**
+         * ReplenishmentDraftRead
+         * @example {
+         *       "next": "purchase_material",
+         *       "resource_id": 1
+         *     }
+         */
         ReplenishmentDraftRead: {
             /**
              * Next
@@ -3884,7 +5616,14 @@ export interface components {
             /** Resource Id */
             resource_id: number;
         };
-        /** ReplenishmentPolicyRead */
+        /**
+         * ReplenishmentPolicyRead
+         * @example {
+         *       "minimum_qty": "5.000",
+         *       "enabled": true,
+         *       "version": 1
+         *     }
+         */
         ReplenishmentPolicyRead: {
             /** Minimum Qty */
             minimum_qty: string;
@@ -3896,7 +5635,14 @@ export interface components {
              */
             version: number;
         };
-        /** ReplenishmentPolicyWrite */
+        /**
+         * ReplenishmentPolicyWrite
+         * @example {
+         *       "minimum_qty": "5.000",
+         *       "enabled": true,
+         *       "version": 1
+         *     }
+         */
         ReplenishmentPolicyWrite: {
             /** Minimum Qty */
             minimum_qty: number | string;
@@ -3908,7 +5654,19 @@ export interface components {
             /** Version */
             version?: number | null;
         };
-        /** ReverseOperationRequest */
+        /**
+         * ReverseOperationRequest
+         * @example {
+         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
+         *       "reason": "reason-示例",
+         *       "lines": [
+         *         {
+         *           "stock_material_id": 1,
+         *           "quantity": "10.000"
+         *         }
+         *       ]
+         *     }
+         */
         ReverseOperationRequest: {
             /** Client Request Id */
             client_request_id: string;
@@ -3931,6 +5689,18 @@ export interface components {
         /**
          * ShareCreateRequest
          * @description 创建匿名分享链接：把勾选的申购计划/申购记录分享为无鉴权页面。
+         * @example {
+         *       "share_type": "share_type-示例",
+         *       "item_ids": [
+         *         1
+         *       ],
+         *       "expires_in": "expires_in-示例",
+         *       "columns": [
+         *         "material_code",
+         *         "name",
+         *         "quantity"
+         *       ]
+         *     }
          */
         ShareCreateRequest: {
             share_type: components["schemas"]["ShareType"];
@@ -3949,6 +5719,20 @@ export interface components {
         /**
          * ShareListRead
          * @description 管理端「分享链接」列表项。
+         * @example {
+         *       "token": "token-示例",
+         *       "share_type": "share_type-示例",
+         *       "item_count": 3,
+         *       "expires_at": "2026-09-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "created_by": 1,
+         *       "created_by_name": "低压电器",
+         *       "columns": [
+         *         "material_code",
+         *         "name",
+         *         "quantity"
+         *       ]
+         *     }
          */
         ShareListRead: {
             /** Token */
@@ -3976,6 +5760,20 @@ export interface components {
          *
          *     当 columns 为 NULL 时 items 为完整类型行；否则 items 为仅含所选列（+行身份键）的字典行，
          *     隐藏列的数据不会随响应下发。
+         * @example {
+         *       "share_type": "share_type-示例",
+         *       "item_count": 3,
+         *       "expires_at": "2026-09-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "columns": [
+         *         "material_code",
+         *         "name",
+         *         "quantity"
+         *       ],
+         *       "items": [
+         *         {}
+         *       ]
+         *     }
          */
         SharePublicView: {
             share_type: components["schemas"]["ShareType"];
@@ -3995,7 +5793,21 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
-        /** ShareRead */
+        /**
+         * ShareRead
+         * @example {
+         *       "token": "token-示例",
+         *       "share_type": "share_type-示例",
+         *       "item_count": 3,
+         *       "expires_at": "2026-09-13T10:30:00+08:00",
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "columns": [
+         *         "material_code",
+         *         "name",
+         *         "quantity"
+         *       ]
+         *     }
+         */
         ShareRead: {
             /** Token */
             token: string;
@@ -4021,6 +5833,14 @@ export interface components {
         /**
          * ShareUpdateRequest
          * @description 更新分享链接：展示列 + 到期时间。缺省/为 None 表示对应项不修改。
+         * @example {
+         *       "columns": [
+         *         "material_code",
+         *         "name",
+         *         "quantity"
+         *       ],
+         *       "expires_in": {}
+         *     }
          */
         ShareUpdateRequest: {
             /** Columns */
@@ -4032,7 +5852,20 @@ export interface components {
          * @enum {string}
          */
         SourceType: "MANUAL" | "MINI_PROGRAM" | "REVERSAL" | "INITIALIZATION";
-        /** StockMaterialCreate */
+        /**
+         * StockMaterialCreate
+         * @example {
+         *       "name": "二级库物资",
+         *       "name_id": 1,
+         *       "alias": "接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "remark": "无",
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ]
+         *     }
+         */
         StockMaterialCreate: {
             /** Name */
             name: string;
@@ -4049,7 +5882,39 @@ export interface components {
             /** Image Ids */
             image_ids?: string[];
         };
-        /** StockMaterialRead */
+        /**
+         * StockMaterialRead
+         * @example {
+         *       "id": 1,
+         *       "uuid": "3f2c1a4e-8b7d-4c1e-9f2a-5d6e7f8a9b0c",
+         *       "name": "二级库物资",
+         *       "name_id": 1,
+         *       "alias": "接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "remark": "无",
+         *       "current_qty": "42.000",
+         *       "images": [
+         *         {
+         *           "id": 1,
+         *           "original_name": "stock-material-20260913.png",
+         *           "mime_type": "image/png",
+         *           "size_bytes": 204800,
+         *           "width": 800,
+         *           "height": 600
+         *         }
+         *       ],
+         *       "replenishment_policy": {
+         *         "minimum_qty": "5.000",
+         *         "enabled": true,
+         *         "version": 1
+         *       },
+         *       "has_operation_records": true,
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         StockMaterialRead: {
             /** Id */
             id: number;
@@ -4093,7 +5958,21 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** StockMaterialUpdate */
+        /**
+         * StockMaterialUpdate
+         * @example {
+         *       "name": "二级库物资",
+         *       "name_id": 1,
+         *       "alias": "接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "remark": "无",
+         *       "image_ids": [
+         *         "image_ids_item-示例"
+         *       ],
+         *       "version": 1
+         *     }
+         */
         StockMaterialUpdate: {
             /** Name */
             name: string;
@@ -4112,7 +5991,20 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** StockOperationLineRead */
+        /**
+         * StockOperationLineRead
+         * @example {
+         *       "id": 1,
+         *       "stock_material_id": 1,
+         *       "material_name": "交流接触器",
+         *       "model_spec": "CJX2-2510",
+         *       "unit_name": "个",
+         *       "quantity": "10.000",
+         *       "remaining_qty": "42.000",
+         *       "before_qty": "45.000",
+         *       "after_qty": "42.000"
+         *     }
+         */
         StockOperationLineRead: {
             /** Id */
             id: number;
@@ -4133,7 +6025,39 @@ export interface components {
             /** After Qty */
             after_qty: string;
         };
-        /** StockOperationRead */
+        /**
+         * StockOperationRead
+         * @example {
+         *       "id": 1,
+         *       "operation_no": "CL-20260913-0001",
+         *       "operation_type": "operation_type-示例",
+         *       "occurred_at": "2026-09-13T10:30:00+08:00",
+         *       "business_reason": "盘点差异修正",
+         *       "receiver_unit": "receiver_unit-示例",
+         *       "receiver_name": "低压电器",
+         *       "subitem_no": "01",
+         *       "source_type": "source_type-示例",
+         *       "reversal_of_id": 1,
+         *       "is_reversed": false,
+         *       "client_request_id": "8b1f0c2d-4a5e-4f6b-9c7d-1e2f3a4b5c6d",
+         *       "mini_program_user_name": "低压电器",
+         *       "lines": [
+         *         {
+         *           "id": 1,
+         *           "stock_material_id": 1,
+         *           "material_name": "交流接触器",
+         *           "model_spec": "CJX2-2510",
+         *           "unit_name": "个",
+         *           "quantity": "10.000",
+         *           "remaining_qty": "42.000",
+         *           "before_qty": "45.000",
+         *           "after_qty": "42.000"
+         *         }
+         *       ],
+         *       "created_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         StockOperationRead: {
             /** Id */
             id: number;
@@ -4175,7 +6099,14 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** TokenPairResponse */
+        /**
+         * TokenPairResponse
+         * @example {
+         *       "access_token": "api-token-example",
+         *       "refresh_token": "api-token-example",
+         *       "token_type": "bearer"
+         *     }
+         */
         TokenPairResponse: {
             /** Access Token */
             access_token: string;
@@ -4188,7 +6119,18 @@ export interface components {
              */
             token_type: "bearer";
         };
-        /** UserApiTokenRead */
+        /**
+         * UserApiTokenRead
+         * @example {
+         *       "id": 1,
+         *       "username": "warehouse",
+         *       "display_name": "张三",
+         *       "role": "WAREHOUSE_ADMIN",
+         *       "enabled": true,
+         *       "version": 1,
+         *       "api_token": "api-token-example"
+         *     }
+         */
         UserApiTokenRead: {
             /** Id */
             id: number;
@@ -4207,12 +6149,26 @@ export interface components {
              */
             api_token?: string | null;
         };
-        /** UserApiTokenRegenerate */
+        /**
+         * UserApiTokenRegenerate
+         * @example {
+         *       "version": 1
+         *     }
+         */
         UserApiTokenRegenerate: {
             /** Version */
             version: number;
         };
-        /** UserCreate */
+        /**
+         * UserCreate
+         * @example {
+         *       "username": "warehouse",
+         *       "password": "password-示例",
+         *       "display_name": "张三",
+         *       "role": "WAREHOUSE_ADMIN",
+         *       "enabled": true
+         *     }
+         */
         UserCreate: {
             /** Username */
             username: string;
@@ -4227,7 +6183,17 @@ export interface components {
              */
             enabled: boolean;
         };
-        /** UserRead */
+        /**
+         * UserRead
+         * @example {
+         *       "id": 1,
+         *       "username": "warehouse",
+         *       "display_name": "张三",
+         *       "role": "WAREHOUSE_ADMIN",
+         *       "enabled": true,
+         *       "version": 1
+         *     }
+         */
         UserRead: {
             /** Id */
             id: number;
@@ -4241,7 +6207,17 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** UserUpdate */
+        /**
+         * UserUpdate
+         * @example {
+         *       "username": "warehouse",
+         *       "display_name": "张三",
+         *       "password": "password-示例",
+         *       "role": "WAREHOUSE_ADMIN",
+         *       "enabled": true,
+         *       "version": 1
+         *     }
+         */
         UserUpdate: {
             /** Username */
             username?: string | null;
@@ -4255,7 +6231,15 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** VersionInfoRead */
+        /**
+         * VersionInfoRead
+         * @example {
+         *       "app_name": "低压电器",
+         *       "version": 1,
+         *       "commit": "commit-示例",
+         *       "build_time": "2026-09-13T02:00:00+08:00"
+         *     }
+         */
         VersionInfoRead: {
             /** App Name */
             app_name: string;
@@ -4266,7 +6250,22 @@ export interface components {
             /** Build Time */
             build_time?: string | null;
         };
-        /** WebhookChannelRead */
+        /**
+         * WebhookChannelRead
+         * @example {
+         *       "platform": "FEISHU",
+         *       "enabled": true,
+         *       "subscribed_events": [
+         *         {}
+         *       ],
+         *       "webhook_url": "https://example.com/hook/token",
+         *       "secret": "secret-示例",
+         *       "webhook_configured": true,
+         *       "secret_configured": true,
+         *       "updated_at": "2026-09-13T10:30:00+08:00",
+         *       "version": 1
+         *     }
+         */
         WebhookChannelRead: {
             platform: components["schemas"]["WebhookPlatform"];
             /** Enabled */
@@ -4286,7 +6285,18 @@ export interface components {
             /** Version */
             version: number;
         };
-        /** WebhookChannelUpdate */
+        /**
+         * WebhookChannelUpdate
+         * @example {
+         *       "enabled": true,
+         *       "webhook_url": "https://example.com/hook/token",
+         *       "secret": "secret-示例",
+         *       "subscribed_events": [
+         *         {}
+         *       ],
+         *       "version": 1
+         *     }
+         */
         WebhookChannelUpdate: {
             /**
              * Enabled
@@ -4318,7 +6328,14 @@ export interface components {
          * @enum {string}
          */
         WebhookPlatform: "FEISHU" | "DINGTALK";
-        /** WebhookTestRead */
+        /**
+         * WebhookTestRead
+         * @example {
+         *       "platform": "FEISHU",
+         *       "success": true,
+         *       "message": "操作成功"
+         *     }
+         */
         WebhookTestRead: {
             platform: components["schemas"]["WebhookPlatform"];
             /** Success */
@@ -4326,7 +6343,13 @@ export interface components {
             /** Message */
             message: string;
         };
-        /** WebhookTestRequest */
+        /**
+         * WebhookTestRequest
+         * @example {
+         *       "webhook_url": "https://example.com/hook/token",
+         *       "secret": "secret-示例"
+         *     }
+         */
         WebhookTestRequest: {
             /** Webhook Url */
             webhook_url: string;

@@ -10,7 +10,7 @@
 | 库存模块 | 补库与低库存 | 按近 6 个月出库实时计算建议数量，低库存工作台一键发起补库。 |
 | 库存模块 | 精简库存 | 二级库精简/完整模式开关，精简库存独立表、小程序只读、后台单页导入查询。 |
 | 申购模块 | 申购计划 | 可暂缺物料编码，到货时关联或新建二级库物资；支持周期性计划模板一键生成。 |
-| 申购模块 | 请购与到货 | 请购单状态机（草稿 → 提交 → 受理 → 完成 / 退回），从未到货行直接发起入库。 |
+| 申购模块 | 请购与到货 | 请购记录按申购单号管理，状态取自外部平台报表并只进不退：已申购 → 已采购 → 部分入库 → 已入库；到货入库在库存模块按普通入库登记并与申购记录对应。 |
 | 采购跟踪 | 采购跟踪 | 按申购单号整单同步外部平台数据（采购人、合同号、合同签订日期、船名、状态），只补空值、只进不退。 |
 | 数据协同 | Excel 导入导出 | 布局模板随代码版本管理，导入导出走异步任务并提供进度查询。 |
 | 数据协同 | 链接分享 | 生成带失效时间的匿名分享页，可配置公开页展示列。 |
@@ -33,8 +33,8 @@
 站点：<https://sakana-1314.github.io/Electrical-Manager/>
 
 - [使用与部署指南](https://sakana-1314.github.io/Electrical-Manager/guide)：Compose 部署、环境变量、本地开发与数据库初始化。
-- [开发方案](https://sakana-1314.github.io/Electrical-Manager/development-plan)：数据模型与接口设计。
-- [API 错误与状态码约定](https://sakana-1314.github.io/Electrical-Manager/api-error-conventions)、[UI 设计规范](https://sakana-1314.github.io/Electrical-Manager/ui-design-guidelines)、[人工功能测试方案](https://sakana-1314.github.io/Electrical-Manager/manual-functional-test-plan)。
+- [开发资料](https://sakana-1314.github.io/Electrical-Manager/dev-overview)：系统概述、数据模型（表结构）、状态机、核心数据流、后端/前端架构、测试与质量。
+- [接口文档与 Mock](https://sakana-1314.github.io/Electrical-Manager/api)（Apifox）；[错误码总表](https://sakana-1314.github.io/Electrical-Manager/api-error-codes)、[API 错误与状态码约定](https://sakana-1314.github.io/Electrical-Manager/api-error-conventions)、[UI 设计规范](https://sakana-1314.github.io/Electrical-Manager/ui-design-guidelines)、[人工功能测试方案](https://sakana-1314.github.io/Electrical-Manager/manual-functional-test-plan)。
 - 接口契约：[docs/openapi.yaml](docs/openapi.yaml)；数据库结构与种子数据：[docs/references/database/init.sql](docs/references/database/init.sql)。
 
 开发与提交约定见 [AGENTS.md](AGENTS.md)。
