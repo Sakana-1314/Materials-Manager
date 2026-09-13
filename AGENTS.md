@@ -3,8 +3,8 @@
 本文档约束在 `Electrical-Manager`（HXNI 电气无忧）仓库内工作的 AI 编程智能体。
 与 `README.md`（面向人类开发者）互补，此处聚焦「如何改代码、如何提交、如何上线」。
 
-> `CLAUDE.md` 是指向本文件的软链接（git 记录为符号链接），供 Claude Code 等只识别 `CLAUDE.md` 的工具读取；
-> 智能体约定**只写在本文件**，改约定不要另建 `CLAUDE.md` 实体文件。
+> `CLAUDE.md` 只有一行 `@AGENTS.md`，用 Claude Code 的导入语法把本文件共享给它（Windows 上不依赖符号链接）；
+> 智能体约定**只写在本文件**，改约定不要往 `CLAUDE.md` 里加内容。
 
 ## 项目概况
 
