@@ -26,9 +26,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # 镜像：ghcr.io/<owner>/<repo 小写>:<component>，由 GITHUB_REPOSITORY 自动推导，仓库改名后无需改这里。
+  # 镜像：ghcr.io/<owner 小写>/electrical-manager:<component>，owner 由 GITHUB_REPOSITORY_OWNER 推导。
+  # 账号是 Sakana-1314，但 Docker/OCI 要求镜像名全小写（大写会被拒：repository name must be lowercase），
+  # 所以下面有一步把 owner 转小写后再拼镜像名；仓库改名或转移后自动跟随。
   REGISTRY: ghcr.io
-  IMAGE_NAMESPACE: ${{ github.repository }}
+  IMAGE_NAMESPACE: ${{ github.repository_owner }}
   # 仅 手动触发 / push 到 main / push v* 标签 时才推送镜像到 ghcr.io；
   # pull_request 事件一律只做构建测试，绝不推送。
   SHOULD_PUSH_IMAGE: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))) }}
@@ -120,11 +122,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 计算镜像命名空间（转小写）
+        id: owner
+        env:
+          OWNER: ${{ env.IMAGE_NAMESPACE }}
+        run: echo "name=${OWNER,,}" >> "$GITHUB_OUTPUT"
+
       - name: 生成镜像元数据
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/electrical-manager
+          images: ${{ env.REGISTRY }}/${{ steps.owner.outputs.name }}/electrical-manager
           tags: |
             type=raw,value=${{ matrix.component }},enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,prefix=${{ matrix.component }}-sha-
